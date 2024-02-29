@@ -39,23 +39,24 @@ export default function App() {
       content: {
         title: 'Alarm',
         body: 'Your alarm is ringing!',
-        sound: 'alarm.mp3',
-        vibrate: [0, 500, 200, 500],
+        vibrate: [0, 250, 250, 250],
+        sound: 'birds.wav',
       },
       trigger: {
-        seconds: 10,
+        seconds: 2,
+        channelId: 'alarm',
       },
     };
 
     console.log('Scheduling alarm...');
     await Notifications.scheduleNotificationAsync(schedulingOptions);
-    console.log('Alarm set for 10 seconds from now.');
+    console.log('Alarm set for 2 seconds from now.');
   }
 
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Simple Alarm App</Text>
-      <Button title='Set Alarm for 10 Seconds' onPress={scheduleAlarm} />
+      <Button title='Set Alarm for 2 Seconds' onPress={scheduleAlarm} />
     </View>
   );
 }

@@ -11,9 +11,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.sleep.zenalarm",
@@ -34,9 +32,7 @@
       [
         "expo-notifications",
         {
-          "sounds": [
-            "./assets/sounds/alarm.mp3"
-          ]
+          "sounds": ["./assets/sounds/birds.wav"]
         }
       ]
     ],
