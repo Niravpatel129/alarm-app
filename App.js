@@ -1,6 +1,7 @@
 import * as Notifications from 'expo-notifications';
 import React, { useEffect } from 'react';
 import { Button, Platform, StyleSheet, Text, View } from 'react-native';
+import { VolumeManager } from 'react-native-volume-manager';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -13,6 +14,9 @@ Notifications.setNotificationHandler({
 export default function App() {
   useEffect(() => {
     const requestPermissions = async () => {
+      const { volume } = await VolumeManager.getVolume();
+      console.log('🚀  volume:', volume);
+
       try {
         if (Platform.OS === 'android') {
           Notifications.setNotificationChannelAsync('alarm-channel', {
