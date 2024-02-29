@@ -14,11 +14,26 @@ export default function App() {
   useEffect(() => {
     const requestPermissions = async () => {
       try {
+        if (Platform.OS === 'android') {
+          Notifications.setNotificationChannelAsync('alarm-channel', {
+            name: 'Alarm channel',
+            importance: Notifications.AndroidImportance.MAX,
+            sound: 'birds.wav',
+          });
+        }
+
+        //
         if (Platform.OS !== 'web') {
           const { status: existingStatus } = await Notifications.getPermissionsAsync();
           let finalStatus = existingStatus;
           if (existingStatus !== 'granted') {
-            const { status } = await Notifications.requestPermissionsAsync();
+            const { status } = await Notifications.requestPermissionsAsync({
+              ios: {
+                allowAlert: true,
+                allowSound: true,
+                allowBadge: true,
+              },
+            });
             finalStatus = status;
           }
           if (finalStatus !== 'granted') {
@@ -39,16 +54,17 @@ export default function App() {
       content: {
         title: 'Alarm',
         body: 'Your alarm is ringing!',
-        vibrate: [0, 250, 250, 250],
+        vibrate: false,
         sound: 'birds.wav',
       },
       trigger: {
         seconds: 2,
-        channelId: 'alarm',
+        channelId: 'alarm-channel',
       },
     };
 
     console.log('Scheduling alarm...');
+
     await Notifications.scheduleNotificationAsync(schedulingOptions);
     console.log('Alarm set for 2 seconds from now.');
   }
