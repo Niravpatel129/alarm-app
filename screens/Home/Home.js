@@ -5,7 +5,7 @@ import TimePicker from '../../components/TimePicker/TimePicker';
 import { useEnhancedAlarmLogic } from '../../hooks/useEnhancedAlarmLogic';
 
 export default function HomeScreen() {
-  const { selectedTime, handleTimeChange, toggleGuide } = useEnhancedAlarmLogic();
+  const { selectedTime, handleTimeChange, startAlarm } = useEnhancedAlarmLogic();
 
   return (
     <View
@@ -26,7 +26,7 @@ export default function HomeScreen() {
         <Text style={{ color: 'white' }}>Selected Time: {selectedTime}</Text>
       </View>
       <View style={{ marginTop: 40 }}>
-        <Button onPress={toggleGuide} text={'Sleep'} />
+        <Button onPress={startAlarm} text={'Sleep'} />
       </View>
     </View>
   );

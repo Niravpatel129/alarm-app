@@ -5,7 +5,7 @@ import MeditationGuide from '../../components/MeditationGuide/MeditationGuide';
 import { useEnhancedAlarmLogic } from '../../hooks/useEnhancedAlarmLogic'; // Ensure the path is correct
 
 export default function InSleep() {
-  const { showGuide, messages, toggleGuide } = useEnhancedAlarmLogic(); // Assuming this hook manages `showGuide`
+  const { messages, showGuide, toggleGuide } = useEnhancedAlarmLogic('01:00 AM');
 
   const handleSlide = () => {
     toggleGuide(); // Use toggleGuide to hide/show the guide or switch modes
@@ -25,7 +25,7 @@ export default function InSleep() {
             <AntDesign name='down' size={24} color='white' />
           </TouchableOpacity>
         </View>
-        {showGuide && <MeditationGuide messages={messages} />}
+        {showGuide && <MeditationGuide messages={messages} onMessagesDone={toggleGuide} />}
       </SafeAreaView>
     </>
   );

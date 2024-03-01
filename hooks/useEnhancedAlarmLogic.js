@@ -22,18 +22,16 @@ export function useEnhancedAlarmLogic(initialTime = '01:00 AM') {
       setMessages(newMessages);
       return !prevIsSleepMode;
     });
-    // Optionally, trigger the alarm in progress state to handle redirection or other actions.
+    setAlarmInProgress(false);
+  }, []);
+
+  const startAlarm = useCallback(() => {
     setAlarmInProgress(true);
   }, []);
 
-  // Auto-redirect or perform other actions when alarm is in progress
   useEffect(() => {
     if (alarmInProgress) {
-      // Example: automatically navigate to a specific screen when alarm is in progress
       navigation.navigate('AlarmScreen');
-
-      // After handling, reset the alarm progress state as needed
-      // setAlarmInProgress(false); // Uncomment if you want to reset after navigation
     }
   }, [alarmInProgress, navigation]);
 
@@ -42,10 +40,10 @@ export function useEnhancedAlarmLogic(initialTime = '01:00 AM') {
     showGuide,
     isSleepMode,
     messages,
-    alarmInProgress, // Expose alarmInProgress state if needed elsewhere
+    alarmInProgress,
     handleTimeChange,
     toggleGuide,
-    // Provide a method to manually control the alarm progress state if needed
+    startAlarm,
     setAlarmInProgress,
   };
 }
