@@ -16,31 +16,40 @@ const ScrollPicker = ({
   type,
   periods,
   setSelectedPeriod,
-}) => (
-  <FlatList
-    ref={refList}
-    data={data}
-    keyExtractor={(item, index) => index.toString()}
-    renderItem={({ item }) => (
-      <View style={[styles.item, { height: ITEM_HEIGHT, width: ITEM_WIDTH }]}>
-        <Text style={styles.text}>{item}</Text>
-      </View>
-    )}
-    showsVerticalScrollIndicator={false}
-    onScroll={(e) => updateSelection(e, data, setSelectedItem, type, periods, setSelectedPeriod)}
-    snapToAlignment='center'
-    snapToInterval={ITEM_HEIGHT}
-    decelerationRate='fast'
-    style={[styles.list, { height: type === 'period' ? 2 * ITEM_HEIGHT : 3 * ITEM_HEIGHT }]}
-    contentContainerStyle={styles.centerContent}
-    initialScrollIndex={data.findIndex((item) => item === selectedItem)}
-    getItemLayout={(data, index) => ({
-      length: ITEM_HEIGHT,
-      offset: ITEM_HEIGHT * index,
-      index,
-    })}
-  />
-);
+}) => {
+  // Calculate the height of the visible area to center one item only.
+  const visibleHeight = ITEM_HEIGHT * (type === 'period' ? 1 : 3);
+
+  return (
+    <FlatList
+      ref={refList}
+      data={data}
+      keyExtractor={(item, index) => index.toString()}
+      renderItem={({ item }) => (
+        <View style={[styles.item, { height: ITEM_HEIGHT, width: ITEM_WIDTH }]}>
+          <Text style={styles.text}>{item}</Text>
+        </View>
+      )}
+      showsVerticalScrollIndicator={false}
+      onScroll={(e) => updateSelection(e, data, setSelectedItem, type, periods, setSelectedPeriod)}
+      snapToAlignment='center'
+      snapToInterval={ITEM_HEIGHT} // Ensure this matches the height of your item
+      decelerationRate='fast'
+      style={[styles.list, { height: visibleHeight }]} // Update this line to set the visible height
+      contentContainerStyle={{
+        // Adjust padding to center the selected item
+        paddingTop: (visibleHeight - ITEM_HEIGHT) / 2,
+        paddingBottom: (visibleHeight - ITEM_HEIGHT) / 2,
+      }}
+      initialScrollIndex={data.findIndex((item) => item === selectedItem)}
+      getItemLayout={(data, index) => ({
+        length: ITEM_HEIGHT,
+        offset: ITEM_HEIGHT * index,
+        index,
+      })}
+    />
+  );
+};
 
 const TimePicker = ({ onTimeChange }) => {
   const {
