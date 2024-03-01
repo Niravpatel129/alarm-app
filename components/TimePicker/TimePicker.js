@@ -91,7 +91,7 @@ const TimePicker = ({ onTimeChange }) => {
         style={{
           height: 40,
           width: '100%',
-          borderWidth: 1,
+          borderWidth: 2,
           position: 'absolute',
           top: 40,
           borderRadius: 10,
