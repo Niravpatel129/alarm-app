@@ -70,7 +70,7 @@ const TimePicker = ({ onTimeChange }) => {
       setSelectedPeriod(newPeriod);
 
       // Programmatically scroll the AM/PM FlatList to the correct position
-      const periodIndex = periods.findIndex((period) => period === newPeriod); // Should be 0 for AM, 1 for PM
+      const periodIndex = periods.findIndex((period) => period === newPeriod);
       if (periodListRef.current) {
         periodListRef.current.scrollToIndex({ index: periodIndex, animated: true });
       }
@@ -89,7 +89,7 @@ const TimePicker = ({ onTimeChange }) => {
         periods={periods}
         setSelectedPeriod={setSelectedPeriod}
       />
-      <Text style={styles.colon}>:</Text>
+
       <ScrollPicker
         data={minutes}
         refList={minuteListRef}
@@ -97,6 +97,7 @@ const TimePicker = ({ onTimeChange }) => {
         setSelectedItem={setSelectedMinute}
         updateSelection={updateSelectionFromScroll}
       />
+      {/* Assuming periods (AM/PM) should be closely aligned with the minute picker */}
       <ScrollPicker
         data={periods}
         refList={periodListRef}
@@ -129,12 +130,6 @@ const styles = StyleSheet.create({
   centerContent: {
     paddingTop: ITEM_HEIGHT / 2,
     paddingBottom: ITEM_HEIGHT / 2,
-  },
-  colon: {
-    color: 'white',
-    fontSize: 28,
-    alignSelf: 'center',
-    paddingHorizontal: 10, // Adjust padding as needed for alignment
   },
 });
 
