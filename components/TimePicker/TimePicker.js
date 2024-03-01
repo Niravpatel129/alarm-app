@@ -31,6 +31,7 @@ const TimePicker = ({ onTimeChange }) => {
   const periods = ['AM', 'PM'];
 
   useEffect(() => {
+    console.log('Initial time:', `${selectedHour}:${selectedMinute} ${selectedPeriod}`);
     // Automatically adjust the initial scroll position for hour, minute, and period
     const hourIndex = hours.findIndex((item) => item === initialHour);
     const minuteIndex = minutes.findIndex((item) => item === initialMinute);
@@ -49,6 +50,10 @@ const TimePicker = ({ onTimeChange }) => {
     // Update the parent component about the initial time
     onTimeChange(`${selectedHour}:${selectedMinute} ${selectedPeriod}`);
   }, []);
+
+  useEffect(() => {
+    onTimeChange(`${selectedHour}:${selectedMinute} ${selectedPeriod}`);
+  }, [selectedHour, selectedMinute, selectedPeriod]);
 
   const updateSelectionFromScroll = (event, data, setState) => {
     const yOffset = event.nativeEvent.contentOffset.y;
