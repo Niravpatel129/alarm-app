@@ -11,6 +11,10 @@ export default function InSleep() {
     toggleGuide(); // Use toggleGuide to hide/show the guide or switch modes
   };
 
+  const handleCompletion = () => {
+    toggleGuide(); // This could hide the guide or perform any other action needed when the messages are done
+  };
+
   return (
     <>
       <SafeAreaView
@@ -25,7 +29,7 @@ export default function InSleep() {
             <AntDesign name='down' size={24} color='white' />
           </TouchableOpacity>
         </View>
-        {showGuide && <MeditationGuide messages={messages} onMessagesDone={toggleGuide} />}
+        {showGuide && <MeditationGuide messages={messages} onCompletion={handleCompletion} />}
       </SafeAreaView>
     </>
   );
