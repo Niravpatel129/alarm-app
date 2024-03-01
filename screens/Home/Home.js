@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Text, View } from 'react-native';
+import { Image, Text, View } from 'react-native';
 import Button from '../../components/Button/Button';
 import TimePicker from '../../components/TimePicker/TimePicker';
 
 export default function HomeScreen() {
-  const [selectedTime, setSelectedTime] = useState('');
+  const [selectedTime, setSelectedTime] = useState('01:00 AM');
 
   const handleTimeChange = (time) => {
     console.log('🚀  time:', time);
@@ -21,6 +21,14 @@ export default function HomeScreen() {
         backgroundColor: '#242830',
       }}
     >
+      <Image
+        source={require('../../assets/monk.png')}
+        style={{
+          width: 200,
+          height: 200,
+          marginBottom: 40,
+        }}
+      />
       <TimePicker onTimeChange={handleTimeChange} />
       <View
         style={{
