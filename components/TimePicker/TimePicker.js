@@ -66,7 +66,7 @@ const TimePicker = ({ onTimeChange }) => {
         <Text
           style={{
             color: 'white',
-            fontSize: 32,
+            fontSize: 28,
             textAlign: 'center',
           }}
         >
