@@ -23,11 +23,23 @@ const TimePicker = ({ onTimeChange }) => {
     periods,
   } = useTimeSelection(onTimeChange);
 
-  const updateSelectionFromScroll = (event, data, setState) => {
+  const updateSelectionFromScroll = (event, data, setState, type) => {
     const yOffset = event.nativeEvent.contentOffset.y;
     const index = Math.round(yOffset / ITEM_HEIGHT);
     const selectedItem = data[index % data.length];
     setState(selectedItem);
+
+    if (type === 'hour') {
+      const isPM = index >= 12; // Assuming a 24-hour cycle represented in a 12-hour format
+      const newPeriod = isPM ? 'PM' : 'AM';
+      setSelectedPeriod(newPeriod);
+
+      // Programmatically scroll the AM/PM FlatList to the correct position
+      const periodIndex = periods.findIndex((period) => period === newPeriod); // Should be 0 for AM, 1 for PM
+      if (periodListRef.current) {
+        periodListRef.current.scrollToIndex({ index: periodIndex, animated: true });
+      }
+    }
   };
 
   const renderItem = ({ item }) => (
@@ -44,7 +56,7 @@ const TimePicker = ({ onTimeChange }) => {
         keyExtractor={(item, index) => index.toString()}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}
-        onScroll={(e) => updateSelectionFromScroll(e, hours, setSelectedHour)}
+        onScroll={(e) => updateSelectionFromScroll(e, hours, setSelectedHour, 'hour')}
         snapToAlignment='center'
         snapToInterval={ITEM_HEIGHT}
         decelerationRate='fast'
