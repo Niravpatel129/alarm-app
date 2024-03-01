@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 export function useEnhancedAlarmLogic(initialTime = '01:00 AM') {
   const navigation = useNavigation();
   const [selectedTime, setSelectedTime] = useState(initialTime);
-  const [showGuide, setShowGuide] = useState(false);
+  const [showGuide, setShowGuide] = useState(true);
   const [isSleepMode, setIsSleepMode] = useState(true);
   const [alarmInProgress, setAlarmInProgress] = useState(false);
   const sleepMessages = ['Breathe in...', 'Breathe out...', 'Focus on your breath...'];
