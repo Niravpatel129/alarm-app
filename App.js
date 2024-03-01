@@ -1,96 +1,45 @@
-import * as Notifications from 'expo-notifications';
-import React, { useEffect } from 'react';
-import { Button, Platform, StyleSheet, Text, View } from 'react-native';
-import { VolumeManager } from 'react-native-volume-manager';
+// Import React and necessary components from React Native and React Navigation
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React from 'react';
+import { Text, View } from 'react-native';
+import TabBar from './components/TabBar/TabBar';
+import HomeScreen from './screens/Home/Home';
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: false,
-  }),
-});
+const SettingsScreen = () => (
+  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <Text>Settings!</Text>
+  </View>
+);
 
-export default function App() {
-  useEffect(() => {
-    const requestPermissions = async () => {
-      const { volume } = await VolumeManager.getVolume();
-      console.log('🚀  volume:', volume);
+const Tab = createBottomTabNavigator();
 
-      try {
-        if (Platform.OS === 'android') {
-          Notifications.setNotificationChannelAsync('alarm-channel', {
-            name: 'Alarm channel',
-            importance: Notifications.AndroidImportance.MAX,
-            sound: 'birds.wav',
-          });
-        }
-
-        //
-        if (Platform.OS !== 'web') {
-          const { status: existingStatus } = await Notifications.getPermissionsAsync();
-          let finalStatus = existingStatus;
-          if (existingStatus !== 'granted') {
-            const { status } = await Notifications.requestPermissionsAsync({
-              ios: {
-                allowAlert: true,
-                allowSound: true,
-                allowBadge: true,
-              },
-            });
-            finalStatus = status;
-          }
-          if (finalStatus !== 'granted') {
-            alert('Failed to get push token for push notification!');
-            return;
-          }
-        }
-      } catch (error) {
-        console.log('Error getting a push token', error);
-      }
-    };
-
-    requestPermissions();
-  }, []);
-
-  async function scheduleAlarm() {
-    const schedulingOptions = {
-      content: {
-        title: 'Alarm',
-        body: 'Your alarm is ringing!',
-        vibrate: false,
-        sound: 'birds.wav',
-      },
-      trigger: {
-        seconds: 2,
-        channelId: 'alarm-channel',
-      },
-    };
-
-    console.log('Scheduling alarm...');
-
-    await Notifications.scheduleNotificationAsync(schedulingOptions);
-    console.log('Alarm set for 2 seconds from now.');
-  }
-
+function MyTabs() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Simple Alarm App</Text>
-      <Button title='Set Alarm for 2 Seconds' onPress={scheduleAlarm} />
-    </View>
+    <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
+      <Tab.Screen
+        name='Sleep'
+        component={HomeScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen name='Settings' component={SettingsScreen} />
+    </Tab.Navigator>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  text: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-});
+const Stack = createNativeStackNavigator();
+
+function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name='Home' component={MyTabs} options={{ headerShown: false }} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+export default App;
