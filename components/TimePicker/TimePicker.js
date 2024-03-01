@@ -39,7 +39,6 @@ const TimePicker = ({ onTimeChange }) => {
         onScroll={(e) => updateSelectionFromScroll(e, hours, setSelectedHour)}
         snapToAlignment='center'
         snapToInterval={ITEM_HEIGHT}
-        snapToOffsets={[0, ITEM_HEIGHT, 2 * ITEM_HEIGHT]}
         decelerationRate='fast'
         style={[styles.list, { height: 3 * ITEM_HEIGHT }]}
         contentContainerStyle={styles.centerContent}
@@ -65,7 +64,7 @@ const TimePicker = ({ onTimeChange }) => {
         snapToAlignment='center'
         snapToInterval={ITEM_HEIGHT}
         decelerationRate='fast'
-        style={[styles.list, { height: 2 * ITEM_HEIGHT }]}
+        style={[styles.list, { height: 2 * ITEM_HEIGHT, marginBottom: 42 }]}
         contentContainerStyle={styles.centerContent}
       />
     </View>
@@ -89,7 +88,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   centerContent: {
-    // Adjust padding to center the first and last items in the view
     paddingTop: ITEM_HEIGHT / 2,
     paddingBottom: ITEM_HEIGHT / 2,
   },
