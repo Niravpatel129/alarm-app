@@ -34,7 +34,7 @@ function App() {
       <Stack.Navigator>
         <Stack.Screen name='Home' component={MyTabs} options={{ headerShown: false }} />
         <Stack.Screen
-          name='InSleep'
+          name='AlarmScreen'
           component={InSleep}
           options={{
             headerShown: false,

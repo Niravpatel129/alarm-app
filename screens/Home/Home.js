@@ -1,20 +1,11 @@
-import { useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react';
+import React from 'react';
 import { Image, Text, View } from 'react-native';
 import Button from '../../components/Button/Button';
 import TimePicker from '../../components/TimePicker/TimePicker';
+import { useEnhancedAlarmLogic } from '../../hooks/useEnhancedAlarmLogic';
 
 export default function HomeScreen() {
-  const navigation = useNavigation();
-  const [selectedTime, setSelectedTime] = useState('01:00 AM');
-
-  const handleTimeChange = (time) => {
-    setSelectedTime(time);
-  };
-
-  const toggleGuide = () => {
-    navigation.navigate('InSleep');
-  };
+  const { selectedTime, handleTimeChange, toggleGuide } = useEnhancedAlarmLogic();
 
   return (
     <View

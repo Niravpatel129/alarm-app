@@ -7,7 +7,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-const MeditationGuide = ({ messages, setShowGuide }) => {
+const MeditationGuide = ({ messages }) => {
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const opacity = useSharedValue(0);
 
@@ -56,11 +56,11 @@ const MeditationGuide = ({ messages, setShowGuide }) => {
   useEffect(() => {
     // This effect handles the visibility based on the messages array length and current index
     if (messages.length === 0 || currentMessageIndex === messages.length - 1) {
-      setShowGuide(false);
+      // setShowGuide(false);
     } else {
-      setShowGuide(true);
+      // setShowGuide(true);
     }
-  }, [currentMessageIndex, messages.length, setShowGuide]);
+  }, [currentMessageIndex, messages.length]);
 
   return (
     <View style={styles.container}>

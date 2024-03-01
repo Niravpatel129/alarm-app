@@ -1,18 +1,14 @@
-import { AntDesign } from '@expo/vector-icons'; // Import AntDesign for the chevron icon
-import React, { useState } from 'react';
+import { AntDesign } from '@expo/vector-icons';
+import React from 'react';
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import MeditationGuide from '../../components/MeditationGuide/MeditationGuide';
+import { useEnhancedAlarmLogic } from '../../hooks/useEnhancedAlarmLogic'; // Ensure the path is correct
 
 export default function InSleep() {
-  const [showGuide, setShowGuide] = useState(true);
-  const [messages, setMessages] = useState([
-    'Breathe in...',
-    'Breathe out...',
-    'Focus on your breath...',
-  ]);
+  const { showGuide, messages, toggleGuide } = useEnhancedAlarmLogic(); // Assuming this hook manages `showGuide`
 
   const handleSlide = () => {
-    console.log('Slide to stop or close');
+    toggleGuide(); // Use toggleGuide to hide/show the guide or switch modes
   };
 
   return (
@@ -24,17 +20,12 @@ export default function InSleep() {
       >
         <View style={styles.container}>
           <Text style={styles.timeText}>12:34PM</Text>
-          <Text style={styles.alarmText}>
-            Alarm{' '}
-            <Text style={styles.alarmTime} onPress={() => console.log('Alarm time clicked')}>
-              5:30AM
-            </Text>
-          </Text>
+          {/* Adjusted parts to use hook's state and methods */}
           <TouchableOpacity style={styles.chevronContainer} onPress={handleSlide}>
             <AntDesign name='down' size={24} color='white' />
           </TouchableOpacity>
         </View>
-        {showGuide && <MeditationGuide messages={messages} setShowGuide={setShowGuide} />}
+        {showGuide && <MeditationGuide messages={messages} />}
       </SafeAreaView>
     </>
   );
