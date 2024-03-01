@@ -32,11 +32,10 @@ const ScrollPicker = ({
       showsVerticalScrollIndicator={false}
       onScroll={(e) => updateSelection(e, data, setSelectedItem, type, periods, setSelectedPeriod)}
       snapToAlignment='center'
-      snapToInterval={ITEM_HEIGHT} // Ensure this matches the height of your item
+      snapToInterval={ITEM_HEIGHT}
       decelerationRate='fast'
-      style={[styles.list, { height: visibleHeight }]} // Update this line to set the visible height
+      style={[styles.list, { height: visibleHeight }]}
       contentContainerStyle={{
-        // Adjust padding to center the selected item
         paddingTop: (visibleHeight - ITEM_HEIGHT) / 2,
         paddingBottom: (visibleHeight - ITEM_HEIGHT) / 2,
       }}
@@ -73,11 +72,10 @@ const TimePicker = ({ onTimeChange }) => {
     setState(selectedItem);
 
     if (type === 'hour') {
-      const isPM = index >= 12; // Assuming a 24-hour cycle represented in a 12-hour format
+      const isPM = index >= 12;
       const newPeriod = isPM ? 'PM' : 'AM';
       setSelectedPeriod(newPeriod);
 
-      // Programmatically scroll the AM/PM FlatList to the correct position
       const periodIndex = periods.findIndex((period) => period === newPeriod);
       if (periodListRef.current) {
         periodListRef.current.scrollToIndex({ index: periodIndex, animated: true });
@@ -110,7 +108,10 @@ const TimePicker = ({ onTimeChange }) => {
         periods={periods}
         setSelectedPeriod={setSelectedPeriod}
       />
-
+      {/* Render the colon between hour and minute selectors */}
+      <View style={styles.colonContainer}>
+        <Text style={styles.colon}>:</Text>
+      </View>
       <ScrollPicker
         data={minutes}
         refList={minuteListRef}
@@ -118,7 +119,6 @@ const TimePicker = ({ onTimeChange }) => {
         setSelectedItem={setSelectedMinute}
         updateSelection={updateSelectionFromScroll}
       />
-      {/* Assuming periods (AM/PM) should be closely aligned with the minute picker */}
       <ScrollPicker
         data={periods}
         refList={periodListRef}
@@ -151,6 +151,15 @@ const styles = StyleSheet.create({
   centerContent: {
     paddingTop: ITEM_HEIGHT / 2,
     paddingBottom: ITEM_HEIGHT / 2,
+  },
+  colonContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  colon: {
+    fontSize: 28,
+    color: 'white',
   },
 });
 
