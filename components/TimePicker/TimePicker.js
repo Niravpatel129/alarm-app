@@ -11,8 +11,12 @@ const TimePicker = ({ onTimeChange }) => {
   const [selectedMinute, setSelectedMinute] = useState('00');
   const [selectedPeriod, setSelectedPeriod] = useState('AM');
 
-  const hours = Array.from({ length: 12 }, (_, i) => (i + 1).toString().padStart(2, '0'));
-  const minutes = Array.from({ length: 60 }, (_, i) => i.toString().padStart(2, '0'));
+  const hours = Array.from({ length: 24 * 100 }, (_, i) =>
+    ((i % 12) + 1).toString().padStart(2, '0'),
+  );
+
+  const minutes = Array.from({ length: 60 * 100 }, (_, i) => (i % 60).toString().padStart(2, '0'));
+
   const periods = ['AM', 'PM'];
 
   const updateSelectionFromScroll = (event, data, setState) => {
@@ -34,7 +38,7 @@ const TimePicker = ({ onTimeChange }) => {
       <View
         style={{
           position: 'absolute',
-          top: 20,
+          top: 21,
           left: 0,
           right: 0,
           height: 40,
@@ -46,7 +50,7 @@ const TimePicker = ({ onTimeChange }) => {
       ></View>
       <FlatList
         data={hours}
-        keyExtractor={(item) => item}
+        keyExtractor={(item, index) => index.toString()}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}
         onScroll={(e) => updateSelectionFromScroll(e, hours, setSelectedHour)}
@@ -55,6 +59,7 @@ const TimePicker = ({ onTimeChange }) => {
         decelerationRate='fast'
         style={[styles.list, { height: 3 * ITEM_HEIGHT }]}
         contentContainerStyle={styles.centerContent}
+        numColumns={1}
       />
       <View
         style={{
@@ -75,7 +80,7 @@ const TimePicker = ({ onTimeChange }) => {
       </View>
       <FlatList
         data={minutes}
-        keyExtractor={(item) => item}
+        keyExtractor={(item, index) => index.toString()}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}
         onScroll={(e) => updateSelectionFromScroll(e, minutes, setSelectedMinute)}
@@ -84,6 +89,7 @@ const TimePicker = ({ onTimeChange }) => {
         decelerationRate='fast'
         style={[styles.list, { height: 3 * ITEM_HEIGHT }]}
         contentContainerStyle={styles.centerContent}
+        numColumns={1}
       />
       <FlatList
         data={periods}
