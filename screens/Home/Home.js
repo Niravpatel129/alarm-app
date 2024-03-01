@@ -7,7 +7,6 @@ export default function HomeScreen() {
   const [selectedTime, setSelectedTime] = useState('01:00 AM');
 
   const handleTimeChange = (time) => {
-    console.log('🚀  time:', time);
     setSelectedTime(time);
   };
 
