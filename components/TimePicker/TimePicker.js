@@ -87,6 +87,19 @@ const TimePicker = ({ onTimeChange }) => {
 
   return (
     <View style={styles.container}>
+      <View
+        style={{
+          height: 40,
+          width: '100%',
+          borderWidth: 1,
+          position: 'absolute',
+          top: 40,
+          borderRadius: 10,
+          borderColor: '#557186',
+          left: 0,
+          zIndex: 1,
+        }}
+      ></View>
       <ScrollPicker
         data={hours}
         refList={hourListRef}
