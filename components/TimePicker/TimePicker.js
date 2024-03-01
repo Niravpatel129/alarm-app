@@ -31,6 +31,19 @@ const TimePicker = ({ onTimeChange }) => {
 
   return (
     <View style={styles.container}>
+      <View
+        style={{
+          position: 'absolute',
+          top: 20,
+          left: 0,
+          right: 0,
+          height: 40,
+          //   backgroundColor: 'rgba(0,0,0,0.2)',
+          borderWidth: 3,
+          borderColor: '#1c3440',
+          borderRadius: 7,
+        }}
+      ></View>
       <FlatList
         data={hours}
         keyExtractor={(item) => item}
@@ -43,6 +56,23 @@ const TimePicker = ({ onTimeChange }) => {
         style={[styles.list, { height: 3 * ITEM_HEIGHT }]}
         contentContainerStyle={styles.centerContent}
       />
+      <View
+        style={{
+          position: 'absolute',
+          top: 20,
+          left: 100,
+        }}
+      >
+        <Text
+          style={{
+            color: 'white',
+            fontSize: 32,
+            textAlign: 'center',
+          }}
+        >
+          :
+        </Text>
+      </View>
       <FlatList
         data={minutes}
         keyExtractor={(item) => item}
@@ -85,7 +115,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    fontSize: 20,
+    fontSize: 28,
+    color: 'white',
   },
   centerContent: {
     paddingTop: ITEM_HEIGHT / 2,
