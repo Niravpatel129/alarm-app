@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
+import Button from '../../components/Button/Button';
 import TimePicker from '../../components/TimePicker/TimePicker';
 
 export default function HomeScreen() {
@@ -33,6 +34,13 @@ export default function HomeScreen() {
         >
           Selected Time: {selectedTime}
         </Text>
+      </View>
+      <View
+        style={{
+          marginTop: 40,
+        }}
+      >
+        <Button />
       </View>
     </View>
   );
