@@ -1,11 +1,46 @@
 import React from 'react';
-import { Dimensions, FlatList, Text, View } from 'react-native';
+import { Dimensions, FlatList, StyleSheet, Text, View } from 'react-native';
 import useTimeSelection from '../../hooks/useTimeSelection';
 
 const { width } = Dimensions.get('window');
 
 const ITEM_HEIGHT = 40; // Adjust this based on your item's height
 const ITEM_WIDTH = width / 4; // Adjust this based on your layout preferences
+
+const ScrollPicker = ({
+  data,
+  refList,
+  selectedItem,
+  setSelectedItem,
+  updateSelection,
+  type,
+  periods,
+  setSelectedPeriod,
+}) => (
+  <FlatList
+    ref={refList}
+    data={data}
+    keyExtractor={(item, index) => index.toString()}
+    renderItem={({ item }) => (
+      <View style={[styles.item, { height: ITEM_HEIGHT, width: ITEM_WIDTH }]}>
+        <Text style={styles.text}>{item}</Text>
+      </View>
+    )}
+    showsVerticalScrollIndicator={false}
+    onScroll={(e) => updateSelection(e, data, setSelectedItem, type, periods, setSelectedPeriod)}
+    snapToAlignment='center'
+    snapToInterval={ITEM_HEIGHT}
+    decelerationRate='fast'
+    style={[styles.list, { height: type === 'period' ? 2 * ITEM_HEIGHT : 3 * ITEM_HEIGHT }]}
+    contentContainerStyle={styles.centerContent}
+    initialScrollIndex={data.findIndex((item) => item === selectedItem)}
+    getItemLayout={(data, index) => ({
+      length: ITEM_HEIGHT,
+      offset: ITEM_HEIGHT * index,
+      index,
+    })}
+  />
+);
 
 const TimePicker = ({ onTimeChange }) => {
   const {
@@ -23,7 +58,7 @@ const TimePicker = ({ onTimeChange }) => {
     periods,
   } = useTimeSelection(onTimeChange);
 
-  const updateSelectionFromScroll = (event, data, setState, type) => {
+  const updateSelectionFromScroll = (event, data, setState, type, periods, setSelectedPeriod) => {
     const yOffset = event.nativeEvent.contentOffset.y;
     const index = Math.round(yOffset / ITEM_HEIGHT);
     const selectedItem = data[index % data.length];
@@ -42,121 +77,65 @@ const TimePicker = ({ onTimeChange }) => {
     }
   };
 
-  const renderItem = ({ item }) => (
-    <View
-      style={{
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: ITEM_HEIGHT,
-        width: ITEM_WIDTH,
-      }}
-    >
-      <Text
-        style={{
-          fontSize: 28,
-          color: 'white',
-        }}
-      >
-        {item}
-      </Text>
-    </View>
-  );
-
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <FlatList
-        ref={hourListRef}
+    <View style={styles.container}>
+      <ScrollPicker
         data={hours}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={renderItem}
-        showsVerticalScrollIndicator={false}
-        onScroll={(e) => updateSelectionFromScroll(e, hours, setSelectedHour, 'hour')}
-        snapToAlignment='center'
-        snapToInterval={ITEM_HEIGHT}
-        decelerationRate='fast'
-        style={{
-          flexGrow: 0,
-          height: 3 * ITEM_HEIGHT,
-        }}
-        contentContainerStyle={{
-          paddingTop: ITEM_HEIGHT / 2,
-          paddingBottom: ITEM_HEIGHT / 2,
-        }}
-        initialScrollIndex={hours.findIndex((item) => item === selectedHour)}
-        getItemLayout={(data, index) => ({
-          length: ITEM_HEIGHT,
-          offset: ITEM_HEIGHT * index,
-          index,
-        })}
+        refList={hourListRef}
+        selectedItem={selectedHour}
+        setSelectedItem={setSelectedHour}
+        updateSelection={updateSelectionFromScroll}
+        type='hour'
+        periods={periods}
+        setSelectedPeriod={setSelectedPeriod}
       />
-      <Text
-        style={{
-          color: 'white',
-          fontSize: 28,
-          alignSelf: 'center',
-          paddingHorizontal: 10, // Adjust padding as needed for alignment
-        }}
-      >
-        :
-      </Text>
-      <FlatList
-        ref={minuteListRef}
+      <Text style={styles.colon}>:</Text>
+      <ScrollPicker
         data={minutes}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={renderItem}
-        showsVerticalScrollIndicator={false}
-        onScroll={(e) => updateSelectionFromScroll(e, minutes, setSelectedMinute)}
-        snapToAlignment='center'
-        snapToInterval={ITEM_HEIGHT}
-        decelerationRate='fast'
-        style={{
-          flexGrow: 0,
-          height: 3 * ITEM_HEIGHT,
-        }}
-        contentContainerStyle={{
-          paddingTop: ITEM_HEIGHT / 2,
-          paddingBottom: ITEM_HEIGHT / 2,
-        }}
-        initialScrollIndex={minutes.findIndex((item) => item === selectedMinute)}
-        getItemLayout={(data, index) => ({
-          length: ITEM_HEIGHT,
-          offset: ITEM_HEIGHT * index,
-          index,
-        })}
+        refList={minuteListRef}
+        selectedItem={selectedMinute}
+        setSelectedItem={setSelectedMinute}
+        updateSelection={updateSelectionFromScroll}
       />
-      <FlatList
-        ref={periodListRef}
+      <ScrollPicker
         data={periods}
-        keyExtractor={(item) => item}
-        renderItem={renderItem}
-        showsVerticalScrollIndicator={false}
-        onScroll={(e) => updateSelectionFromScroll(e, periods, setSelectedPeriod)}
-        snapToAlignment='center'
-        snapToInterval={ITEM_HEIGHT}
-        decelerationRate='fast'
-        style={{
-          flexGrow: 0,
-          height: 2 * ITEM_HEIGHT,
-        }}
-        contentContainerStyle={{
-          paddingTop: ITEM_HEIGHT / 2,
-          paddingBottom: ITEM_HEIGHT / 2,
-        }}
-        initialScrollIndex={periods.findIndex((item) => item === selectedPeriod)}
-        getItemLayout={(data, index) => ({
-          length: ITEM_HEIGHT,
-          offset: ITEM_HEIGHT * index,
-          index,
-        })}
+        refList={periodListRef}
+        selectedItem={selectedPeriod}
+        setSelectedItem={setSelectedPeriod}
+        updateSelection={updateSelectionFromScroll}
+        type='period'
       />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  list: {
+    flexGrow: 0,
+  },
+  item: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  text: {
+    fontSize: 28,
+    color: 'white',
+  },
+  centerContent: {
+    paddingTop: ITEM_HEIGHT / 2,
+    paddingBottom: ITEM_HEIGHT / 2,
+  },
+  colon: {
+    color: 'white',
+    fontSize: 28,
+    alignSelf: 'center',
+    paddingHorizontal: 10, // Adjust padding as needed for alignment
+  },
+});
 
 export default TimePicker;
