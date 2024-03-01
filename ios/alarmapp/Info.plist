@@ -30,6 +30,12 @@
           <string>com.sleep.zenalarm</string>
         </array>
       </dict>
+      <dict>
+        <key>CFBundleURLSchemes</key>
+        <array>
+          <string>exp+alarm-app</string>
+        </array>
+      </dict>
     </array>
     <key>CFBundleVersion</key>
     <string>2</string>

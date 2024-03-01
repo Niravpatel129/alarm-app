@@ -85,6 +85,8 @@ PODS:
     - ExpoModulesCore
   - ExpoKeepAwake (12.8.2):
     - ExpoModulesCore
+  - ExpoLinearGradient (12.7.2):
+    - ExpoModulesCore
   - ExpoModulesCore (1.11.9):
     - glog
     - RCT-Folly (= 2022.05.16.00)
@@ -1151,6 +1153,11 @@ PODS:
     - React-jsi (= 0.73.4)
     - React-logger (= 0.73.4)
     - React-perflogger (= 0.73.4)
+  - RNReanimated (3.7.2):
+    - glog
+    - RCT-Folly (= 2022.05.16.00)
+    - React-Core
+    - ReactCommon/turbomodule/core
   - RNScreens (3.29.0):
     - glog
     - RCT-Folly (= 2022.05.16.00)
@@ -1174,6 +1181,7 @@ DEPENDENCIES:
   - expo-dev-menu-interface (from `../node_modules/expo-dev-menu-interface/ios`)
   - ExpoFileSystem (from `../node_modules/expo-file-system/ios`)
   - ExpoKeepAwake (from `../node_modules/expo-keep-awake/ios`)
+  - ExpoLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core`)
   - EXUpdatesInterface (from `../node_modules/expo-updates-interface/ios`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
@@ -1226,6 +1234,7 @@ DEPENDENCIES:
   - React-runtimescheduler (from `../node_modules/react-native/ReactCommon/react/renderer/runtimescheduler`)
   - React-utils (from `../node_modules/react-native/ReactCommon/react/utils`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -1267,6 +1276,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-file-system/ios"
   ExpoKeepAwake:
     :path: "../node_modules/expo-keep-awake/ios"
+  ExpoLinearGradient:
+    :path: "../node_modules/expo-linear-gradient/ios"
   ExpoModulesCore:
     :path: "../node_modules/expo-modules-core"
   EXUpdatesInterface:
@@ -1366,6 +1377,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/react/utils"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  RNReanimated:
+    :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
   Yoga:
@@ -1387,6 +1400,7 @@ SPEC CHECKSUMS:
   expo-dev-menu-interface: 7ba029c9d1a82ac22b9b584c00514860b060553e
   ExpoFileSystem: c7488590959bf85ebc114909eb8186cbd62e3a25
   ExpoKeepAwake: 0f5cad99603a3268e50af9a6eb8b76d0d9ac956c
+  ExpoLinearGradient: 4ad1449a2408e0435ac959076562b3921f2e32a1
   ExpoModulesCore: 1391529545de72f7f64ecabc7adb912306ab4d34
   EXUpdatesInterface: 3e444e2093e25b7ca0999a7d8c16e8392dee70c3
   FBLazyVector: 84f6edbe225f38aebd9deaf1540a4160b1f087d7
@@ -1439,6 +1453,7 @@ SPEC CHECKSUMS:
   React-runtimescheduler: ed48e5faac6751e66ee1261c4bd01643b436f112
   React-utils: 6e5ad394416482ae21831050928ae27348f83487
   ReactCommon: 840a955d37b7f3358554d819446bffcf624b2522
+  RNReanimated: 3850671fd0c67051ea8e1e648e8c3e86bf3a28eb
   RNScreens: b582cb834dc4133307562e930e8fa914b8c04ef2
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   Yoga: 1b901a6d6eeba4e8a2e8f308f708691cdb5db312

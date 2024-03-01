@@ -1,9 +1,10 @@
 import React from 'react';
 import { Text, TouchableOpacity } from 'react-native';
 
-export default function Button() {
+export default function Button({ onPress, text }) {
   return (
     <TouchableOpacity
+      onPress={onPress}
       style={{
         borderRadius: 10,
         backgroundColor: '#3A3E52',
@@ -29,7 +30,7 @@ export default function Button() {
           fontSize: 16,
         }}
       >
-        Sleep
+        {text}
       </Text>
     </TouchableOpacity>
   );
