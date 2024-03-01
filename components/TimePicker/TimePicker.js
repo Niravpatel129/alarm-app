@@ -17,8 +17,7 @@ const ScrollPicker = ({
   periods,
   setSelectedPeriod,
 }) => {
-  // Calculate the height of the visible area to center one item only.
-  const visibleHeight = ITEM_HEIGHT * (type === 'period' ? 1 : 3);
+  const visibleHeight = ITEM_HEIGHT * (type === 'period' ? 2 : 3);
 
   return (
     <FlatList
