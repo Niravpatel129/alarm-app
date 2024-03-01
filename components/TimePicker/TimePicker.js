@@ -42,7 +42,6 @@ const TimePicker = ({ onTimeChange }) => {
           left: 0,
           right: 0,
           height: 40,
-          //   backgroundColor: 'rgba(0,0,0,0.2)',
           borderWidth: 3,
           borderColor: '#1c3440',
           borderRadius: 7,
