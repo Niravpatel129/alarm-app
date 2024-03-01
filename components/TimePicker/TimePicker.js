@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, FlatList, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, FlatList, Text, View } from 'react-native';
 import useTimeSelection from '../../hooks/useTimeSelection';
 
 const { width } = Dimensions.get('window');
@@ -43,13 +43,33 @@ const TimePicker = ({ onTimeChange }) => {
   };
 
   const renderItem = ({ item }) => (
-    <View style={[styles.item, { height: ITEM_HEIGHT, width: ITEM_WIDTH }]}>
-      <Text style={styles.text}>{item}</Text>
+    <View
+      style={{
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: ITEM_HEIGHT,
+        width: ITEM_WIDTH,
+      }}
+    >
+      <Text
+        style={{
+          fontSize: 28,
+          color: 'white',
+        }}
+      >
+        {item}
+      </Text>
     </View>
   );
 
   return (
-    <View style={styles.container}>
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
       <FlatList
         ref={hourListRef}
         data={hours}
@@ -60,8 +80,14 @@ const TimePicker = ({ onTimeChange }) => {
         snapToAlignment='center'
         snapToInterval={ITEM_HEIGHT}
         decelerationRate='fast'
-        style={[styles.list, { height: 3 * ITEM_HEIGHT }]}
-        contentContainerStyle={styles.centerContent}
+        style={{
+          flexGrow: 0,
+          height: 3 * ITEM_HEIGHT,
+        }}
+        contentContainerStyle={{
+          paddingTop: ITEM_HEIGHT / 2,
+          paddingBottom: ITEM_HEIGHT / 2,
+        }}
         initialScrollIndex={hours.findIndex((item) => item === selectedHour)}
         getItemLayout={(data, index) => ({
           length: ITEM_HEIGHT,
@@ -69,7 +95,16 @@ const TimePicker = ({ onTimeChange }) => {
           index,
         })}
       />
-      <Text style={styles.colon}>:</Text>
+      <Text
+        style={{
+          color: 'white',
+          fontSize: 28,
+          alignSelf: 'center',
+          paddingHorizontal: 10, // Adjust padding as needed for alignment
+        }}
+      >
+        :
+      </Text>
       <FlatList
         ref={minuteListRef}
         data={minutes}
@@ -80,8 +115,14 @@ const TimePicker = ({ onTimeChange }) => {
         snapToAlignment='center'
         snapToInterval={ITEM_HEIGHT}
         decelerationRate='fast'
-        style={[styles.list, { height: 3 * ITEM_HEIGHT }]}
-        contentContainerStyle={styles.centerContent}
+        style={{
+          flexGrow: 0,
+          height: 3 * ITEM_HEIGHT,
+        }}
+        contentContainerStyle={{
+          paddingTop: ITEM_HEIGHT / 2,
+          paddingBottom: ITEM_HEIGHT / 2,
+        }}
         initialScrollIndex={minutes.findIndex((item) => item === selectedMinute)}
         getItemLayout={(data, index) => ({
           length: ITEM_HEIGHT,
@@ -99,8 +140,14 @@ const TimePicker = ({ onTimeChange }) => {
         snapToAlignment='center'
         snapToInterval={ITEM_HEIGHT}
         decelerationRate='fast'
-        style={[styles.list, { height: 2 * ITEM_HEIGHT }]}
-        contentContainerStyle={styles.centerContent}
+        style={{
+          flexGrow: 0,
+          height: 2 * ITEM_HEIGHT,
+        }}
+        contentContainerStyle={{
+          paddingTop: ITEM_HEIGHT / 2,
+          paddingBottom: ITEM_HEIGHT / 2,
+        }}
         initialScrollIndex={periods.findIndex((item) => item === selectedPeriod)}
         getItemLayout={(data, index) => ({
           length: ITEM_HEIGHT,
@@ -111,34 +158,5 @@ const TimePicker = ({ onTimeChange }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  list: {
-    flexGrow: 0,
-  },
-  item: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  text: {
-    fontSize: 28,
-    color: 'white',
-  },
-  centerContent: {
-    paddingTop: ITEM_HEIGHT / 2,
-    paddingBottom: ITEM_HEIGHT / 2,
-  },
-  colon: {
-    color: 'white',
-    fontSize: 28,
-    alignSelf: 'center',
-    paddingHorizontal: 10, // Adjust padding as needed for alignment
-  },
-});
 
 export default TimePicker;
