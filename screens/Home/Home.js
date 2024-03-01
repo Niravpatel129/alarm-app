@@ -2,7 +2,6 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { Image, Text, View } from 'react-native';
 import Button from '../../components/Button/Button';
-import MeditationGuide from '../../components/MeditationGuide/MeditationGuide';
 import TimePicker from '../../components/TimePicker/TimePicker';
 
 export default function HomeScreen() {
@@ -26,7 +25,7 @@ export default function HomeScreen() {
 
   const toggleGuide = () => {
     navigation.navigate('InSleep');
-
+    return;
     setShowGuide(!showGuide);
     if (!showGuide) {
       setMessages(isSleepMode ? sleepMessages : wakeUpMessages);
@@ -57,7 +56,6 @@ export default function HomeScreen() {
         {/* Update button text based on the mode */}
         <Button onPress={toggleGuide} text={isSleepMode ? 'Sleep' : 'Wake Up'} />
       </View>
-      {showGuide && <MeditationGuide messages={messages} setShowGuide={setShowGuide} />}
     </View>
   );
 }
