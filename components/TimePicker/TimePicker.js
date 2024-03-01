@@ -7,7 +7,6 @@ const ITEM_HEIGHT = 40; // Adjust this based on your item's height
 const ITEM_WIDTH = width / 4; // Adjust this based on your layout preferences
 
 const TimePicker = ({ onTimeChange }) => {
-  // Reference for the FlatList components
   const hourListRef = useRef(null);
   const minuteListRef = useRef(null);
   const periodListRef = useRef(null);
@@ -31,8 +30,6 @@ const TimePicker = ({ onTimeChange }) => {
   const periods = ['AM', 'PM'];
 
   useEffect(() => {
-    console.log('Initial time:', `${selectedHour}:${selectedMinute} ${selectedPeriod}`);
-    // Automatically adjust the initial scroll position for hour, minute, and period
     const hourIndex = hours.findIndex((item) => item === initialHour);
     const minuteIndex = minutes.findIndex((item) => item === initialMinute);
     const periodIndex = periods.findIndex((item) => item === initialPeriod);
@@ -47,7 +44,6 @@ const TimePicker = ({ onTimeChange }) => {
       periodListRef.current.scrollToIndex({ index: periodIndex, animated: false });
     }
 
-    // Update the parent component about the initial time
     onTimeChange(`${selectedHour}:${selectedMinute} ${selectedPeriod}`);
   }, []);
 
@@ -70,19 +66,6 @@ const TimePicker = ({ onTimeChange }) => {
 
   return (
     <View style={styles.container}>
-      <View
-        style={{
-          position: 'absolute',
-          top: 21,
-          left: 0,
-          right: 0,
-          height: 40,
-          borderWidth: 3,
-          borderColor: '#1c3440',
-          borderRadius: 7,
-        }}
-      ></View>
-      {/* Hours list */}
       <FlatList
         ref={hourListRef}
         data={hours}
@@ -103,24 +86,7 @@ const TimePicker = ({ onTimeChange }) => {
           index,
         })}
       />
-      <View
-        style={{
-          position: 'absolute',
-          top: 20,
-          left: 100,
-        }}
-      >
-        <Text
-          style={{
-            color: 'white',
-            fontSize: 28,
-            textAlign: 'center',
-          }}
-        >
-          :
-        </Text>
-      </View>
-      {/* Minutes list */}
+      <Text style={styles.colon}>:</Text>
       <FlatList
         ref={minuteListRef}
         data={minutes}
@@ -141,7 +107,6 @@ const TimePicker = ({ onTimeChange }) => {
           index,
         })}
       />
-      {/* Periods list */}
       <FlatList
         ref={periodListRef}
         data={periods}
@@ -186,6 +151,12 @@ const styles = StyleSheet.create({
   centerContent: {
     paddingTop: ITEM_HEIGHT / 2,
     paddingBottom: ITEM_HEIGHT / 2,
+  },
+  colon: {
+    color: 'white',
+    fontSize: 28,
+    alignSelf: 'center',
+    paddingHorizontal: 10, // Adjust padding as needed for alignment
   },
 });
 
