@@ -95,7 +95,6 @@ const TimePicker = ({ onTimeChange }) => {
           borderRadius: 10,
           borderColor: '#557186',
           left: 0,
-          zIndex: 1,
         }}
       ></View>
       <ScrollPicker
@@ -136,6 +135,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    position: 'relative',
+    width: '90%',
   },
   list: {
     flexGrow: 0,
