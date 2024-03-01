@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { Dimensions, FlatList, StyleSheet, Text, View } from 'react-native';
+import useTimeSelection from '../../hooks/useTimeSelection';
 
 const { width } = Dimensions.get('window');
 
@@ -7,49 +8,20 @@ const ITEM_HEIGHT = 40; // Adjust this based on your item's height
 const ITEM_WIDTH = width / 4; // Adjust this based on your layout preferences
 
 const TimePicker = ({ onTimeChange }) => {
-  const hourListRef = useRef(null);
-  const minuteListRef = useRef(null);
-  const periodListRef = useRef(null);
-
-  const now = new Date();
-  now.setMinutes(now.getMinutes() + 1); // Add one minute to the current time
-
-  const formatHour = (hour) => `${hour % 12 === 0 ? 12 : hour % 12}`.padStart(2, '0');
-  const initialHour = formatHour(now.getHours());
-  const initialMinute = `${now.getMinutes()}`.padStart(2, '0');
-  const initialPeriod = now.getHours() < 12 ? 'AM' : 'PM';
-
-  const [selectedHour, setSelectedHour] = useState(initialHour);
-  const [selectedMinute, setSelectedMinute] = useState(initialMinute);
-  const [selectedPeriod, setSelectedPeriod] = useState(initialPeriod);
-
-  const hours = Array.from({ length: 24 }, (_, i) => ((i % 12) + 1).toString().padStart(2, '0'));
-
-  const minutes = Array.from({ length: 60 }, (_, i) => (i % 60).toString().padStart(2, '0'));
-
-  const periods = ['AM', 'PM'];
-
-  useEffect(() => {
-    const hourIndex = hours.findIndex((item) => item === initialHour);
-    const minuteIndex = minutes.findIndex((item) => item === initialMinute);
-    const periodIndex = periods.findIndex((item) => item === initialPeriod);
-
-    if (hourListRef.current) {
-      hourListRef.current.scrollToIndex({ index: hourIndex, animated: false });
-    }
-    if (minuteListRef.current) {
-      minuteListRef.current.scrollToIndex({ index: minuteIndex, animated: false });
-    }
-    if (periodListRef.current) {
-      periodListRef.current.scrollToIndex({ index: periodIndex, animated: false });
-    }
-
-    onTimeChange(`${selectedHour}:${selectedMinute} ${selectedPeriod}`);
-  }, []);
-
-  useEffect(() => {
-    onTimeChange(`${selectedHour}:${selectedMinute} ${selectedPeriod}`);
-  }, [selectedHour, selectedMinute, selectedPeriod]);
+  const {
+    hourListRef,
+    minuteListRef,
+    periodListRef,
+    selectedHour,
+    setSelectedHour,
+    selectedMinute,
+    setSelectedMinute,
+    selectedPeriod,
+    setSelectedPeriod,
+    hours,
+    minutes,
+    periods,
+  } = useTimeSelection(onTimeChange);
 
   const updateSelectionFromScroll = (event, data, setState) => {
     const yOffset = event.nativeEvent.contentOffset.y;
@@ -78,8 +50,7 @@ const TimePicker = ({ onTimeChange }) => {
         decelerationRate='fast'
         style={[styles.list, { height: 3 * ITEM_HEIGHT }]}
         contentContainerStyle={styles.centerContent}
-        numColumns={1}
-        initialScrollIndex={hours.findIndex((item) => item === initialHour)}
+        initialScrollIndex={hours.findIndex((item) => item === selectedHour)}
         getItemLayout={(data, index) => ({
           length: ITEM_HEIGHT,
           offset: ITEM_HEIGHT * index,
@@ -99,8 +70,7 @@ const TimePicker = ({ onTimeChange }) => {
         decelerationRate='fast'
         style={[styles.list, { height: 3 * ITEM_HEIGHT }]}
         contentContainerStyle={styles.centerContent}
-        numColumns={1}
-        initialScrollIndex={minutes.findIndex((item) => item === initialMinute)}
+        initialScrollIndex={minutes.findIndex((item) => item === selectedMinute)}
         getItemLayout={(data, index) => ({
           length: ITEM_HEIGHT,
           offset: ITEM_HEIGHT * index,
@@ -117,10 +87,9 @@ const TimePicker = ({ onTimeChange }) => {
         snapToAlignment='center'
         snapToInterval={ITEM_HEIGHT}
         decelerationRate='fast'
-        style={[styles.list, { height: 2 * ITEM_HEIGHT, marginBottom: 42 }]}
+        style={[styles.list, { height: 2 * ITEM_HEIGHT }]}
         contentContainerStyle={styles.centerContent}
-        numColumns={1}
-        initialScrollIndex={periods.findIndex((item) => item === initialPeriod)}
+        initialScrollIndex={periods.findIndex((item) => item === selectedPeriod)}
         getItemLayout={(data, index) => ({
           length: ITEM_HEIGHT,
           offset: ITEM_HEIGHT * index,
