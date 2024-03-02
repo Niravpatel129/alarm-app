@@ -33,7 +33,7 @@ function App() {
     <NavigationContainer>
       <Stack.Navigator>
         {/* Dev */}
-        <Stack.Screen name='Dev' component={InSleep} options={{ headerShown: false }} />
+        {/* <Stack.Screen name='Dev' component={InSleep} options={{ headerShown: false }} /> */}
 
         <Stack.Screen name='Home' component={MyTabs} options={{ headerShown: false }} />
         <Stack.Screen

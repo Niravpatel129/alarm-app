@@ -26,7 +26,7 @@ export default function HomeScreen() {
         <Text style={{ color: 'white' }}>Selected Time: {selectedTime}</Text>
       </View>
       <View style={{ marginTop: 40 }}>
-        <Button onPress={startAlarm} text={'Sleep'} />
+        <Button onPress={() => startAlarm(selectedTime)} text={'Sleep'} />
       </View>
     </View>
   );

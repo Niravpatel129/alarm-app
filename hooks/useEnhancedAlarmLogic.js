@@ -29,7 +29,8 @@ export function useEnhancedAlarmLogic(initialTime = '01:00 AM') {
     setShowGuide((prevShowGuide) => !prevShowGuide);
   }, []);
 
-  const startAlarm = useCallback(() => {
+  const startAlarm = useCallback((alarmTime) => {
+    console.log('🚀  alarmTime:', alarmTime);
     setAlarmInProgress(true);
     setIsSleepMode(true);
     setMessageTitle('Intentional Dreaming');
