@@ -29,6 +29,10 @@ export function useEnhancedAlarmLogic(initialTime = '01:00 AM') {
     setAlarmInProgress(true);
   }, []);
 
+  const stopAlarm = useCallback(() => {
+    setAlarmInProgress(false);
+  }, []);
+
   useEffect(() => {
     if (alarmInProgress) {
       navigation.navigate('AlarmScreen');
@@ -44,6 +48,7 @@ export function useEnhancedAlarmLogic(initialTime = '01:00 AM') {
     handleTimeChange,
     toggleGuide,
     startAlarm,
+    stopAlarm,
     setAlarmInProgress,
   };
 }

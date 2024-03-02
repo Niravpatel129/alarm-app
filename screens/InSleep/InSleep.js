@@ -5,14 +5,11 @@ import MeditationGuide from '../../components/MeditationGuide/MeditationGuide';
 import { useEnhancedAlarmLogic } from '../../hooks/useEnhancedAlarmLogic'; // Ensure the path is correct
 
 export default function InSleep() {
-  const { messages, showGuide, toggleGuide } = useEnhancedAlarmLogic('01:00 AM');
-
-  const handleSlide = () => {
-    toggleGuide(); // Use toggleGuide to hide/show the guide or switch modes
-  };
+  const { messages, showGuide, toggleGuide, stopAlarm } = useEnhancedAlarmLogic('01:00 AM');
 
   const handleCompletion = () => {
-    toggleGuide(); // This could hide the guide or perform any other action needed when the messages are done
+    stopAlarm();
+    toggleGuide();
   };
 
   return (
@@ -24,12 +21,11 @@ export default function InSleep() {
       >
         <View style={styles.container}>
           <Text style={styles.timeText}>12:34PM</Text>
-          {/* Adjusted parts to use hook's state and methods */}
-          <TouchableOpacity style={styles.chevronContainer} onPress={handleSlide}>
+          <TouchableOpacity style={styles.chevronContainer} onPress={handleCompletion}>
             <AntDesign name='down' size={24} color='white' />
           </TouchableOpacity>
         </View>
-        {showGuide && <MeditationGuide messages={messages} onCompletion={handleCompletion} />}
+        {showGuide && <MeditationGuide messages={messages} onCompletion={() => toggleGuide()} />}
       </SafeAreaView>
     </>
   );
