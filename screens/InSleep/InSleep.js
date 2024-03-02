@@ -5,7 +5,10 @@ import MeditationGuide from '../../components/MeditationGuide/MeditationGuide';
 import { useAlarmContext } from '../../context/Alarm/AlarmContext';
 
 export default function InSleep() {
-  const { messages, showGuide, toggleGuide, stopAlarm, messageTitle } = useAlarmContext('01:00 AM');
+  const { selectedTime, messages, showGuide, toggleGuide, stopAlarm, messageTitle } =
+    useAlarmContext('01:00 AM');
+
+  console.log('🚀  selectedTime:', selectedTime);
 
   const handleCompletion = () => {
     console.log('Alarm completed');
@@ -27,7 +30,7 @@ export default function InSleep() {
         }}
       >
         <View style={styles.container}>
-          <Text style={styles.timeText}>12:34PM</Text>
+          <Text style={styles.timeText}>{selectedTime}</Text>
           <TouchableOpacity
             style={{
               position: 'absolute',
