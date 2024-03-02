@@ -14,10 +14,9 @@ const MeditationGuide = ({ messages, onCompletion }) => {
   const tapToContinueOpacity = useSharedValue(0); // Shared value for controlling the "Tap to continue" text opacity
 
   useEffect(() => {
-    // Trigger the "Tap to continue" text to appear with a delay when the component mounts or currentMessageIndex changes
     const timer = setTimeout(() => {
       tapToContinueOpacity.value = 1; // Fade in the "Tap to continue" text after an additional delay
-    }, 2000); // Delay for the "Tap to continue" text to appear
+    }, 3000); // Delay for the "Tap to continue" text to appear
     return () => clearTimeout(timer); // Cleanup the timer when component unmounts or currentMessageIndex changes
   }, [currentMessageIndex]); // Dependency array includes currentMessageIndex to trigger the effect on change
 
@@ -47,7 +46,6 @@ const MeditationGuide = ({ messages, onCompletion }) => {
         setCurrentMessageIndex(currentMessageIndex + 1); // Update the message index to the next message
         setTimeout(() => {
           opacity.value = 1; // Start fading in the next message after the index has been updated
-          // The effect hook will handle fading in the "Tap to continue" text
         }, 100); // Short delay to ensure the index is updated before starting to fade in
       }, 700); // Match this delay with the duration of the fade-out animation
     } else {
