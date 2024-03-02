@@ -87,6 +87,7 @@ export const AlarmProvider = ({ children }) => {
     }
 
     return [
+      'Carefully read the following messages and tap to continue.',
       `The time is ${formattedCurrentTime}`,
       `Alarm will ring at ${formattedWakeUpTime}`,
       `Which is in ${timeString}`,
@@ -95,7 +96,6 @@ export const AlarmProvider = ({ children }) => {
 
   useEffect(() => {
     const checkAlarmInProgress = async () => {
-      console.log('Checking alarm in progress');
       const localAlarmInProgress = await AsyncStorage.getItem('alarmInProgress');
 
       if (localAlarmInProgress === 'true') {
