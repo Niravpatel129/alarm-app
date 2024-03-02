@@ -94,14 +94,23 @@ export const AlarmProvider = ({ children }) => {
   }, [selectedTime]);
 
   useEffect(() => {
-    setMessages(getDynamicSleepMessages());
-  }, [selectedTime, getDynamicSleepMessages]);
+    const checkAlarmInProgress = async () => {
+      const localAlarmInProgress = await AsyncStorage.getItem('alarmInProgress');
+
+      if (localAlarmInProgress === true) {
+        console.log('Alarm in progress: ', localAlarmInProgress);
+
+        setAlarmInProgress(true);
+        navigation.navigate('AlarmScreen');
+      }
+    };
+
+    checkAlarmInProgress();
+  }, []);
 
   useEffect(() => {
-    AsyncStorage.setItem('selectedTime', JSON.stringify(selectedTime));
-    AsyncStorage.setItem('isSleepMode', JSON.stringify(isSleepMode));
-    AsyncStorage.setItem('alarmInProgress', JSON.stringify(alarmInProgress));
-  }, [selectedTime, isSleepMode, alarmInProgress]);
+    setMessages(getDynamicSleepMessages());
+  }, [selectedTime, getDynamicSleepMessages]);
 
   const handleTimeChange = useCallback((time) => {
     setSelectedTime(time);
@@ -116,6 +125,13 @@ export const AlarmProvider = ({ children }) => {
     setIsSleepMode(true);
     setMessageTitle('Intentional Dreaming');
     setMessages(getDynamicSleepMessages());
+
+    // save the alarm in progress to local storage
+    AsyncStorage.setItem('alarmInProgress', JSON.stringify(true));
+    AsyncStorage.setItem('isSleepMode', JSON.stringify(true));
+    AsyncStorage.setItem('selectedTime', JSON.stringify(selectedTime));
+
+    navigation.navigate('AlarmScreen');
   }, [getDynamicSleepMessages]);
 
   const stopAlarm = useCallback(() => {
@@ -131,6 +147,10 @@ export const AlarmProvider = ({ children }) => {
     setMessageTitle('Good Morning');
     setAlarmInProgress(false);
     toggleGuide();
+
+    // save the alarm in progress to local storage
+    AsyncStorage.setItem('alarmInProgress', JSON.stringify(false));
+    AsyncStorage.setItem('isSleepMode', JSON.stringify(false));
   }, [toggleGuide]);
 
   useEffect(() => {
@@ -139,12 +159,6 @@ export const AlarmProvider = ({ children }) => {
       navigation.navigate('Home');
     }
   }, [alarmInProgress, navigation, showGuide]);
-
-  useEffect(() => {
-    if (alarmInProgress) {
-      navigation.navigate('AlarmScreen');
-    }
-  }, [alarmInProgress, navigation]);
 
   return (
     <AlarmContext.Provider
