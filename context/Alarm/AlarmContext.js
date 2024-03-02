@@ -149,9 +149,9 @@ export const AlarmProvider = ({ children }) => {
     setIsSleepMode(false);
 
     const wakeUpMessages = [
-      "It's time to wake up. Let's seize the day!",
-      'Remember to stretch and have a great morning.',
-      "What's one positive thing you're looking forward to today?",
+      'You are awake now',
+      'Take a deep breath and stretch your body',
+      'Clear your mind and start your day with a smile',
     ];
 
     setMessages(wakeUpMessages);
