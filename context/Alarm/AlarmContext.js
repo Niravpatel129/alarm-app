@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { format } from 'date-fns';
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
@@ -16,14 +17,14 @@ export const AlarmProvider = ({ children }) => {
   const navigation = useNavigation();
 
   const [selectedTime, setSelectedTime] = useState(
-    () => safelyParseJSON(localStorage.getItem('selectedTime')) || '01:00 AM',
+    () => safelyParseJSON(AsyncStorage.getItem('selectedTime')) || '01:00 AM',
   );
   const [showGuide, setShowGuide] = useState(true);
   const [isSleepMode, setIsSleepMode] = useState(
-    () => safelyParseJSON(localStorage.getItem('isSleepMode')) || true,
+    () => safelyParseJSON(AsyncStorage.getItem('isSleepMode')) || true,
   );
   const [alarmInProgress, setAlarmInProgress] = useState(
-    () => safelyParseJSON(localStorage.getItem('alarmInProgress')) || false,
+    () => safelyParseJSON(AsyncStorage.getItem('alarmInProgress')) || false,
   );
   const [messages, setMessages] = useState([]);
   const [messageTitle, setMessageTitle] = useState('Intentional Dreaming');
@@ -59,8 +60,17 @@ export const AlarmProvider = ({ children }) => {
     const totalMinutesUntilWakeUp = Math.floor((wakeUpTime - currentTime) / 60000);
     const hoursUntilWakeUp = Math.floor(totalMinutesUntilWakeUp / 60);
     const minutesUntilWakeUp = totalMinutesUntilWakeUp % 60;
-    const formattedCurrentTime = format(currentTime, 'hh:mm a');
-    const formattedWakeUpTime = format(wakeUpTime, 'hh:mm a');
+    let formattedCurrentTime = format(currentTime, 'hh:mm a');
+    let formattedWakeUpTime = format(wakeUpTime, 'hh:mm a');
+
+    // remove prefix 0 from hours
+    if (formattedCurrentTime[0] === '0') {
+      formattedCurrentTime = formattedCurrentTime.slice(1);
+    }
+
+    if (formattedWakeUpTime[0] === '0') {
+      formattedWakeUpTime = formattedWakeUpTime.slice(1);
+    }
 
     let timeString = '';
     if (hoursUntilWakeUp > 0) {
@@ -74,9 +84,9 @@ export const AlarmProvider = ({ children }) => {
     }
 
     return [
-      `It's currently ${formattedCurrentTime}. You are ready for a restful sleep.`,
-      `You will wake up at ${formattedWakeUpTime}, feeling refreshed and energetic.`,
-      `You have ${timeString} until it's time to start your day. Enjoy your rest.`,
+      `The time is ${formattedCurrentTime}`,
+      `Alarm will ring at ${formattedWakeUpTime}`,
+      `Which is in ${timeString}`,
     ];
   }, [selectedTime]);
 
@@ -86,9 +96,9 @@ export const AlarmProvider = ({ children }) => {
 
   useEffect(() => {
     // Save to local storage when values change
-    localStorage.setItem('selectedTime', JSON.stringify(selectedTime));
-    localStorage.setItem('isSleepMode', JSON.stringify(isSleepMode));
-    localStorage.setItem('alarmInProgress', JSON.stringify(alarmInProgress));
+    AsyncStorage.setItem('selectedTime', JSON.stringify(selectedTime));
+    AsyncStorage.setItem('isSleepMode', JSON.stringify(isSleepMode));
+    AsyncStorage.setItem('alarmInProgress', JSON.stringify(alarmInProgress));
   }, [selectedTime, isSleepMode, alarmInProgress]);
 
   const handleTimeChange = useCallback((time) => {

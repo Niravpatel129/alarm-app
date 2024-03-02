@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'; // Import useEffect
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -54,55 +54,60 @@ const MeditationGuide = ({ messages, onCompletion, messageTitle }) => {
   };
 
   return (
-    <Pressable style={styles.container} onPress={goToNextMessage}>
-      <Animated.View style={[styles.messageContainer, animatedStyles]}>
-        <View
-          style={{
-            marginBottom: 'auto',
-          }}
-        >
-          <GradientText
+    <SafeAreaView style={styles.container}>
+      <Pressable onPress={goToNextMessage}>
+        <Animated.View style={[styles.messageContainer, animatedStyles]}>
+          <View
             style={{
-              fontSize: 14,
-              fontWeight: 'bold',
-              color: 'white',
+              marginBottom: 'auto',
             }}
           >
-            {messageTitle} ({currentMessageIndex + 1}/{messages.length})
-          </GradientText>
-        </View>
+            <Text
+              style={{
+                fontSize: 14,
+                fontWeight: 'bold',
+                color: 'white',
+                opacity: 0.2,
+              }}
+            >
+              {messageTitle} ({currentMessageIndex + 1}/{messages.length})
+            </Text>
+          </View>
 
-        <GradientText
-          style={{
-            fontSize: 36,
-            fontWeight: 'bold',
-            color: 'white',
-            textAlign: 'center',
-          }}
-        >
-          {messages[currentMessageIndex]}
-        </GradientText>
-        <Animated.View
-          style={[
-            {
-              marginTop: 'auto',
-            },
-            tapToContinueAnimatedStyle,
-          ]}
-        >
           <GradientText
             style={{
-              fontSize: 14,
+              fontSize: 30,
               fontWeight: 'bold',
               color: 'white',
               textAlign: 'center',
+              fontFamily: 'Avenir-Black',
+              letterSpacing: 1,
             }}
           >
-            - Tap to continue -
+            {messages[currentMessageIndex]}
           </GradientText>
+          <Animated.View
+            style={[
+              {
+                marginTop: 'auto',
+              },
+              tapToContinueAnimatedStyle,
+            ]}
+          >
+            <GradientText
+              style={{
+                fontSize: 14,
+                fontWeight: 'bold',
+                color: 'white',
+                textAlign: 'center',
+              }}
+            >
+              - Tap to continue -
+            </GradientText>
+          </Animated.View>
         </Animated.View>
-      </Animated.View>
-    </Pressable>
+      </Pressable>
+    </SafeAreaView>
   );
 };
 
@@ -119,7 +124,7 @@ const styles = StyleSheet.create({
     left: 0,
   },
   messageContainer: {
-    padding: 20,
+    padding: 10,
     backgroundColor: 'transparent',
     borderRadius: 10,
     flex: 1,
