@@ -76,21 +76,28 @@ const TimePicker = ({ onTimeChange }) => {
   } = useTimeSelection(onTimeChange);
 
   const updateSelectionFromScroll = (event, data, setState, type, periods, setSelectedPeriod) => {
+    // ignore the event if the data is empty
+    if (data.length === 0) {
+      return;
+    }
+
     const yOffset = event.nativeEvent.contentOffset.y;
     const index = Math.round(yOffset / ITEM_HEIGHT);
     const selectedItem = data[index % data.length];
+    console.log('🚀  selectedItem:', selectedItem);
+    if (selectedItem === undefined) return;
     setState(selectedItem);
 
-    if (type === 'hour') {
-      const isPM = index >= 12;
-      const newPeriod = isPM ? 'PM' : 'AM';
-      setSelectedPeriod(newPeriod);
+    // if (type === 'hour') {
+    //   const isPM = index >= 12;
+    //   const newPeriod = isPM ? 'PM' : 'AM';
+    //   setSelectedPeriod(newPeriod);
 
-      const periodIndex = periods.findIndex((period) => period === newPeriod);
-      if (periodListRef.current) {
-        periodListRef.current.scrollToIndex({ index: periodIndex, animated: true });
-      }
-    }
+    //   const periodIndex = periods.findIndex((period) => period === newPeriod);
+    //   if (periodListRef.current) {
+    //     periodListRef.current.scrollToIndex({ index: periodIndex, animated: true });
+    //   }
+    // }
   };
 
   return (
