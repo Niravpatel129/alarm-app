@@ -68,7 +68,7 @@ const MeditationGuide = ({ messages, onCompletion }) => {
               color: 'white',
             }}
           >
-            Sleep ({currentMessageIndex + 1}/{messages.length})
+            Sleep Guide ({currentMessageIndex + 1}/{messages.length})
           </GradientText>
         </View>
 
