@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import Animated, {
   Easing,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import GradientText from '../GradientText/GradientText';
 
 const MeditationGuide = ({ messages, onCompletion }) => {
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
@@ -61,7 +62,15 @@ const MeditationGuide = ({ messages, onCompletion }) => {
   return (
     <View style={styles.container}>
       <Animated.View style={[styles.messageContainer, animatedStyles]}>
-        <Text style={styles.messageText}>{messages[currentMessageIndex]}</Text>
+        <GradientText
+          style={{
+            fontSize: 36,
+            fontWeight: 'bold',
+            color: 'white',
+          }}
+        >
+          {messages[currentMessageIndex]}
+        </GradientText>
       </Animated.View>
     </View>
   );

@@ -8,12 +8,20 @@ export default function InSleep() {
   const { messages, showGuide, toggleGuide, stopAlarm } = useEnhancedAlarmLogic('01:00 AM');
 
   const handleCompletion = () => {
+    console.log('Alarm completed');
     stopAlarm();
     toggleGuide();
   };
 
   return (
-    <>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: 'black',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
       <SafeAreaView
         style={{
           flex: 1,
@@ -21,20 +29,26 @@ export default function InSleep() {
       >
         <View style={styles.container}>
           <Text style={styles.timeText}>12:34PM</Text>
-          <TouchableOpacity style={styles.chevronContainer} onPress={handleCompletion}>
+          <TouchableOpacity
+            style={{
+              position: 'absolute',
+              bottom: 20, // Position at the bottom of the screen
+              zIndex: 1, // Ensure it's above the SafeAreaView
+            }}
+            onPress={handleCompletion}
+          >
             <AntDesign name='down' size={24} color='white' />
           </TouchableOpacity>
         </View>
-        {showGuide && <MeditationGuide messages={messages} onCompletion={() => toggleGuide()} />}
       </SafeAreaView>
-    </>
+      {showGuide && <MeditationGuide messages={messages} onCompletion={() => toggleGuide()} />}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'black',
     justifyContent: 'center',
     alignItems: 'center',
     paddingBottom: 50, // To ensure the chevron is at the bottom
@@ -52,8 +66,8 @@ const styles = StyleSheet.create({
   alarmTime: {
     textDecorationLine: 'underline',
   },
-  chevronContainer: {
-    position: 'absolute',
-    bottom: 20, // Position at the bottom of the screen
-  },
+  // chevronContainer: {
+  //   position: 'absolute',
+  //   bottom: 20, // Position at the bottom of the screen
+  // },
 });
