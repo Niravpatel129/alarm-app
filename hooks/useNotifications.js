@@ -18,7 +18,7 @@ export function useNotifications() {
           await Notifications.setNotificationChannelAsync('alarm-channel', {
             name: 'Alarm channel',
             importance: Notifications.AndroidImportance.MAX,
-            sound: 'birds.wav', // Make sure this file exists in your android app resources
+            sound: 'birds2.wav', // Make sure this file exists in your android app resources
           });
         }
 
@@ -53,17 +53,16 @@ export function useNotifications() {
       content: {
         title: 'Alarm',
         body: 'Your alarm is ringing!',
-        sound: 'birds.wav', // Make sure this file exists in your project
+        sound: 'birds2.wav',
       },
       trigger: {
         seconds: 2,
-        channelId: 'alarm-channel', // Make sure this channel is created for Android
+        channelId: 'alarm-channel',
       },
     };
 
     console.log('Scheduling alarm...');
     await Notifications.scheduleNotificationAsync(schedulingOptions);
-    console.log('Alarm set for 2 seconds from now.');
   };
 
   return { scheduleAlarm };

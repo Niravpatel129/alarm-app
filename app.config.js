@@ -31,7 +31,7 @@ export default {
       [
         'expo-notifications',
         {
-          sounds: ['./assets/sounds/birds.wav'],
+          sounds: ['./assets/sounds/birds2.wav'],
         },
       ],
     ],
