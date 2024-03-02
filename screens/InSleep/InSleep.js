@@ -5,12 +5,12 @@ import MeditationGuide from '../../components/MeditationGuide/MeditationGuide';
 import { useEnhancedAlarmLogic } from '../../hooks/useEnhancedAlarmLogic'; // Ensure the path is correct
 
 export default function InSleep() {
-  const { messages, showGuide, toggleGuide, stopAlarm } = useEnhancedAlarmLogic('01:00 AM');
+  const { messages, showGuide, toggleGuide, stopAlarm, messageTitle } =
+    useEnhancedAlarmLogic('01:00 AM');
 
   const handleCompletion = () => {
     console.log('Alarm completed');
     stopAlarm();
-    toggleGuide();
   };
 
   return (
@@ -41,7 +41,13 @@ export default function InSleep() {
           </TouchableOpacity>
         </View>
       </SafeAreaView>
-      {showGuide && <MeditationGuide messages={messages} onCompletion={() => toggleGuide()} />}
+      {showGuide && (
+        <MeditationGuide
+          messageTitle={messageTitle}
+          messages={messages}
+          onCompletion={() => toggleGuide()}
+        />
+      )}
     </View>
   );
 }

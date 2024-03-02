@@ -8,7 +8,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import GradientText from '../GradientText/GradientText';
 
-const MeditationGuide = ({ messages, onCompletion }) => {
+const MeditationGuide = ({ messages, onCompletion, messageTitle }) => {
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const opacity = useSharedValue(1);
   const tapToContinueOpacity = useSharedValue(0); // Shared value for controlling the "Tap to continue" text opacity
@@ -68,7 +68,7 @@ const MeditationGuide = ({ messages, onCompletion }) => {
               color: 'white',
             }}
           >
-            Sleep Guide ({currentMessageIndex + 1}/{messages.length})
+            {messageTitle} ({currentMessageIndex + 1}/{messages.length})
           </GradientText>
         </View>
 
