@@ -26,18 +26,16 @@ const MeditationGuide = ({ messages, onCompletion }) => {
       return;
     }
 
-    opacity.value = 0; // Reset opacity to 0 to fade in the next message
+    opacity.value = 0;
     let timer = setTimeout(() => {
-      opacity.value = 1; // Start fading in the message
+      opacity.value = 1;
 
-      // Change the message after it's fully visible for a period
       let changeMessageTimer = setTimeout(() => {
         setCurrentMessageIndex((prevIndex) => {
           const nextIndex = prevIndex + 1;
           if (nextIndex < messages.length) {
             return nextIndex;
           } else {
-            // Trigger completion when all messages have been displayed
             setIsCompleted(true);
             return prevIndex; // Keep the last message displayed
           }
@@ -54,7 +52,6 @@ const MeditationGuide = ({ messages, onCompletion }) => {
     };
   }, [currentMessageIndex, messages.length, opacity]);
 
-  // Notify parent component when the message sequence is completed
   useEffect(() => {
     if (isCompleted) {
       onCompletion();
