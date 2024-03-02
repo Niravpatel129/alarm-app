@@ -15,7 +15,7 @@ export default {
     ios: {
       supportsTablet: true,
       bundleIdentifier: 'com.sleep.zenalarm',
-      buildNumber: '2',
+      buildNumber: '3',
     },
     android: {
       adaptiveIcon: {
