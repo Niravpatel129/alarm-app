@@ -8,7 +8,6 @@ export function useEnhancedAlarmLogic(initialTime = '01:00 AM') {
   const [isSleepMode, setIsSleepMode] = useState(true);
   const [alarmInProgress, setAlarmInProgress] = useState(false);
 
-  // Enhanced messages with scientific approach and engagement guidance
   const sleepMessages = [
     'Guide: Quietly read these thoughts to yourself or aloud, focusing on the sensation of relaxation. "Breathe in deeply through your nose, and exhale slowly through your mouth..."',
     '"Feel every muscle in your body begin to relax, starting from your toes, moving up to your head. Let go of all tension..."',
