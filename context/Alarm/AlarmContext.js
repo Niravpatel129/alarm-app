@@ -55,6 +55,9 @@ export const AlarmProvider = ({ children }) => {
   };
 
   const getDynamicSleepMessages = useCallback(() => {
+    if (!selectedTime) return null;
+    if (!isSleepMode) return null;
+
     const currentTime = new Date();
     const wakeUpTime = parseTime(selectedTime);
     const totalMinutesUntilWakeUp = Math.floor((wakeUpTime - currentTime) / 60000);
@@ -92,7 +95,7 @@ export const AlarmProvider = ({ children }) => {
 
   useEffect(() => {
     setMessages(getDynamicSleepMessages());
-  }, [selectedTime, alarmInProgress, getDynamicSleepMessages]);
+  }, [selectedTime, getDynamicSleepMessages]);
 
   useEffect(() => {
     // Save to local storage when values change
@@ -117,6 +120,8 @@ export const AlarmProvider = ({ children }) => {
   }, [getDynamicSleepMessages]);
 
   const stopAlarm = useCallback(() => {
+    setIsSleepMode(false);
+
     const wakeUpMessages = [
       "It's time to wake up. Let's seize the day!",
       'Remember to stretch and have a great morning.',
@@ -126,7 +131,6 @@ export const AlarmProvider = ({ children }) => {
     setMessages(wakeUpMessages);
     setMessageTitle('Good Morning');
     setAlarmInProgress(false);
-    setIsSleepMode(false);
     toggleGuide();
   }, [toggleGuide]);
 
