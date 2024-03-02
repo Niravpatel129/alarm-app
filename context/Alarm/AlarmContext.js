@@ -4,55 +4,56 @@ import React, { createContext, useCallback, useContext, useEffect, useState } fr
 
 const AlarmContext = createContext();
 
-export function useAlarm() {
-  return useContext(AlarmContext);
-}
-
-const parseTime = (timeString) => {
-  if (!timeString) return new Date();
-
-  const [time, modifier] = timeString.split(' ');
-  let [hours, minutes] = time.split(':');
-  hours = parseInt(hours, 10);
-  minutes = parseInt(minutes, 10);
-
-  if (modifier === 'PM' && hours !== 12) {
-    hours += 12;
-  } else if (modifier === 'AM' && hours === 12) {
-    hours = 0;
+// Helper function for safely parsing JSON data from local storage
+const safelyParseJSON = (json) => {
+  try {
+    return JSON.parse(json);
+  } catch (e) {
+    return null;
   }
-
-  let wakeUpTime = new Date();
-  wakeUpTime.setHours(hours, minutes, 0, 0);
-
-  const currentTime = new Date();
-  if (wakeUpTime <= currentTime) {
-    wakeUpTime.setDate(wakeUpTime.getDate() + 1);
-  }
-
-  return wakeUpTime;
 };
 
 export const AlarmProvider = ({ children }) => {
   const navigation = useNavigation();
-  const [selectedTime, setSelectedTime] = useState('01:00 AM');
+
+  // Initialize state with values from local storage if available
+  const [selectedTime, setSelectedTime] = useState(
+    () => safelyParseJSON(localStorage.getItem('selectedTime')) || '01:00 AM',
+  );
   const [showGuide, setShowGuide] = useState(true);
-  const [isSleepMode, setIsSleepMode] = useState(true);
-  const [alarmInProgress, setAlarmInProgress] = useState(false);
+  const [isSleepMode, setIsSleepMode] = useState(
+    () => safelyParseJSON(localStorage.getItem('isSleepMode')) || true,
+  );
+  const [alarmInProgress, setAlarmInProgress] = useState(
+    () => safelyParseJSON(localStorage.getItem('alarmInProgress')) || false,
+  );
   const [messages, setMessages] = useState([]);
   const [messageTitle, setMessageTitle] = useState('Intentional Dreaming');
 
-  const sleepMessages = [
-    "It's currently [current time]. You are ready for a restful sleep.",
-    'You will wake up at [wake-up time], feeling refreshed and energetic.',
-    "You have [X hours] until it's time to start your day. Enjoy your rest.",
-  ];
+  const parseTime = (timeString) => {
+    if (!timeString) return new Date();
 
-  const wakeUpMessages = [
-    "It's [wake-up time]. Rise and shine, ready to embrace the day with positivity.",
-    "Take a moment to stretch and awaken your body, preparing for today's adventures.",
-    'Consider one goal for today. Let this intention guide you as you begin.',
-  ];
+    const [time, modifier] = timeString.split(' ');
+    let [hours, minutes] = time.split(':');
+    hours = parseInt(hours, 10);
+    minutes = parseInt(minutes, 10);
+
+    if (modifier === 'PM' && hours !== 12) {
+      hours += 12;
+    } else if (modifier === 'AM' && hours === 12) {
+      hours = 0;
+    }
+
+    let wakeUpTime = new Date();
+    wakeUpTime.setHours(hours, minutes, 0, 0);
+
+    const currentTime = new Date();
+    if (wakeUpTime <= currentTime) {
+      wakeUpTime.setDate(wakeUpTime.getDate() + 1);
+    }
+
+    return wakeUpTime;
+  };
 
   const getDynamicSleepMessages = useCallback(() => {
     const currentTime = new Date();
@@ -62,9 +63,7 @@ export const AlarmProvider = ({ children }) => {
     const minutesUntilWakeUp = totalMinutesUntilWakeUp % 60;
     const formattedCurrentTime = format(currentTime, 'hh:mm a');
     const formattedWakeUpTime = format(wakeUpTime, 'hh:mm a');
-    console.log('🚀 formattedWakeUpTime:', formattedWakeUpTime);
 
-    // Building the time string conditionally based on hours and minutes
     let timeString = '';
     if (hoursUntilWakeUp > 0) {
       timeString += `${hoursUntilWakeUp} hour${hoursUntilWakeUp > 1 ? 's' : ''}`;
@@ -87,6 +86,13 @@ export const AlarmProvider = ({ children }) => {
     setMessages(getDynamicSleepMessages());
   }, [selectedTime, alarmInProgress, getDynamicSleepMessages]);
 
+  useEffect(() => {
+    // Save to local storage when values change
+    localStorage.setItem('selectedTime', JSON.stringify(selectedTime));
+    localStorage.setItem('isSleepMode', JSON.stringify(isSleepMode));
+    localStorage.setItem('alarmInProgress', JSON.stringify(alarmInProgress));
+  }, [selectedTime, isSleepMode, alarmInProgress]);
+
   const handleTimeChange = useCallback((time) => {
     setSelectedTime(time);
   }, []);
@@ -99,15 +105,29 @@ export const AlarmProvider = ({ children }) => {
     setAlarmInProgress(true);
     setIsSleepMode(true);
     setMessageTitle('Intentional Dreaming');
-    setMessages(sleepMessages);
-  }, []);
+    setMessages(getDynamicSleepMessages());
+  }, [getDynamicSleepMessages]);
 
   const stopAlarm = useCallback(() => {
+    const wakeUpMessages = [
+      "It's time to wake up. Let's seize the day!",
+      'Remember to stretch and have a great morning.',
+      "What's one positive thing you're looking forward to today?",
+    ];
+
     setMessages(wakeUpMessages);
-    setMessageTitle('Intentional Awakening');
+    setMessageTitle('Good Morning');
     setAlarmInProgress(false);
+    setIsSleepMode(false);
     toggleGuide();
   }, [toggleGuide]);
+
+  useEffect(() => {
+    if (!alarmInProgress && !showGuide) {
+      console.log('Navigating to Home');
+      navigation.navigate('Home');
+    }
+  }, [alarmInProgress, navigation, showGuide]);
 
   useEffect(() => {
     if (alarmInProgress) {
@@ -127,7 +147,6 @@ export const AlarmProvider = ({ children }) => {
         toggleGuide,
         startAlarm,
         stopAlarm,
-        setAlarmInProgress,
         messageTitle,
       }}
     >
@@ -139,7 +158,7 @@ export const AlarmProvider = ({ children }) => {
 export const useAlarmContext = () => {
   const context = useContext(AlarmContext);
   if (!context) {
-    throw new Error('useAlarmContext must be used within an AlarmProvider');
+    throw new Error('useAlarm must be used within an AlarmProvider');
   }
   return context;
 };
