@@ -49,25 +49,32 @@ export function useNotifications() {
   }, []);
 
   const scheduleAlarm = async (alarmTime) => {
-    // Calculate the number of seconds until the alarm should fire
     const now = new Date();
     const timeDifference = alarmTime.getTime() - now.getTime();
     const secondsUntilAlarm = Math.round(timeDifference / 1000);
 
-    const schedulingOptions = {
-      content: {
-        title: 'Alarm',
-        body: 'Your alarm is ringing!',
-        sound: 'birds2.wav',
-      },
-      trigger: {
-        seconds: secondsUntilAlarm > 0 ? secondsUntilAlarm : 1, // Ensure there's a minimum 1 second delay
-        channelId: 'alarm-channel', // For Android 8.0 and above
-      },
-    };
+    const numberOfNotifications = 10;
+    const notificationInterval = 10;
 
-    console.log('Scheduling alarm...');
-    await Notifications.scheduleNotificationAsync(schedulingOptions);
+    for (let i = 0; i < numberOfNotifications; i++) {
+      const schedulingOptions = {
+        content: {
+          title: 'Alarm',
+          body: 'Your alarm is ringing!',
+          sound: 'birds2.wav', // Ensure this is a repeating sound or use multiple notifications
+        },
+        trigger: {
+          seconds:
+            secondsUntilAlarm > 0
+              ? secondsUntilAlarm + i * notificationInterval
+              : 1 + i * notificationInterval, // Ensure there's a delay
+          channelId: 'alarm-channel', // For Android 8.0 and above
+        },
+      };
+
+      console.log(`Scheduling notification #${i + 1}`);
+      await Notifications.scheduleNotificationAsync(schedulingOptions);
+    }
   };
 
   const stopAlarm = async () => {
