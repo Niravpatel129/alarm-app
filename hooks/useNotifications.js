@@ -77,10 +77,10 @@ export function useNotifications() {
     }
   };
 
-  const stopAlarm = async () => {
+  const stopAlarmNotifications = async () => {
     console.log('Cancelling all scheduled alarms...');
     await Notifications.cancelAllScheduledNotificationsAsync();
   };
 
-  return { scheduleAlarm, stopAlarm };
+  return { scheduleAlarm, stopAlarmNotifications };
 }

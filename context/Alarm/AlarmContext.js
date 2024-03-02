@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { format } from 'date-fns';
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { useNotifications } from '../../hooks/useNotifications';
 
 const AlarmContext = createContext();
 
@@ -15,7 +16,7 @@ const safelyParseJSON = (json) => {
 
 export const AlarmProvider = ({ children }) => {
   const navigation = useNavigation();
-
+  const { scheduleAlarm, stopAlarmNotifications } = useNotifications();
   const [selectedTime, setSelectedTime] = useState(
     () => safelyParseJSON(AsyncStorage.getItem('selectedTime')) || '01:00 AM',
   );
@@ -129,6 +130,7 @@ export const AlarmProvider = ({ children }) => {
   };
 
   const startAlarm = useCallback(() => {
+    scheduleAlarm(parseTime(selectedTime));
     console.log('🚀  start alarm selectedTime:', selectedTime);
     setAlarmInProgress(true);
     setIsSleepMode(true);
@@ -146,6 +148,8 @@ export const AlarmProvider = ({ children }) => {
   }, [getDynamicSleepMessages]);
 
   const stopAlarm = useCallback(() => {
+    console.log('🚀  stop alarm');
+    stopAlarmNotifications();
     setIsSleepMode(false);
 
     const wakeUpMessages = [
