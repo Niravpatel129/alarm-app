@@ -60,25 +60,31 @@ const MeditationGuide = ({ messages = ['Sleep is luxury'], onCompletion, message
 
   return (
     <SafeAreaView style={styles.container}>
-      <Pressable onPress={goToNextMessage}>
-        <Animated.View style={[styles.messageContainer, animatedStyles]}>
-          <View
+      <Pressable
+        style={{
+          flex: 1,
+        }}
+        onPress={goToNextMessage}
+      >
+        <View
+          style={{
+            marginBottom: 'auto',
+            alignItems: 'center',
+          }}
+        >
+          <Text
             style={{
-              marginBottom: 'auto',
+              fontSize: 14,
+              fontWeight: 'bold',
+              color: 'white',
+              opacity: 0.2,
             }}
           >
-            <Text
-              style={{
-                fontSize: 14,
-                fontWeight: 'bold',
-                color: 'white',
-                opacity: 0.2,
-              }}
-            >
-              {messageTitle} ({currentMessageIndex + 1}/{messages.length})
-            </Text>
-          </View>
+            {messageTitle} ({currentMessageIndex + 1}/{messages.length})
+          </Text>
+        </View>
 
+        <Animated.View style={[styles.messageContainer, animatedStyles]}>
           <GradientText
             style={{
               fontSize: 30,
@@ -91,25 +97,25 @@ const MeditationGuide = ({ messages = ['Sleep is luxury'], onCompletion, message
           >
             {messages[currentMessageIndex]}
           </GradientText>
-          <Animated.View
-            style={[
-              {
-                marginTop: 'auto',
-              },
-              tapToContinueAnimatedStyle,
-            ]}
+        </Animated.View>
+        <Animated.View
+          style={[
+            {
+              marginTop: 'auto',
+            },
+            tapToContinueAnimatedStyle,
+          ]}
+        >
+          <GradientText
+            style={{
+              fontSize: 14,
+              fontWeight: 'bold',
+              color: 'white',
+              textAlign: 'center',
+            }}
           >
-            <GradientText
-              style={{
-                fontSize: 14,
-                fontWeight: 'bold',
-                color: 'white',
-                textAlign: 'center',
-              }}
-            >
-              - Tap to continue -
-            </GradientText>
-          </Animated.View>
+            - Tap to continue -
+          </GradientText>
         </Animated.View>
       </Pressable>
     </SafeAreaView>
@@ -132,10 +138,6 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: 'transparent',
     borderRadius: 10,
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 20,
   },
 });
 
