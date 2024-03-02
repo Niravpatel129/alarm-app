@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react'; // Import useEffect
 import { Pressable, StyleSheet, View } from 'react-native';
 import Animated, {
   Easing,
@@ -11,6 +11,15 @@ import GradientText from '../GradientText/GradientText';
 const MeditationGuide = ({ messages, onCompletion }) => {
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const opacity = useSharedValue(1);
+  const tapToContinueOpacity = useSharedValue(0); // Shared value for controlling the "Tap to continue" text opacity
+
+  useEffect(() => {
+    // Trigger the "Tap to continue" text to appear with a delay when the component mounts or currentMessageIndex changes
+    const timer = setTimeout(() => {
+      tapToContinueOpacity.value = 1; // Fade in the "Tap to continue" text after an additional delay
+    }, 2000); // Delay for the "Tap to continue" text to appear
+    return () => clearTimeout(timer); // Cleanup the timer when component unmounts or currentMessageIndex changes
+  }, [currentMessageIndex]); // Dependency array includes currentMessageIndex to trigger the effect on change
 
   const animatedStyles = useAnimatedStyle(() => {
     return {
@@ -21,13 +30,24 @@ const MeditationGuide = ({ messages, onCompletion }) => {
     };
   });
 
+  const tapToContinueAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: withTiming(tapToContinueOpacity.value, {
+        duration: 500, // Slightly faster to make it more responsive
+        easing: Easing.inOut(Easing.ease),
+      }),
+    };
+  });
+
   const goToNextMessage = () => {
     opacity.value = 0; // Start fading out the current message
+    tapToContinueOpacity.value = 0; // Also start fading out the "Tap to continue" text
     if (currentMessageIndex < messages.length - 1) {
       setTimeout(() => {
         setCurrentMessageIndex(currentMessageIndex + 1); // Update the message index to the next message
         setTimeout(() => {
           opacity.value = 1; // Start fading in the next message after the index has been updated
+          // The effect hook will handle fading in the "Tap to continue" text
         }, 100); // Short delay to ensure the index is updated before starting to fade in
       }, 700); // Match this delay with the duration of the fade-out animation
     } else {
@@ -64,10 +84,13 @@ const MeditationGuide = ({ messages, onCompletion }) => {
         >
           {messages[currentMessageIndex]}
         </GradientText>
-        <View
-          style={{
-            marginTop: 'auto',
-          }}
+        <Animated.View
+          style={[
+            {
+              marginTop: 'auto',
+            },
+            tapToContinueAnimatedStyle,
+          ]}
         >
           <GradientText
             style={{
@@ -79,7 +102,7 @@ const MeditationGuide = ({ messages, onCompletion }) => {
           >
             - Tap to continue -
           </GradientText>
-        </View>
+        </Animated.View>
       </Animated.View>
     </Pressable>
   );
