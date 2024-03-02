@@ -8,7 +8,12 @@ import Animated, {
 } from 'react-native-reanimated';
 import GradientText from '../GradientText/GradientText';
 
-const MeditationGuide = ({ messages, onCompletion, messageTitle }) => {
+const MeditationGuide = ({ messages = ['Sleep is luxury'], onCompletion, messageTitle }) => {
+  if (!messages) {
+    console.error('MeditationGuide: No messages provided');
+    return null;
+  }
+
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const opacity = useSharedValue(1);
   const tapToContinueOpacity = useSharedValue(0); // Shared value for controlling the "Tap to continue" text opacity

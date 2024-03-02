@@ -19,7 +19,7 @@ export const AlarmProvider = ({ children }) => {
   const [selectedTime, setSelectedTime] = useState(
     () => safelyParseJSON(AsyncStorage.getItem('selectedTime')) || '01:00 AM',
   );
-  const [showGuide, setShowGuide] = useState(true);
+  const [showGuide, setShowGuide] = useState(false);
   const [isSleepMode, setIsSleepMode] = useState(
     () => safelyParseJSON(AsyncStorage.getItem('isSleepMode')) || true,
   );
@@ -55,8 +55,8 @@ export const AlarmProvider = ({ children }) => {
   };
 
   const getDynamicSleepMessages = useCallback(() => {
-    if (!selectedTime) return null;
-    if (!isSleepMode) return null;
+    if (!selectedTime) return;
+    if (!isSleepMode) return;
 
     const currentTime = new Date();
     const wakeUpTime = parseTime(selectedTime);
@@ -91,7 +91,7 @@ export const AlarmProvider = ({ children }) => {
       `Alarm will ring at ${formattedWakeUpTime}`,
       `Which is in ${timeString}`,
     ];
-  }, [selectedTime]);
+  }, [selectedTime, isSleepMode]);
 
   useEffect(() => {
     const checkAlarmInProgress = async () => {
@@ -109,7 +109,8 @@ export const AlarmProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    setMessages(getDynamicSleepMessages());
+    const dynamicSleepMessages = getDynamicSleepMessages();
+    if (dynamicSleepMessages) setMessages(dynamicSleepMessages);
   }, [selectedTime, getDynamicSleepMessages]);
 
   const handleTimeChange = useCallback((time) => {
@@ -117,6 +118,8 @@ export const AlarmProvider = ({ children }) => {
   }, []);
 
   const toggleGuide = () => {
+    console.log('🚀  toggleGuide showGuide:', showGuide);
+
     if (!alarmInProgress && showGuide) {
       navigation.navigate('Home');
     }
@@ -130,6 +133,8 @@ export const AlarmProvider = ({ children }) => {
     setIsSleepMode(true);
     setMessageTitle('Intentional Dreaming');
     setMessages(getDynamicSleepMessages());
+
+    toggleGuide();
 
     // save the alarm in progress to local storage
     AsyncStorage.setItem('alarmInProgress', JSON.stringify(true));
