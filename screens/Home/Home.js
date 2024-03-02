@@ -11,9 +11,6 @@ export default function HomeScreen() {
 
   // Call this function whenever the time changes
   const onTimeChange = (newTime) => {
-    console.log('🚀  newTime:', newTime);
-    // add debounce
-
     handleTimeChange(newTime);
     selectedTimeShared.value = withTiming(newTime, { duration: 500 }); // Smooth transition for time update
   };

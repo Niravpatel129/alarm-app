@@ -33,7 +33,6 @@ const ScrollPicker = ({
               index: data.findIndex((dataItem) => dataItem === item),
               animated: true,
             });
-            setSelectedItem(item);
           }}
         >
           <Text style={styles.text}>{item}</Text>
