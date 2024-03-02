@@ -48,7 +48,12 @@ export function useNotifications() {
     requestPermissions();
   }, []);
 
-  const scheduleAlarm = async () => {
+  const scheduleAlarm = async (alarmTime) => {
+    // Calculate the number of seconds until the alarm should fire
+    const now = new Date();
+    const timeDifference = alarmTime.getTime() - now.getTime();
+    const secondsUntilAlarm = Math.round(timeDifference / 1000);
+
     const schedulingOptions = {
       content: {
         title: 'Alarm',
@@ -56,8 +61,8 @@ export function useNotifications() {
         sound: 'birds2.wav',
       },
       trigger: {
-        seconds: 2,
-        channelId: 'alarm-channel',
+        seconds: secondsUntilAlarm > 0 ? secondsUntilAlarm : 1, // Ensure there's a minimum 1 second delay
+        channelId: 'alarm-channel', // For Android 8.0 and above
       },
     };
 
@@ -65,5 +70,10 @@ export function useNotifications() {
     await Notifications.scheduleNotificationAsync(schedulingOptions);
   };
 
-  return { scheduleAlarm };
+  const stopAlarm = async () => {
+    console.log('Cancelling all scheduled alarms...');
+    await Notifications.cancelAllScheduledNotificationsAsync();
+  };
+
+  return { scheduleAlarm, stopAlarm };
 }
