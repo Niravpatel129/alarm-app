@@ -2,11 +2,10 @@ import { AntDesign } from '@expo/vector-icons';
 import React from 'react';
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import MeditationGuide from '../../components/MeditationGuide/MeditationGuide';
-import { useEnhancedAlarmLogic } from '../../hooks/useEnhancedAlarmLogic'; // Ensure the path is correct
+import { useAlarmContext } from '../../context/Alarm/AlarmContext';
 
 export default function InSleep() {
-  const { messages, showGuide, toggleGuide, stopAlarm, messageTitle } =
-    useEnhancedAlarmLogic('01:00 AM');
+  const { messages, showGuide, toggleGuide, stopAlarm, messageTitle } = useAlarmContext('01:00 AM');
 
   const handleCompletion = () => {
     console.log('Alarm completed');

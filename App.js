@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import TabBar from './components/TabBar/TabBar';
+import { AlarmProvider } from './context/Alarm/AlarmContext';
 import HomeScreen from './screens/Home/Home';
 import InSleep from './screens/InSleep/InSleep';
 import SettingsScreen from './screens/Settings/Settings';
@@ -31,20 +32,22 @@ const Stack = createNativeStackNavigator();
 function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        {/* Dev */}
-        {/* <Stack.Screen name='Dev' component={InSleep} options={{ headerShown: false }} /> */}
+      <AlarmProvider>
+        <Stack.Navigator>
+          {/* Dev */}
+          {/* <Stack.Screen name='Dev' component={InSleep} options={{ headerShown: false }} /> */}
 
-        <Stack.Screen name='Home' component={MyTabs} options={{ headerShown: false }} />
-        <Stack.Screen
-          name='AlarmScreen'
-          component={InSleep}
-          options={{
-            headerShown: false,
-            animation: 'slide_from_bottom',
-          }}
-        />
-      </Stack.Navigator>
+          <Stack.Screen name='Home' component={MyTabs} options={{ headerShown: false }} />
+          <Stack.Screen
+            name='AlarmScreen'
+            component={InSleep}
+            options={{
+              headerShown: false,
+              animation: 'slide_from_bottom',
+            }}
+          />
+        </Stack.Navigator>
+      </AlarmProvider>
     </NavigationContainer>
   );
 }

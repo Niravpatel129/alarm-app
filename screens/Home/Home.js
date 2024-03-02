@@ -2,10 +2,10 @@ import React from 'react';
 import { Image, Text, View } from 'react-native';
 import Button from '../../components/Button/Button';
 import TimePicker from '../../components/TimePicker/TimePicker';
-import { useEnhancedAlarmLogic } from '../../hooks/useEnhancedAlarmLogic';
+import { useAlarmContext } from '../../context/Alarm/AlarmContext';
 
 export default function HomeScreen() {
-  const { selectedTime, handleTimeChange, startAlarm } = useEnhancedAlarmLogic();
+  const { selectedTime, handleTimeChange, startAlarm } = useAlarmContext('01:00 AM');
 
   return (
     <View
