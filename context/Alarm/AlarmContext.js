@@ -95,9 +95,10 @@ export const AlarmProvider = ({ children }) => {
 
   useEffect(() => {
     const checkAlarmInProgress = async () => {
+      console.log('Checking alarm in progress');
       const localAlarmInProgress = await AsyncStorage.getItem('alarmInProgress');
 
-      if (localAlarmInProgress === true) {
+      if (localAlarmInProgress === 'true') {
         console.log('Alarm in progress: ', localAlarmInProgress);
 
         setAlarmInProgress(true);
