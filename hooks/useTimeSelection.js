@@ -8,17 +8,17 @@ const useTimeSelection = (onTimeChange) => {
   const now = new Date();
   now.setMinutes(now.getMinutes() + 1); // Add one minute to ensure we're in the future
 
-  const formatHour = (hour) => `${hour % 12 === 0 ? 12 : hour % 12}`.padStart(2, '0');
+  const formatHour = (hour) => `${hour % 12 === 0 ? 12 : hour % 12}`;
   const initialHour = formatHour(now.getHours());
-  const initialMinute = `${now.getMinutes()}`.padStart(2, '0');
+  const initialMinute = `${now.getMinutes()}`;
   const initialPeriod = now.getHours() < 12 ? 'AM' : 'PM';
 
   const [selectedHour, setSelectedHour] = useState(initialHour);
   const [selectedMinute, setSelectedMinute] = useState(initialMinute);
   const [selectedPeriod, setSelectedPeriod] = useState(initialPeriod);
 
-  const hours = Array.from({ length: 24 }, (_, i) => formatHour(i));
-  const minutes = Array.from({ length: 60 }, (_, i) => i.toString().padStart(2, '0'));
+  const hours = Array.from({ length: 12 }, (_, i) => formatHour(i + 1));
+  const minutes = Array.from({ length: 60 }, (_, i) => i.toString());
   const periods = ['AM', 'PM'];
 
   useEffect(() => {
