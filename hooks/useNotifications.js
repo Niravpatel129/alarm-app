@@ -54,7 +54,7 @@ export function useNotifications() {
     const secondsUntilAlarm = Math.round(timeDifference / 1000);
 
     const numberOfNotifications = 10;
-    const notificationInterval = 10;
+    const notificationInterval = 20;
 
     for (let i = 0; i < numberOfNotifications; i++) {
       const schedulingOptions = {
