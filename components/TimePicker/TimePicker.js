@@ -84,20 +84,8 @@ const TimePicker = ({ onTimeChange }) => {
     const yOffset = event.nativeEvent.contentOffset.y;
     const index = Math.round(yOffset / ITEM_HEIGHT);
     const selectedItem = data[index % data.length];
-    console.log('🚀  selectedItem:', selectedItem);
     if (selectedItem === undefined) return;
     setState(selectedItem);
-
-    // if (type === 'hour') {
-    //   const isPM = index >= 12;
-    //   const newPeriod = isPM ? 'PM' : 'AM';
-    //   setSelectedPeriod(newPeriod);
-
-    //   const periodIndex = periods.findIndex((period) => period === newPeriod);
-    //   if (periodListRef.current) {
-    //     periodListRef.current.scrollToIndex({ index: periodIndex, animated: true });
-    //   }
-    // }
   };
 
   return (
