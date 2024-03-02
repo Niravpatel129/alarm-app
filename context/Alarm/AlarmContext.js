@@ -4,7 +4,6 @@ import React, { createContext, useCallback, useContext, useEffect, useState } fr
 
 const AlarmContext = createContext();
 
-// Helper function for safely parsing JSON data from local storage
 const safelyParseJSON = (json) => {
   try {
     return JSON.parse(json);
@@ -16,7 +15,6 @@ const safelyParseJSON = (json) => {
 export const AlarmProvider = ({ children }) => {
   const navigation = useNavigation();
 
-  // Initialize state with values from local storage if available
   const [selectedTime, setSelectedTime] = useState(
     () => safelyParseJSON(localStorage.getItem('selectedTime')) || '01:00 AM',
   );
