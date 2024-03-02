@@ -37,7 +37,14 @@ function App() {
           {/* Dev */}
           {/* <Stack.Screen name='Dev' component={InSleep} options={{ headerShown: false }} /> */}
 
-          <Stack.Screen name='Home' component={MyTabs} options={{ headerShown: false }} />
+          <Stack.Screen
+            name='Home'
+            component={MyTabs}
+            options={{
+              headerShown: false,
+              animation: 'slide_from_bottom',
+            }}
+          />
           <Stack.Screen
             name='AlarmScreen'
             component={InSleep}
