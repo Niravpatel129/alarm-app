@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { useState } from 'react';
+import { Pressable, StyleSheet, View } from 'react-native';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -10,69 +10,78 @@ import GradientText from '../GradientText/GradientText';
 
 const MeditationGuide = ({ messages, onCompletion }) => {
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
-  const [isCompleted, setIsCompleted] = useState(false);
-  const opacity = useSharedValue(0);
+  const opacity = useSharedValue(1);
 
   const animatedStyles = useAnimatedStyle(() => {
     return {
       opacity: withTiming(opacity.value, {
-        duration: 1000,
-        easing: Easing.linear,
+        duration: 700,
+        easing: Easing.inOut(Easing.ease),
       }),
     };
   });
 
-  useEffect(() => {
-    if (messages.length === 0) {
-      return;
+  const goToNextMessage = () => {
+    opacity.value = 0; // Start fading out the current message
+    if (currentMessageIndex < messages.length - 1) {
+      setTimeout(() => {
+        setCurrentMessageIndex(currentMessageIndex + 1); // Update the message index to the next message
+        setTimeout(() => {
+          opacity.value = 1; // Start fading in the next message after the index has been updated
+        }, 100); // Short delay to ensure the index is updated before starting to fade in
+      }, 700); // Match this delay with the duration of the fade-out animation
+    } else {
+      setTimeout(onCompletion, 700); // If at the last message, call completion handler after the fade-out animation
     }
-
-    opacity.value = 0;
-    let timer = setTimeout(() => {
-      opacity.value = 1;
-
-      let changeMessageTimer = setTimeout(() => {
-        setCurrentMessageIndex((prevIndex) => {
-          const nextIndex = prevIndex + 1;
-          if (nextIndex < messages.length) {
-            return nextIndex;
-          } else {
-            setIsCompleted(true);
-            return prevIndex; // Keep the last message displayed
-          }
-        });
-      }, 4000); // Show each message for 4 seconds before moving to the next
-
-      return () => {
-        clearTimeout(changeMessageTimer);
-      };
-    }, 100); // Short delay before starting to fade in the next message
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [currentMessageIndex, messages.length, opacity]);
-
-  useEffect(() => {
-    if (isCompleted) {
-      onCompletion();
-    }
-  }, [isCompleted, onCompletion]);
+  };
 
   return (
-    <View style={styles.container}>
+    <Pressable style={styles.container} onPress={goToNextMessage}>
       <Animated.View style={[styles.messageContainer, animatedStyles]}>
+        <View
+          style={{
+            marginBottom: 'auto',
+          }}
+        >
+          <GradientText
+            style={{
+              fontSize: 14,
+              fontWeight: 'bold',
+              color: 'white',
+            }}
+          >
+            Sleep ({currentMessageIndex + 1}/{messages.length})
+          </GradientText>
+        </View>
+
         <GradientText
           style={{
             fontSize: 36,
             fontWeight: 'bold',
             color: 'white',
+            textAlign: 'center',
           }}
         >
           {messages[currentMessageIndex]}
         </GradientText>
+        <View
+          style={{
+            marginTop: 'auto',
+          }}
+        >
+          <GradientText
+            style={{
+              fontSize: 14,
+              fontWeight: 'bold',
+              color: 'white',
+              textAlign: 'center',
+            }}
+          >
+            - Tap to continue -
+          </GradientText>
+        </View>
       </Animated.View>
-    </View>
+    </Pressable>
   );
 };
 
@@ -92,11 +101,10 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: 'transparent',
     borderRadius: 10,
-  },
-  messageText: {
-    fontSize: 24,
-    color: 'white',
-    textAlign: 'center',
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 20,
   },
 });
 

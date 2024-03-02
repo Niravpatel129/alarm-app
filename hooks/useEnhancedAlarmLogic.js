@@ -9,14 +9,14 @@ export function useEnhancedAlarmLogic(initialTime = '01:00 AM') {
   const [alarmInProgress, setAlarmInProgress] = useState(false);
 
   const sleepMessages = [
-    'Guide: Quietly read these thoughts to yourself or aloud, focusing on the sensation of relaxation. "Breathe in deeply through your nose, and exhale slowly through your mouth..."',
-    '"Feel every muscle in your body begin to relax, starting from your toes, moving up to your head. Let go of all tension..."',
-    '"Picture yourself in a peaceful place. It’s serene here, and you’re surrounded by tranquility. Focus on the calmness, and let it wash over you..."',
+    'Guide: Quietly read these thoughts to yourself or aloud, focusing on the sensation of relaxation. Breathe in deeply through your nose, and exhale slowly through your mouth..."',
+    'Feel every muscle in your body begin to relax, starting from your toes, moving up to your head. Let go of all tension...',
+    'Picture yourself in a peaceful place. It’s serene here, and you’re surrounded by tranquility. Focus on the calmness, and let it wash over you...',
   ];
   const wakeUpMessages = [
-    'Guide: Gently read these affirmations to yourself or aloud, embracing the energy of a new day. "Welcome to a new day filled with opportunities and possibilities..."',
-    '"Stretch your body slowly, feeling each part wake up with you. Embrace the sensation of becoming fully alert and alive..."',
-    '"Think of one positive thing you aim to achieve today. Hold onto this intention as you prepare to start your day..."',
+    'Guide: Gently read these affirmations to yourself or aloud, embracing the energy of a new day. Welcome to a new day filled with opportunities and possibilities...',
+    'Stretch your body slowly, feeling each part wake up with you. Embrace the sensation of becoming fully alert and alive...',
+    'Think of one positive thing you aim to achieve today. Hold onto this intention as you prepare to start your day...',
   ];
 
   const [messages, setMessages] = useState(sleepMessages);
