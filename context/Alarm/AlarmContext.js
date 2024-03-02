@@ -98,7 +98,6 @@ export const AlarmProvider = ({ children }) => {
   }, [selectedTime, getDynamicSleepMessages]);
 
   useEffect(() => {
-    // Save to local storage when values change
     AsyncStorage.setItem('selectedTime', JSON.stringify(selectedTime));
     AsyncStorage.setItem('isSleepMode', JSON.stringify(isSleepMode));
     AsyncStorage.setItem('alarmInProgress', JSON.stringify(alarmInProgress));
