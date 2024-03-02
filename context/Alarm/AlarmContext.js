@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import { differenceInHours, format } from 'date-fns';
+import { format } from 'date-fns';
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 const AlarmContext = createContext();
@@ -57,14 +57,29 @@ export const AlarmProvider = ({ children }) => {
   const getDynamicSleepMessages = useCallback(() => {
     const currentTime = new Date();
     const wakeUpTime = parseTime(selectedTime);
-    const hoursUntilWakeUp = differenceInHours(wakeUpTime, currentTime);
+    const totalMinutesUntilWakeUp = Math.floor((wakeUpTime - currentTime) / 60000);
+    const hoursUntilWakeUp = Math.floor(totalMinutesUntilWakeUp / 60);
+    const minutesUntilWakeUp = totalMinutesUntilWakeUp % 60;
     const formattedCurrentTime = format(currentTime, 'hh:mm a');
     const formattedWakeUpTime = format(wakeUpTime, 'hh:mm a');
+    console.log('🚀 formattedWakeUpTime:', formattedWakeUpTime);
+
+    // Building the time string conditionally based on hours and minutes
+    let timeString = '';
+    if (hoursUntilWakeUp > 0) {
+      timeString += `${hoursUntilWakeUp} hour${hoursUntilWakeUp > 1 ? 's' : ''}`;
+    }
+    if (minutesUntilWakeUp > 0) {
+      if (timeString.length > 0) {
+        timeString += ' and ';
+      }
+      timeString += `${minutesUntilWakeUp} minute${minutesUntilWakeUp > 1 ? 's' : ''}`;
+    }
 
     return [
       `It's currently ${formattedCurrentTime}. You are ready for a restful sleep.`,
       `You will wake up at ${formattedWakeUpTime}, feeling refreshed and energetic.`,
-      `You have ${hoursUntilWakeUp} hours until it's time to start your day. Enjoy your rest.`,
+      `You have ${timeString} until it's time to start your day. Enjoy your rest.`,
     ];
   }, [selectedTime]);
 
