@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, FlatList, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import useTimeSelection from '../../hooks/useTimeSelection';
 
 const { width } = Dimensions.get('window');
@@ -25,9 +25,19 @@ const ScrollPicker = ({
       data={data}
       keyExtractor={(item, index) => index.toString()}
       renderItem={({ item }) => (
-        <View style={[styles.item, { height: ITEM_HEIGHT, width: ITEM_WIDTH }]}>
+        <Pressable
+          style={[styles.item, { height: ITEM_HEIGHT, width: ITEM_WIDTH }]}
+          onPress={() => {
+            // scroll to the selected item
+            refList.current.scrollToIndex({
+              index: data.findIndex((dataItem) => dataItem === item),
+              animated: true,
+            });
+            setSelectedItem(item);
+          }}
+        >
           <Text style={styles.text}>{item}</Text>
-        </View>
+        </Pressable>
       )}
       showsVerticalScrollIndicator={false}
       onScroll={(e) => updateSelection(e, data, setSelectedItem, type, periods, setSelectedPeriod)}
