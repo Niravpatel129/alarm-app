@@ -116,11 +116,16 @@ export const AlarmProvider = ({ children }) => {
     setSelectedTime(time);
   }, []);
 
-  const toggleGuide = useCallback(() => {
+  const toggleGuide = () => {
+    if (!alarmInProgress && showGuide) {
+      navigation.navigate('Home');
+    }
+
     setShowGuide((prevShowGuide) => !prevShowGuide);
-  }, []);
+  };
 
   const startAlarm = useCallback(() => {
+    console.log('🚀  start alarm selectedTime:', selectedTime);
     setAlarmInProgress(true);
     setIsSleepMode(true);
     setMessageTitle('Intentional Dreaming');
@@ -152,13 +157,6 @@ export const AlarmProvider = ({ children }) => {
     AsyncStorage.setItem('alarmInProgress', JSON.stringify(false));
     AsyncStorage.setItem('isSleepMode', JSON.stringify(false));
   }, [toggleGuide]);
-
-  useEffect(() => {
-    if (!alarmInProgress && !showGuide) {
-      console.log('Navigating to Home');
-      navigation.navigate('Home');
-    }
-  }, [alarmInProgress, navigation, showGuide]);
 
   return (
     <AlarmContext.Provider
