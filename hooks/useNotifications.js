@@ -46,12 +46,31 @@ export function useNotifications() {
       }
     };
 
+    const configureAudioSession = async () => {
+      try {
+        await Audio.setAudioModeAsync({
+          playsInSilentModeIOS: true,
+          allowsRecordingIOS: false,
+          staysActiveInBackground: true,
+          interruptionModeIOS: 'DoNotMix',
+          shouldDuckAndroid: true,
+          interruptionModeAndroid: 'DoNotMix',
+          playThroughEarpieceAndroid: false,
+        });
+      } catch (e) {
+        console.error('Error configuring audio session', e);
+      }
+    };
+
+    configureAudioSession();
     requestPermissions();
   }, []);
 
   const soundObject = useRef(new Audio.Sound());
 
   const scheduleAlarm = async (alarmTime) => {
+    await soundObject.current.loadAsync(require('../assets/sounds/birds2.wav'));
+
     const now = new Date();
     const timeDifference = alarmTime.getTime() - now.getTime();
     if (timeDifference < 0) {
@@ -61,7 +80,6 @@ export function useNotifications() {
 
     setTimeout(async () => {
       try {
-        await soundObject.current.loadAsync(require('../assets/sounds/birds2.wav'));
         await soundObject.current.setIsLoopingAsync(true); // Set the sound to loop
         await soundObject.current.playAsync();
       } catch (error) {

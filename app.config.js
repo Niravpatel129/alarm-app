@@ -16,6 +16,9 @@ export default {
       supportsTablet: true,
       bundleIdentifier: 'com.sleep.zenalarm',
       buildNumber: '3',
+      infoPlist: {
+        UIBackgroundModes: ['audio'],
+      },
     },
     android: {
       adaptiveIcon: {
