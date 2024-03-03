@@ -4,27 +4,40 @@ import { Animated, Image, PanResponder, SafeAreaView, Text, View } from 'react-n
 
 export default function AlarmScreen() {
   const position = useRef(new Animated.ValueXY()).current;
+  const opacity = useRef(new Animated.Value(1)).current; // Initialize opacity for the chevron
+
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onPanResponderMove: (_, gestureState) => {
-        // Limit the swipe up to -100 pixels
+        // Limit the swipe up and adjust opacity
         const newY = gestureState.dy < -100 ? -100 : gestureState.dy;
         position.setValue({ x: 0, y: newY });
+        const newOpacity = gestureState.dy < -50 ? Math.max(1 - -gestureState.dy / 100, 0) : 1;
+        opacity.setValue(newOpacity);
       },
       onPanResponderRelease: (_, gestureState) => {
         if (gestureState.dy < -100) {
           Animated.timing(position, {
             toValue: { x: 0, y: -200 },
-            useNativeDriver: false,
             duration: 200,
-          }).start(() => position.setValue({ x: 0, y: 0 }));
+            useNativeDriver: false,
+          }).start(() => {
+            position.setValue({ x: 0, y: 0 });
+            // Optionally reset opacity here if you want the chevron to reappear after the animation
+            // after 3 seconds
+            setTimeout(() => {
+              opacity.setValue(1);
+            }, 3000);
+          });
         } else {
           Animated.spring(position, {
             toValue: { x: 0, y: 0 },
-            useNativeDriver: true,
             friction: 5,
+            useNativeDriver: false,
           }).start();
+          // Reset opacity to make chevron fully visible again
+          opacity.setValue(1);
         }
       },
     }),
@@ -94,6 +107,7 @@ export default function AlarmScreen() {
             style={{
               width: 200,
               height: 200,
+              marginBottom: -40,
             }}
           />
           <Image
@@ -129,7 +143,12 @@ export default function AlarmScreen() {
               Alarm 8:30
             </Text>
           </View>
-          <Animated.View style={[position.getLayout(), { alignItems: 'center', marginTop: 40 }]}>
+          <Animated.View
+            style={[
+              position.getLayout(),
+              { alignItems: 'center', marginTop: 40, opacity: opacity },
+            ]}
+          >
             <Entypo name='chevron-thin-up' size={38} color='#4d4c52' />
             <Entypo name='chevron-thin-up' size={38} color='white' style={{ marginTop: -15 }} />
           </Animated.View>
