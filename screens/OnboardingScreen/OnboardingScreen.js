@@ -1,3 +1,4 @@
+import LottieView from 'lottie-react-native';
 import React from 'react';
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Animated, { interpolate, useAnimatedStyle } from 'react-native-reanimated';
@@ -94,7 +95,21 @@ const Card = ({ index, animationValue }) => {
 
   return (
     <Animated.View style={[styles.slide, cardStyle]}>
-      <Animated.Image source={image} style={[styles.slideImage, imageStyle]} resizeMode='contain' />
+      <Animated.View style={styles.slideImage}>
+        <LottieView
+          autoPlay
+          style={
+            ([
+              {
+                width: 600,
+                height: 600,
+              },
+            ],
+            styles.slideImage)
+          }
+          source={require('./lottie/1.json')}
+        />
+      </Animated.View>
       <Text style={styles.slideTitle}>{title}</Text>
       <Text style={styles.slideText}>{description}</Text>
     </Animated.View>
