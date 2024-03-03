@@ -9,14 +9,28 @@ const data = [
   {
     title: 'Welcome',
     description: 'Welcome to ZenWake, your serene start to the day...',
-    image: require('../../assets/monk.png'), // Adjust the path as necessary
+    image: require('../../assets/monk.png'),
   },
   {
     title: 'Set Your First Alarm',
     description: 'Choose a time to wake up and select a soothing Zen sound...',
-    image: require('../../assets/monk.png'), // Adjust the path as necessary
+    image: require('../../assets/monk.png'),
   },
-  // Add additional slides as needed
+  {
+    title: 'Set Your First Alarm',
+    description: 'Choose a time to wake up and select a soothing Zen sound...',
+    image: require('../../assets/monk.png'),
+  },
+  {
+    title: 'Set Your First Alarm',
+    description: 'Choose a time to wake up and select a soothing Zen sound...',
+    image: require('../../assets/monk.png'),
+  },
+  {
+    title: 'Set Your First Alarm',
+    description: 'Choose a time to wake up and select a soothing Zen sound...',
+    image: require('../../assets/monk.png'),
+  },
 ];
 
 const OnboardingScreen = ({ navigation }) => {
@@ -47,7 +61,7 @@ const OnboardingScreen = ({ navigation }) => {
 
 const Card = ({ index, animationValue }) => {
   const cardStyle = useAnimatedStyle(() => {
-    const scale = interpolate(animationValue.value, [-1, 0, 1], [0.9, 1, 1.1], {
+    const scale = interpolate(animationValue.value, [-1, 0, 1], [0.8, 1, 1.2], {
       extrapolateLeft: 'clamp',
       extrapolateRight: 'clamp',
     });
