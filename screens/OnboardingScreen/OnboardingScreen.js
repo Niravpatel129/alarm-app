@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Animated, { Extrapolate, interpolate, useAnimatedStyle } from 'react-native-reanimated';
+import Animated, { interpolate, useAnimatedStyle } from 'react-native-reanimated';
 import Carousel from 'react-native-reanimated-carousel';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
@@ -8,46 +8,15 @@ const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
 const data = [
   {
     title: 'Welcome',
-    description:
-      'Welcome to ZenWake, your serene start to the day. Let’s get ready to wake up refreshed every morning.',
+    description: 'Welcome to ZenWake, your serene start to the day...',
+    image: require('../../assets/monk.png'), // Adjust the path as necessary
   },
   {
     title: 'Set Your First Alarm',
-    description:
-      'Choose a time to wake up and select a soothing Zen sound to start your day peacefully.',
+    description: 'Choose a time to wake up and select a soothing Zen sound...',
+    image: require('../../assets/monk.png'), // Adjust the path as necessary
   },
-  {
-    title: 'Discover Zen Sounds',
-    description:
-      'Explore a variety of calming sounds for your alarms, from gentle rains to soft chimes.',
-  },
-  {
-    title: 'Personalize Your Morning',
-    description: 'Customize how you wake up by setting multiple alarms for different days.',
-  },
-  {
-    title: 'Zen Tools for Better Sleep',
-    description: 'Use our bedtime reminder and guided meditations to prepare for a restful night.',
-  },
-  {
-    title: 'Track Your Sleep',
-    description:
-      'Understand your sleep patterns with our insights to improve your sleep quality over time.',
-  },
-  {
-    title: 'Stay Mindful',
-    description: 'Set daily mindfulness reminders to take moments of peace throughout your day.',
-  },
-  {
-    title: 'Join Our Community',
-    description:
-      'Share tips, experiences, and support with others on their journey to better sleep and mornings.',
-  },
-  {
-    title: 'You’re All Set',
-    description:
-      'Start your ZenWake journey to a more peaceful morning and a restful night’s sleep.',
-  },
+  // Add additional slides as needed
 ];
 
 const OnboardingScreen = ({ navigation }) => {
@@ -78,14 +47,18 @@ const OnboardingScreen = ({ navigation }) => {
 
 const Card = ({ index, animationValue }) => {
   const cardStyle = useAnimatedStyle(() => {
-    const scale = interpolate(animationValue.value, [-1, 0, 1], [0.9, 1, 1.1], Extrapolate.CLAMP);
-    const opacity = interpolate(animationValue.value, [-1, 0, 1], [0.5, 1, 0.5], Extrapolate.CLAMP);
-    const translateX = interpolate(
-      animationValue.value,
-      [-1, 0, 1],
-      [-30, 0, 30],
-      Extrapolate.CLAMP,
-    );
+    const scale = interpolate(animationValue.value, [-1, 0, 1], [0.9, 1, 1.1], {
+      extrapolateLeft: 'clamp',
+      extrapolateRight: 'clamp',
+    });
+    const opacity = interpolate(animationValue.value, [-1, 0, 1], [0.5, 1, 0.5], {
+      extrapolateLeft: 'clamp',
+      extrapolateRight: 'clamp',
+    });
+    const translateX = interpolate(animationValue.value, [-1, 0, 1], [-50, 0, 50], {
+      extrapolateLeft: 'clamp',
+      extrapolateRight: 'clamp',
+    });
 
     return {
       opacity,
@@ -93,10 +66,21 @@ const Card = ({ index, animationValue }) => {
     };
   });
 
-  const { title, description } = data[index];
+  const imageStyle = useAnimatedStyle(() => {
+    const translateX = interpolate(animationValue.value, [-1, 0, 1], [-30, 0, 30], {
+      extrapolateLeft: 'clamp',
+      extrapolateRight: 'clamp',
+    });
+    return {
+      transform: [{ translateX }],
+    };
+  });
+
+  const { title, description, image } = data[index];
 
   return (
     <Animated.View style={[styles.slide, cardStyle]}>
+      <Animated.Image source={image} style={[styles.slideImage, imageStyle]} resizeMode='contain' />
       <Text style={styles.slideTitle}>{title}</Text>
       <Text style={styles.slideText}>{description}</Text>
     </Animated.View>
@@ -112,10 +96,15 @@ const styles = StyleSheet.create({
   },
   slide: {
     width: windowWidth,
-    height: windowHeight,
+    height: windowHeight * 0.75, // Adjust the height as needed
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 20, // Ensure text does not touch the edges
+    overflow: 'hidden', // Ensure nothing spills outside the slide bounds
+    padding: 20,
+  },
+  slideImage: {
+    width: windowWidth,
+    height: 300,
   },
   slideTitle: {
     fontSize: 24,
@@ -136,8 +125,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 40,
     right: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-    padding: 10,
+    padding: 30,
     borderRadius: 20,
   },
   skipButtonText: {
