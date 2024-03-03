@@ -110,10 +110,10 @@ const styles = StyleSheet.create({
   },
   slide: {
     width: windowWidth,
-    height: windowHeight * 0.75, // Adjust the height as needed
+    height: windowHeight * 0.75,
     justifyContent: 'center',
     alignItems: 'center',
-    overflow: 'hidden', // Ensure nothing spills outside the slide bounds
+    overflow: 'hidden',
     padding: 20,
   },
   slideImage: {
