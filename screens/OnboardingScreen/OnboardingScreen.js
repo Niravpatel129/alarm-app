@@ -6,15 +6,48 @@ import Carousel from 'react-native-reanimated-carousel';
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
 
 const data = [
-  'Welcome to ZenWake, your serene start to the day. Let’s get ready to wake up refreshed every morning.',
-  'Set Your First Alarm: Choose a time to wake up and select a soothing Zen sound to start your day peacefully.',
-  'Discover Zen Sounds: Explore a variety of calming sounds for your alarms, from gentle rains to soft chimes.',
-  'Personalize Your Morning: Customize how you wake up by setting multiple alarms for different days.',
-  'Zen Tools for Better Sleep: Use our bedtime reminder and guided meditations to prepare for a restful night.',
-  'Track Your Sleep: Understand your sleep patterns with our insights to improve your sleep quality over time.',
-  'Stay Mindful: Set daily mindfulness reminders to take moments of peace throughout your day.',
-  'Join Our Community: Share tips, experiences, and support with others on their journey to better sleep and mornings.',
-  'You’re All Set: Start your ZenWake journey to a more peaceful morning and a restful night’s sleep.',
+  {
+    title: 'Welcome',
+    description:
+      'Welcome to ZenWake, your serene start to the day. Let’s get ready to wake up refreshed every morning.',
+  },
+  {
+    title: 'Set Your First Alarm',
+    description:
+      'Choose a time to wake up and select a soothing Zen sound to start your day peacefully.',
+  },
+  {
+    title: 'Discover Zen Sounds',
+    description:
+      'Explore a variety of calming sounds for your alarms, from gentle rains to soft chimes.',
+  },
+  {
+    title: 'Personalize Your Morning',
+    description: 'Customize how you wake up by setting multiple alarms for different days.',
+  },
+  {
+    title: 'Zen Tools for Better Sleep',
+    description: 'Use our bedtime reminder and guided meditations to prepare for a restful night.',
+  },
+  {
+    title: 'Track Your Sleep',
+    description:
+      'Understand your sleep patterns with our insights to improve your sleep quality over time.',
+  },
+  {
+    title: 'Stay Mindful',
+    description: 'Set daily mindfulness reminders to take moments of peace throughout your day.',
+  },
+  {
+    title: 'Join Our Community',
+    description:
+      'Share tips, experiences, and support with others on their journey to better sleep and mornings.',
+  },
+  {
+    title: 'You’re All Set',
+    description:
+      'Start your ZenWake journey to a more peaceful morning and a restful night’s sleep.',
+  },
 ];
 
 const OnboardingScreen = ({ navigation }) => {
@@ -47,7 +80,6 @@ const Card = ({ index, animationValue }) => {
   const cardStyle = useAnimatedStyle(() => {
     const scale = interpolate(animationValue.value, [-1, 0, 1], [0.9, 1, 1.1], Extrapolate.CLAMP);
     const opacity = interpolate(animationValue.value, [-1, 0, 1], [0.5, 1, 0.5], Extrapolate.CLAMP);
-    // Parallax effect: adjust translateX based on the animationValue
     const translateX = interpolate(
       animationValue.value,
       [-1, 0, 1],
@@ -57,13 +89,16 @@ const Card = ({ index, animationValue }) => {
 
     return {
       opacity,
-      transform: [{ scale }, { translateX }], // Add translateX to the transform array for the parallax effect
+      transform: [{ scale }, { translateX }],
     };
   });
 
+  const { title, description } = data[index];
+
   return (
     <Animated.View style={[styles.slide, cardStyle]}>
-      <Text style={styles.slideText}>{data[index]}</Text>
+      <Text style={styles.slideTitle}>{title}</Text>
+      <Text style={styles.slideText}>{description}</Text>
     </Animated.View>
   );
 };
@@ -73,21 +108,29 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f0ede5', // Static serene background color
+    backgroundColor: '#f0ede5',
   },
   slide: {
     width: windowWidth,
     height: windowHeight,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: 20, // Ensure text does not touch the edges
   },
-  slideText: {
-    fontSize: 22,
+  slideTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
     textAlign: 'center',
     color: '#333',
-    padding: 20,
+    paddingBottom: 10,
+  },
+  slideText: {
+    fontSize: 18,
+    textAlign: 'center',
+    color: '#333',
     backgroundColor: 'rgba(255, 255, 255, 0.8)',
     borderRadius: 10,
+    padding: 20,
   },
   skipButton: {
     position: 'absolute',
