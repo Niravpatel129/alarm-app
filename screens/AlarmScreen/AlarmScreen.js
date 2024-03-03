@@ -1,14 +1,35 @@
 import { Entypo, MaterialIcons } from '@expo/vector-icons';
-import React from 'react';
-import { Image, SafeAreaView, Text, View } from 'react-native';
+import React, { useRef } from 'react';
+import { Image, PanResponder, SafeAreaView, Text, View } from 'react-native';
 
 export default function AlarmScreen() {
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderMove: (event, gestureState) => {
+        // Check if the swipe gesture is a deep swipe up
+        const { dy } = gestureState;
+        const swipeThreshold = -100; // Adjust this threshold value as needed
+        if (dy < swipeThreshold) {
+          // Perform action on deep swipe up
+          console.log('Deep Swipe Up Detected');
+          alert('Alarm dismissed');
+          // Add your action here, for example, dismissing the alarm
+        } else {
+          // Perform action on shallow swipe up
+          console.log('Shallow Swipe Up Detected');
+        }
+      },
+    }),
+  ).current;
+
   return (
     <View
       style={{
         backgroundColor: '#222027',
         flex: 1,
       }}
+      {...panResponder.panHandlers}
     >
       <SafeAreaView
         style={{
