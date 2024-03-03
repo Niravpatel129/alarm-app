@@ -1,13 +1,14 @@
+import { Audio } from 'expo-av';
 import * as Notifications from 'expo-notifications';
-import { useEffect } from 'react';
-import { Platform } from 'react-native';
+import { useEffect, useRef } from 'react';
+import { Alert, Platform } from 'react-native';
 
 export function useNotifications() {
   useEffect(() => {
     Notifications.setNotificationHandler({
       handleNotification: async () => ({
         shouldShowAlert: true,
-        shouldPlaySound: true,
+        shouldPlaySound: false,
         shouldSetBadge: false,
       }),
     });
@@ -18,7 +19,7 @@ export function useNotifications() {
           await Notifications.setNotificationChannelAsync('alarm-channel', {
             name: 'Alarm channel',
             importance: Notifications.AndroidImportance.MAX,
-            sound: 'birds2.wav', // Make sure this file exists in your android app resources
+            sound: 'default',
           });
         }
 
@@ -36,7 +37,7 @@ export function useNotifications() {
             finalStatus = status;
           }
           if (finalStatus !== 'granted') {
-            alert('Failed to get push token for push notification!');
+            Alert.alert('Failed to get push token for push notification!');
             return;
           }
         }
@@ -48,38 +49,46 @@ export function useNotifications() {
     requestPermissions();
   }, []);
 
+  const soundObject = useRef(new Audio.Sound());
+
   const scheduleAlarm = async (alarmTime) => {
     const now = new Date();
     const timeDifference = alarmTime.getTime() - now.getTime();
-    const secondsUntilAlarm = Math.round(timeDifference / 1000);
-
-    const numberOfNotifications = 10;
-    const notificationInterval = 20;
-
-    for (let i = 0; i < numberOfNotifications; i++) {
-      const schedulingOptions = {
-        content: {
-          title: 'Alarm',
-          body: 'Your alarm is ringing!',
-          sound: 'birds2.wav', // Ensure this is a repeating sound or use multiple notifications
-        },
-        trigger: {
-          seconds:
-            secondsUntilAlarm > 0
-              ? secondsUntilAlarm + i * notificationInterval
-              : 1 + i * notificationInterval, // Ensure there's a delay
-          channelId: 'alarm-channel', // For Android 8.0 and above
-        },
-      };
-
-      console.log(`Scheduling notification #${i + 1}`);
-      await Notifications.scheduleNotificationAsync(schedulingOptions);
+    if (timeDifference < 0) {
+      Alert.alert('Error', 'Alarm time must be in the future.');
+      return;
     }
+
+    setTimeout(async () => {
+      try {
+        await soundObject.current.loadAsync(require('../assets/sounds/birds2.wav'));
+        await soundObject.current.setIsLoopingAsync(true); // Set the sound to loop
+        await soundObject.current.playAsync();
+      } catch (error) {
+        console.error('Error playing sound', error);
+      }
+    }, timeDifference);
+
+    // Optionally schedule a notification as a backup or additional reminder
+    const schedulingOptions = {
+      content: {
+        title: 'Alarm',
+        body: 'Your alarm is ringing!',
+      },
+      trigger: { seconds: Math.round(timeDifference / 1000) }, // Convert milliseconds to seconds
+    };
+    await Notifications.scheduleNotificationAsync(schedulingOptions);
   };
 
   const stopAlarmNotifications = async () => {
-    console.log('Cancelling all scheduled alarms...');
+    console.log('Cancelling all scheduled alarms and stopping sound...');
     await Notifications.cancelAllScheduledNotificationsAsync();
+    try {
+      await soundObject.current.stopAsync(); // Stop the sound
+      await soundObject.current.unloadAsync(); // Unload the sound from memory
+    } catch (error) {
+      console.error('Error stopping sound', error);
+    }
   };
 
   return { scheduleAlarm, stopAlarmNotifications };
