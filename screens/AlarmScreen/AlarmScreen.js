@@ -13,7 +13,6 @@ export default function AlarmScreen() {
         if (dy < swipeThreshold) {
           // Perform action on deep swipe up
           console.log('Deep Swipe Up Detected');
-          alert('Alarm dismissed');
           // Add your action here, for example, dismissing the alarm
         } else {
           // Perform action on shallow swipe up
@@ -89,8 +88,7 @@ export default function AlarmScreen() {
           <View
             style={{
               flexDirection: 'row',
-              gap: 5,
-              marginTop: 4,
+              gap: 3,
             }}
           >
             <MaterialIcons name='access-alarms' size={18} color='#c0c0c0' />
