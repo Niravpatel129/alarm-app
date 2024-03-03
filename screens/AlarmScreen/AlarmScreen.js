@@ -4,7 +4,7 @@ import { Animated, Image, PanResponder, SafeAreaView, Text, View } from 'react-n
 
 export default function AlarmScreen() {
   const position = useRef(new Animated.ValueXY()).current;
-  const opacity = useRef(new Animated.Value(1)).current; // Initialize opacity for the chevron
+  const opacity = useRef(new Animated.Value(1)).current;
 
   const panResponder = useRef(
     PanResponder.create({
@@ -12,7 +12,6 @@ export default function AlarmScreen() {
       onPanResponderMove: (_, gestureState) => {
         if (gestureState.dy > 0) return;
 
-        // Limit the swipe up and adjust opacity
         const newY = gestureState.dy < -100 ? -100 : gestureState.dy;
         position.setValue({ x: 0, y: newY });
         const newOpacity = gestureState.dy < -50 ? Math.max(1 - -gestureState.dy / 100, 0) : 1;
@@ -26,8 +25,6 @@ export default function AlarmScreen() {
             useNativeDriver: false,
           }).start(() => {
             position.setValue({ x: 0, y: 0 });
-            // Optionally reset opacity here if you want the chevron to reappear after the animation
-            // after 3 seconds
             setTimeout(() => {
               opacity.setValue(1);
             }, 3000);
@@ -38,7 +35,6 @@ export default function AlarmScreen() {
             friction: 5,
             useNativeDriver: false,
           }).start();
-          // Reset opacity to make chevron fully visible again
           opacity.setValue(1);
         }
       },
