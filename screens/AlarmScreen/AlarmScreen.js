@@ -64,18 +64,14 @@ export default function AlarmScreen() {
             02.10.23
           </Text>
           <Image
-            source={{
-              uri: 'https://cdn.discordapp.com/attachments/1110409819808079982/1213631045644062740/image.png?ex=65f62cfd&is=65e3b7fd&hm=dfd2310522ce56203ded3bb354b4ddce53cb32beacde8801facc1e08b1db5e44&',
-            }}
+            source={require('../../assets/images/moon.png')}
             style={{
               width: 200,
               height: 200,
             }}
           />
           <Image
-            source={{
-              uri: 'https://cdn.discordapp.com/attachments/1110409819808079982/1213631894797942824/2Q.png?ex=65f62dc7&is=65e3b8c7&hm=5cdc009c3e5252be6e329f550603469b27e90302cab63f5a2fad627509f99016&',
-            }}
+            source={require('../../assets/images/waves.png')}
             style={{
               width: '100%',
               height: 200,
