@@ -10,6 +10,8 @@ export default function AlarmScreen() {
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onPanResponderMove: (_, gestureState) => {
+        if (gestureState.dy > 0) return;
+
         // Limit the swipe up and adjust opacity
         const newY = gestureState.dy < -100 ? -100 : gestureState.dy;
         position.setValue({ x: 0, y: newY });
