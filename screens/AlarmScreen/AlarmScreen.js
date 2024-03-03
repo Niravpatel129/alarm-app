@@ -1,5 +1,5 @@
 import { Entypo, MaterialIcons } from '@expo/vector-icons';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Image, PanResponder, SafeAreaView, Text, View } from 'react-native';
 
 export default function AlarmScreen() {
@@ -7,20 +7,35 @@ export default function AlarmScreen() {
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onPanResponderMove: (event, gestureState) => {
-        // Check if the swipe gesture is a deep swipe up
         const { dy } = gestureState;
-        const swipeThreshold = -100; // Adjust this threshold value as needed
+        const swipeThreshold = -100;
         if (dy < swipeThreshold) {
-          // Perform action on deep swipe up
           console.log('Deep Swipe Up Detected');
-          // Add your action here, for example, dismissing the alarm
         } else {
-          // Perform action on shallow swipe up
           console.log('Shallow Swipe Up Detected');
         }
       },
     }),
   ).current;
+
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+
+  const day = days[currentTime.getDay()];
+  const date = `${currentTime.getDate() < 10 ? '0' : ''}${currentTime.getDate()}`;
+  const month = months[currentTime.getMonth()];
+  const year = currentTime.getFullYear();
+  const hours = `${currentTime.getHours() < 10 ? '0' : ''}${currentTime.getHours()}`;
+  const minutes = `${currentTime.getMinutes() < 10 ? '0' : ''}${currentTime.getMinutes()}`;
 
   return (
     <View
@@ -45,22 +60,22 @@ export default function AlarmScreen() {
           <Text
             style={{
               fontSize: 24,
-              fontWeight: 400,
+              fontWeight: '400',
               color: 'white',
               marginTop: 20,
             }}
           >
-            Today, Monday
+            Today, {day}
           </Text>
           <Text
             style={{
               fontSize: 16,
-              fontWeight: 400,
+              fontWeight: '400',
               color: '#ababac',
               marginTop: 5,
             }}
           >
-            02.10.23
+            {date}.{month}.{year}
           </Text>
           <Image
             source={require('../../assets/images/moon.png')}
@@ -83,7 +98,7 @@ export default function AlarmScreen() {
               color: 'white',
             }}
           >
-            23:30
+            {hours}:{minutes}
           </Text>
           <View
             style={{
