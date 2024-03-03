@@ -1,18 +1,30 @@
 import { Entypo, MaterialIcons } from '@expo/vector-icons';
 import React, { useEffect, useRef, useState } from 'react';
-import { Image, PanResponder, SafeAreaView, Text, View } from 'react-native';
+import { Animated, Image, PanResponder, SafeAreaView, Text, View } from 'react-native';
 
 export default function AlarmScreen() {
+  const position = useRef(new Animated.ValueXY()).current;
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
-      onPanResponderMove: (event, gestureState) => {
-        const { dy } = gestureState;
-        const swipeThreshold = -100;
-        if (dy < swipeThreshold) {
-          console.log('Deep Swipe Up Detected');
+      onPanResponderMove: (_, gestureState) => {
+        // Limit the swipe up to -100 pixels
+        const newY = gestureState.dy < -100 ? -100 : gestureState.dy;
+        position.setValue({ x: 0, y: newY });
+      },
+      onPanResponderRelease: (_, gestureState) => {
+        if (gestureState.dy < -100) {
+          Animated.timing(position, {
+            toValue: { x: 0, y: -200 },
+            useNativeDriver: false,
+            duration: 200,
+          }).start(() => position.setValue({ x: 0, y: 0 }));
         } else {
-          console.log('Shallow Swipe Up Detected');
+          Animated.spring(position, {
+            toValue: { x: 0, y: 0 },
+            useNativeDriver: true,
+            friction: 5,
+          }).start();
         }
       },
     }),
@@ -117,21 +129,10 @@ export default function AlarmScreen() {
               Alarm 8:30
             </Text>
           </View>
-          <View
-            style={{
-              marginTop: 40,
-            }}
-          >
+          <Animated.View style={[position.getLayout(), { alignItems: 'center', marginTop: 40 }]}>
             <Entypo name='chevron-thin-up' size={38} color='#4d4c52' />
-            <Entypo
-              name='chevron-thin-up'
-              size={38}
-              color='white'
-              style={{
-                marginTop: -15,
-              }}
-            />
-          </View>
+            <Entypo name='chevron-thin-up' size={38} color='white' style={{ marginTop: -15 }} />
+          </Animated.View>
           <Text
             style={{
               color: '#7c7b7e',
