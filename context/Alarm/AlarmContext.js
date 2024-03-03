@@ -148,24 +148,28 @@ export const AlarmProvider = ({ children }) => {
   }, [getDynamicSleepMessages]);
 
   const stopAlarm = useCallback(() => {
-    console.log('🚀  stop alarm');
-    stopAlarmNotifications();
-    setIsSleepMode(false);
+    try {
+      console.log('🚀  stop alarm');
+      stopAlarmNotifications();
+      setIsSleepMode(false);
 
-    const wakeUpMessages = [
-      'You are awake now',
-      'Take a deep breath and stretch your body',
-      'Clear your mind and start your day with a smile',
-    ];
+      const wakeUpMessages = [
+        'You are awake now',
+        'Take a deep breath and stretch your body',
+        'Clear your mind and start your day with a smile',
+      ];
 
-    setMessages(wakeUpMessages);
-    setMessageTitle('Good Morning');
-    setAlarmInProgress(false);
-    toggleGuide();
+      setMessages(wakeUpMessages);
+      setMessageTitle('Good Morning');
+      setAlarmInProgress(false);
+      toggleGuide();
 
-    // save the alarm in progress to local storage
-    AsyncStorage.setItem('alarmInProgress', JSON.stringify(false));
-    AsyncStorage.setItem('isSleepMode', JSON.stringify(false));
+      // save the alarm in progress to local storage
+      AsyncStorage.setItem('alarmInProgress', JSON.stringify(false));
+      AsyncStorage.setItem('isSleepMode', JSON.stringify(false));
+    } catch (error) {
+      console.error('Error stopping alarm', error);
+    }
   }, [toggleGuide]);
 
   return (
