@@ -1,10 +1,14 @@
 import { Entypo, MaterialIcons } from '@expo/vector-icons';
 import React, { useEffect, useRef, useState } from 'react';
 import { Animated, Image, PanResponder, SafeAreaView, Text, View } from 'react-native';
+import MeditationGuide from '../../components/MeditationGuide/MeditationGuide';
+import { useAlarmContext } from '../../context/Alarm/AlarmContext';
 
 export default function AlarmScreen() {
   const position = useRef(new Animated.ValueXY()).current;
   const opacity = useRef(new Animated.Value(1)).current;
+  const { selectedTime, messages, showGuide, toggleGuide, stopAlarm, messageTitle } =
+    useAlarmContext('01:00 AM');
 
   const panResponder = useRef(
     PanResponder.create({
@@ -29,6 +33,8 @@ export default function AlarmScreen() {
               opacity.setValue(1);
             }, 3000);
           });
+
+          stopAlarm();
         } else {
           Animated.spring(position, {
             toValue: { x: 0, y: 0 },
@@ -138,7 +144,7 @@ export default function AlarmScreen() {
                 fontFamily: 'Roboto',
               }}
             >
-              Alarm 8:30
+              Alarm {selectedTime}
             </Text>
           </View>
           <Animated.View
@@ -161,6 +167,13 @@ export default function AlarmScreen() {
           </Text>
         </View>
       </SafeAreaView>
+      {showGuide && (
+        <MeditationGuide
+          messageTitle={messageTitle}
+          messages={messages}
+          onCompletion={() => toggleGuide()}
+        />
+      )}
     </View>
   );
 }

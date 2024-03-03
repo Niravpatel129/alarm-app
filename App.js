@@ -5,8 +5,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import TabBar from './components/TabBar/TabBar';
 import { AlarmProvider } from './context/Alarm/AlarmContext';
+import AlarmScreen from './screens/AlarmScreen/AlarmScreen';
 import HomeScreen from './screens/Home/Home';
-import InSleep from './screens/InSleep/InSleep';
 import SettingsScreen from './screens/Settings/Settings';
 
 const Tab = createBottomTabNavigator();
@@ -35,7 +35,7 @@ function App() {
       <AlarmProvider>
         <Stack.Navigator>
           {/* Dev */}
-          {/* <Stack.Screen name='Dev' component={InSleep} options={{ headerShown: false }} /> */}
+          {/* <Stack.Screen name='Dev' component={AlarmScreen} options={{ headerShown: false }} /> */}
 
           <Stack.Screen
             name='Home'
@@ -47,7 +47,7 @@ function App() {
           />
           <Stack.Screen
             name='AlarmScreen'
-            component={InSleep}
+            component={AlarmScreen}
             options={{
               headerShown: false,
               animation: 'slide_from_bottom',
