@@ -1,10 +1,11 @@
 import { Audio } from 'expo-av';
 import * as Notifications from 'expo-notifications';
 import React, { useEffect, useState } from 'react';
-import { Platform, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Platform, Text, TouchableOpacity, View } from 'react-native';
+import BackgroundTimer from 'react-native-background-timer';
 
 const Settings = () => {
-  const [soundObject, setSoundObject] = useState();
+  const [soundObject, setSoundObject] = useState(null);
 
   useEffect(() => {
     const loadSounds = async () => {
@@ -14,7 +15,6 @@ const Settings = () => {
         }
 
         const { sound } = await Audio.Sound.createAsync(require('../../assets/sounds/birds2.wav'));
-
         setSoundObject(sound);
       } catch (error) {
         console.error('Error loading sounds', error);
@@ -23,7 +23,6 @@ const Settings = () => {
 
     const requestPermissions = async () => {
       try {
-        // get background sound permissions for iOS
         await Audio.setAudioModeAsync({
           playsInSilentModeIOS: true,
           allowsRecordingIOS: false,
@@ -35,7 +34,7 @@ const Settings = () => {
         });
 
         if (Platform.OS !== 'web') {
-          const { status: existingStatus } = await Notification.getPermissionsAsync();
+          const { status: existingStatus } = await Notifications.getPermissionsAsync();
           let finalStatus = existingStatus;
           if (existingStatus !== 'granted') {
             const { status } = await Notifications.requestPermissionsAsync({
@@ -66,11 +65,13 @@ const Settings = () => {
       <Text>Settings Page</Text>
       <TouchableOpacity
         onPress={() => {
-          // wait 5 seconds before playing the sound
-          soundObject.setIsLoopingAsync(true);
-          setTimeout(() => {
-            soundObject.replayAsync();
-          }, 5000);
+          if (soundObject) {
+            // Wait 1 minute before playing the sound
+            soundObject.setIsLoopingAsync(true);
+            BackgroundTimer.setTimeout(() => {
+              soundObject.playAsync();
+            }, 60000); // 60000 milliseconds = 1 minute
+          }
         }}
         style={{
           backgroundColor: 'blue',
@@ -84,7 +85,9 @@ const Settings = () => {
 
       <TouchableOpacity
         onPress={() => {
-          soundObject.stopAsync();
+          if (soundObject) {
+            soundObject.stopAsync();
+          }
         }}
         style={{
           backgroundColor: 'red',
