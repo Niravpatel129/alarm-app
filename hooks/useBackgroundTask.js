@@ -1,19 +1,50 @@
 import { Audio } from 'expo-av';
 import BackgroundService from 'react-native-background-actions';
+import TrackPlayer, { Capability, RepeatMode } from 'react-native-track-player';
 
 const sleep = (time) => new Promise((resolve) => setTimeout(() => resolve(), time));
 
-// You can do anything in your task such as network requests, timers and so on,
-// as long as it doesn't touch UI. Once your task completes (i.e. the promise is resolved),
-// React Native will go into "paused" mode (unless there are other tasks running,
-// or there is a foreground app).
+let backgroundSound = null; // Global reference for the background sound
+
+const setupTrackPlayer = async () => {
+  try {
+    await TrackPlayer.setupPlayer();
+    await TrackPlayer.updateOptions({
+      stopWithApp: false,
+      capabilities: [Capability.Play, Capability.Pause],
+      playInBackground: true,
+      pauseInBackground: true,
+    });
+
+    await TrackPlayer.add({
+      id: 'silent-track',
+      url: require('../assets/sounds/silent.mp3'),
+      title: 'Silent Track',
+      artist: 'Background Service',
+      artwork: require('../assets/icon.png'),
+    });
+
+    await TrackPlayer.setRepeatMode(RepeatMode.Queue);
+  } catch (error) {
+    console.log('Error setting up track player', error);
+  }
+};
+
 const veryIntensiveTask = async (taskDataArguments) => {
-  // Example of an infinite loop task
   const { delay } = taskDataArguments;
+  await setupTrackPlayer();
+  await TrackPlayer.play();
+
   await new Promise(async (resolve) => {
     for (let i = 0; BackgroundService.isRunning(); i++) {
-      if (i === 200) {
-        const { sound } = await Audio.Sound.createAsync(require('../assets/sounds/birds2.wav'));
+      console.log('🚀  i:', i);
+      if (i === 300 && !backgroundSound) {
+        const { sound } = await Audio.Sound.createAsync(
+          require('../assets/sounds/birds2.wav'),
+          { shouldPlay: true, isLooping: true }, // Set to play immediately and loop
+        );
+        backgroundSound = sound; // Keep a reference to the sound object
+
         await Audio.setAudioModeAsync({
           playsInSilentModeIOS: true,
           allowsRecordingIOS: false,
@@ -25,10 +56,10 @@ const veryIntensiveTask = async (taskDataArguments) => {
           allowsBackgroundPlayback: true,
         });
 
-        sound.replayAsync();
+        sound.playAsync(); // Explicitly start playback (if not auto-playing)
       }
 
-      await sleep(1000);
+      await sleep(delay);
     }
   });
 };
@@ -42,7 +73,7 @@ const options = {
     type: 'mipmap',
   },
   color: '#ff00ff',
-  linkingURI: 'yourSchemeHere://chat/jane', // See Deep Linking for more info
+  linkingURI: 'yourSchemeHere://chat/jane',
   parameters: {
     delay: 1000,
   },
@@ -53,7 +84,14 @@ const doSomething = async () => {
 };
 
 const doSomethingElse = async () => {
+  if (backgroundSound) {
+    await backgroundSound.stopAsync(); // Stop the background sound
+    await backgroundSound.unloadAsync(); // Unload the sound from memory
+    backgroundSound = null; // Clear the reference
+  }
+
   await BackgroundService.stop();
+  await TrackPlayer.stop();
 };
 
 export { doSomething, doSomethingElse };
