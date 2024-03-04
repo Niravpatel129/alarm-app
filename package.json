@@ -46,7 +46,9 @@
     "react-native-volume-manager": "^1.10.0",
     "react-native-web": "~0.19.6",
     "react-native-svg": "14.1.0",
-    "lottie-react-native": "6.5.1"
+    "lottie-react-native": "6.5.1",
+    "expo-background-fetch": "~11.8.1",
+    "expo-task-manager": "~11.7.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
