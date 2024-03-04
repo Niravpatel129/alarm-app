@@ -71,6 +71,8 @@ const Settings = () => {
             BackgroundTimer.setTimeout(() => {
               soundObject.playAsync();
             }, 60000); // 60000 milliseconds = 1 minute
+          } else {
+            alert('Sound not loaded');
           }
         }}
         style={{

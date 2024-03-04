@@ -1,6 +1,6 @@
 export default {
   expo: {
-    name: 'zen-alarm',
+    name: 'Zen Alarm',
     slug: 'zen-alarm',
     version: '1.0.0',
     orientation: 'portrait',
