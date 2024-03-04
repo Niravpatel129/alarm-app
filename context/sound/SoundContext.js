@@ -31,8 +31,6 @@ export const SoundProvider = ({ children }) => {
         allowsBackgroundPlayback: true,
       });
 
-      await sound.setCategory('Playback');
-
       setAlarmSound(alarm);
     } catch (error) {
       console.log('error loading sounds', error);
