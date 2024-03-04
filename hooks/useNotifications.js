@@ -1,9 +1,13 @@
 import { Audio } from 'expo-av';
 import * as Notifications from 'expo-notifications';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Alert, Platform } from 'react-native';
+import BackgroundTimer from 'react-native-background-timer';
 
 export function useNotifications() {
+  const soundObject = useRef(new Audio.Sound());
+  const [isAlarmSet, setIsAlarmSet] = useState(false);
+
   useEffect(() => {
     Notifications.setNotificationHandler({
       handleNotification: async () => ({
@@ -66,8 +70,6 @@ export function useNotifications() {
     requestPermissions();
   }, []);
 
-  const soundObject = useRef(new Audio.Sound());
-
   const scheduleAlarm = async (alarmTime) => {
     await soundObject.current.loadAsync(require('../assets/sounds/birds2.wav'));
 
@@ -78,32 +80,30 @@ export function useNotifications() {
       return;
     }
 
-    setTimeout(async () => {
+    setIsAlarmSet(true);
+
+    BackgroundTimer.setTimeout(async () => {
       try {
-        await soundObject.current.setIsLoopingAsync(true); // Set the sound to loop
+        console.log('Alarm time reached, playing sound...');
+        await soundObject.current.setIsLoopingAsync(true);
         await soundObject.current.playAsync();
+        setIsAlarmSet(false);
       } catch (error) {
         console.error('Error playing sound', error);
       }
     }, timeDifference);
-
-    // Optionally schedule a notification as a backup or additional reminder
-    const schedulingOptions = {
-      content: {
-        title: 'Alarm',
-        body: 'Your alarm is ringing!',
-      },
-      trigger: { seconds: Math.round(timeDifference / 1000) }, // Convert milliseconds to seconds
-    };
-    await Notifications.scheduleNotificationAsync(schedulingOptions);
   };
 
   const stopAlarmNotifications = async () => {
     console.log('Cancelling all scheduled alarms and stopping sound...');
     await Notifications.cancelAllScheduledNotificationsAsync();
+    if (isAlarmSet) {
+      BackgroundTimer.clearTimeout(); // Stop the background timer
+      setIsAlarmSet(false);
+    }
     try {
-      await soundObject.current.stopAsync(); // Stop the sound
-      await soundObject.current.unloadAsync(); // Unload the sound from memory
+      await soundObject.current.stopAsync();
+      await soundObject.current.unloadAsync();
     } catch (error) {
       console.error('Error stopping sound', error);
     }
