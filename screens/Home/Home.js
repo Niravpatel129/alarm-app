@@ -4,6 +4,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-na
 import Button from '../../components/Button/Button';
 import TimePicker from '../../components/TimePicker/TimePicker';
 import { useAlarmContext } from '../../context/Alarm/AlarmContext';
+import { doSomething, doSomethingElse } from '../../hooks/useBackgroundTask';
 
 export default function HomeScreen() {
   const { selectedTime, handleTimeChange, startAlarm } = useAlarmContext('01:00 AM');
@@ -43,6 +44,12 @@ export default function HomeScreen() {
       </View>
       <View style={{ marginTop: 40 }}>
         <Button onPress={() => startAlarm(selectedTime)} text={'Sleep'} />
+      </View>
+      <View style={{ marginTop: 40 }}>
+        <Button onPress={() => doSomething()} text={'1'} />
+      </View>
+      <View style={{ marginTop: 40 }}>
+        <Button onPress={() => doSomethingElse()} text={'2'} />
       </View>
     </View>
   );
