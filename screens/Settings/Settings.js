@@ -66,11 +66,10 @@ const Settings = () => {
       <TouchableOpacity
         onPress={() => {
           if (soundObject) {
-            // Wait 1 minute before playing the sound
             soundObject.setIsLoopingAsync(true);
             BackgroundTimer.setTimeout(() => {
               soundObject.playAsync();
-            }, 60000); // 60000 milliseconds = 1 minute
+            }, 60000);
           } else {
             alert('Sound not loaded');
           }
