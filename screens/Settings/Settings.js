@@ -69,7 +69,7 @@ const Settings = () => {
             soundObject.setIsLoopingAsync(true);
             BackgroundTimer.setTimeout(() => {
               soundObject.playAsync();
-            }, 21600000);
+            }, 60000);
           } else {
             alert('Sound not loaded');
           }
