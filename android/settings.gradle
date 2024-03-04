@@ -1,4 +1,4 @@
-rootProject.name = 'alarm-app'
+rootProject.name = 'zen-alarm'
 
 dependencyResolutionManagement {
   versionCatalogs {

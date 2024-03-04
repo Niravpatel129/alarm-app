@@ -1,7 +1,7 @@
 export default {
   expo: {
-    name: 'alarm-app',
-    slug: 'alarm-app',
+    name: 'zen-alarm',
+    slug: 'zen-alarm',
     version: '1.0.0',
     orientation: 'portrait',
     icon: './assets/icon.png',
