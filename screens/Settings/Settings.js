@@ -1,5 +1,4 @@
 import { Audio } from 'expo-av';
-import * as Notifications from 'expo-notifications';
 import React, { useEffect, useState } from 'react';
 import { Platform, Text, TouchableOpacity, View } from 'react-native';
 
@@ -35,7 +34,7 @@ const Settings = () => {
         });
 
         if (Platform.OS !== 'web') {
-          const { status: existingStatus } = await Notifications.getPermissionsAsync();
+          const { status: existingStatus } = await Notification.getPermissionsAsync();
           let finalStatus = existingStatus;
           if (existingStatus !== 'granted') {
             const { status } = await Notifications.requestPermissionsAsync({
