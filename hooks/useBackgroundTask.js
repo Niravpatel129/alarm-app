@@ -22,7 +22,7 @@ const setupTrackPlayer = async () => {
 };
 
 const playSilentClipAtIntervals = async () => {
-  const { sound } = await Audio.Sound.createAsync(require('../assets/sounds/birds.wav'), {
+  const { sound } = await Audio.Sound.createAsync(require('../assets/sounds/silent.mp3'), {
     shouldPlay: false,
   });
 
@@ -53,7 +53,7 @@ const veryIntensiveTask = async (taskDataArguments) => {
     }
 
     if (i === 300 && !backgroundSound) {
-      const { sound } = await Audio.Sound.createAsync(require('../assets/sounds/silent.mp3'), {
+      const { sound } = await Audio.Sound.createAsync(require('../assets/sounds/birds2.wav'), {
         shouldPlay: true,
         isLooping: true,
       });
