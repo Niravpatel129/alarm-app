@@ -6,6 +6,7 @@ import React from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import TabBar from './components/TabBar/TabBar';
 import { AlarmProvider } from './context/Alarm/AlarmContext';
+import { SoundProvider } from './context/sound/SoundContext';
 import AlarmScreen from './screens/AlarmScreen/AlarmScreen';
 import HomeScreen from './screens/Home/Home';
 import OnboardingScreen from './screens/OnboardingScreen/OnboardingScreen';
@@ -35,34 +36,36 @@ function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <NavigationContainer>
-        <AlarmProvider>
-          <Stack.Navigator>
-            {/* Dev */}
-            {/* <Stack.Screen name='Dev' component={AlarmScreen} options={{ headerShown: false }} /> */}
-            <Stack.Screen
-              name='Onboarding'
-              component={OnboardingScreen}
-              options={{ headerShown: false }}
-            />
+        <SoundProvider>
+          <AlarmProvider>
+            <Stack.Navigator>
+              {/* Dev */}
+              {/* <Stack.Screen name='Dev' component={AlarmScreen} options={{ headerShown: false }} /> */}
+              <Stack.Screen
+                name='Onboarding'
+                component={OnboardingScreen}
+                options={{ headerShown: false }}
+              />
 
-            <Stack.Screen
-              name='Home'
-              component={MyTabs}
-              options={{
-                headerShown: false,
-                animation: 'slide_from_bottom',
-              }}
-            />
-            <Stack.Screen
-              name='AlarmScreen'
-              component={AlarmScreen}
-              options={{
-                headerShown: false,
-                animation: 'slide_from_bottom',
-              }}
-            />
-          </Stack.Navigator>
-        </AlarmProvider>
+              <Stack.Screen
+                name='Home'
+                component={MyTabs}
+                options={{
+                  headerShown: false,
+                  animation: 'slide_from_bottom',
+                }}
+              />
+              <Stack.Screen
+                name='AlarmScreen'
+                component={AlarmScreen}
+                options={{
+                  headerShown: false,
+                  animation: 'slide_from_bottom',
+                }}
+              />
+            </Stack.Navigator>
+          </AlarmProvider>
+        </SoundProvider>
       </NavigationContainer>
     </GestureHandlerRootView>
   );
