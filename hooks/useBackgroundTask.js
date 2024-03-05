@@ -4,14 +4,13 @@ import TrackPlayer, { Capability } from 'react-native-track-player';
 
 const sleep = (time) => new Promise((resolve) => setTimeout(resolve, time));
 
-let backgroundSound = null; // Global reference for the background sound
+let backgroundSound = null;
 
-// Setups TrackPlayer without adding a silent track to be played continuously
 const setupTrackPlayer = async () => {
   try {
     await TrackPlayer.setupPlayer();
     await TrackPlayer.updateOptions({
-      stopWithApp: true, // Change to true to ensure the track stops with the app
+      stopWithApp: true,
       capabilities: [Capability.Play, Capability.Pause],
       playInBackground: true,
       pauseInBackground: true,
