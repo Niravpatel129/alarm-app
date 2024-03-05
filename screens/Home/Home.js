@@ -5,10 +5,12 @@ import Button from '../../components/Button/Button';
 import TimePicker from '../../components/TimePicker/TimePicker';
 import { useAlarmContext } from '../../context/Alarm/AlarmContext';
 import { doSomething, doSomethingElse } from '../../hooks/useBackgroundTask';
+import useTTS from '../../hooks/useTTS';
 
 export default function HomeScreen() {
   const { selectedTime, handleTimeChange, startAlarm } = useAlarmContext('01:00 AM');
   const selectedTimeShared = useSharedValue(selectedTime);
+  const tts = useTTS();
 
   // Call this function whenever the time changes
   const onTimeChange = (newTime) => {
@@ -50,6 +52,9 @@ export default function HomeScreen() {
       </View>
       <View style={{ marginTop: 40 }}>
         <Button onPress={() => doSomethingElse()} text={'2'} />
+      </View>
+      <View style={{ marginTop: 40 }}>
+        <Button onPress={() => tts.speak()} text={'Speak'} />
       </View>
     </View>
   );
