@@ -4,16 +4,48 @@ import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-na
 import Button from '../../components/Button/Button';
 import TimePicker from '../../components/TimePicker/TimePicker';
 import { useAlarmContext } from '../../context/Alarm/AlarmContext';
-import { doSomething, doSomethingElse } from '../../hooks/useBackgroundTask';
+import { StartAlarmEvent, StopAlarmEvent } from '../../hooks/useBackgroundTask';
 import useTTS from '../../hooks/useTTS';
 
 export default function HomeScreen() {
   const { selectedTime, handleTimeChange, startAlarm } = useAlarmContext('01:00 AM');
+  const [secondsToRing, setSecondsToRing] = React.useState(30);
   const selectedTimeShared = useSharedValue(selectedTime);
   const tts = useTTS();
 
   // Call this function whenever the time changes
   const onTimeChange = (newTime) => {
+    console.log('🚀  newTime:', newTime); // Example format: 11:59 PM
+
+    // Convert newTime string to a Date object representing the next occurrence of that time
+    const now = new Date();
+    const [time, modifier] = newTime.split(' ');
+    let [hours, minutes] = time.split(':');
+
+    // Convert 12-hour time to 24-hour time
+    hours = parseInt(hours, 10);
+    minutes = parseInt(minutes, 10);
+    if (modifier === 'PM' && hours < 12) {
+      hours += 12;
+    } else if (modifier === 'AM' && hours === 12) {
+      hours = 0;
+    }
+
+    // Create a Date object for the next occurrence of the alarm time
+    const nextAlarmTime = new Date(now);
+    nextAlarmTime.setHours(hours, minutes, 0, 0);
+
+    // If the next alarm time is in the past, set it to the next day
+    if (nextAlarmTime <= now) {
+      nextAlarmTime.setDate(nextAlarmTime.getDate() + 1);
+    }
+
+    // Calculate the difference in seconds
+    let secondsToRingAlarm = Math.floor((nextAlarmTime - now) / 1000) + 1;
+
+    console.log('🔔 secondsToRingAlarm:', secondsToRingAlarm);
+    setSecondsToRing(secondsToRingAlarm);
+
     handleTimeChange(newTime);
     selectedTimeShared.value = withTiming(newTime, { duration: 500 }); // Smooth transition for time update
   };
@@ -48,13 +80,13 @@ export default function HomeScreen() {
         <Button onPress={() => startAlarm(selectedTime)} text={'Sleep'} />
       </View>
       <View style={{ marginTop: 40 }}>
-        <Button onPress={() => doSomething()} text={'1'} />
+        <Button onPress={() => StartAlarmEvent(secondsToRing || 30)} text={'1'} />
       </View>
       <View style={{ marginTop: 40 }}>
-        <Button onPress={() => doSomethingElse()} text={'2'} />
+        <Button onPress={() => StopAlarmEvent()} text={'2'} />
       </View>
       <View style={{ marginTop: 40 }}>
-        <Button onPress={() => tts.speak()} text={'Speak'} />
+        <Button onPress={() => tts.readText()} text={'Speak'} />
       </View>
     </View>
   );

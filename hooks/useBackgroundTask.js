@@ -40,7 +40,8 @@ const playSilentClipAtIntervals = async () => {
 };
 
 const veryIntensiveTask = async (taskDataArguments) => {
-  const { delay } = taskDataArguments;
+  const { delay, secondsToRing } = taskDataArguments;
+  console.log('🚀  delay, secondsToRing:', delay, secondsToRing);
 
   await setupTrackPlayer();
 
@@ -51,7 +52,7 @@ const veryIntensiveTask = async (taskDataArguments) => {
       playSilentClipAtIntervals();
     }
 
-    if (i === 300 && !backgroundSound) {
+    if (i === secondsToRing && !backgroundSound) {
       const { sound } = await Audio.Sound.createAsync(require('../assets/sounds/birds2.wav'), {
         shouldPlay: true,
         isLooping: true,
@@ -61,30 +62,31 @@ const veryIntensiveTask = async (taskDataArguments) => {
       sound.playAsync();
     }
 
-    await sleep(delay);
+    await sleep(delay || 1000);
   }
 };
 
-const options = {
-  taskName: 'Example',
-  taskTitle: 'ExampleTask title',
-  taskDesc: 'ExampleTask description',
-  taskIcon: {
-    name: 'ic_launcher',
-    type: 'mipmap',
-  },
-  color: '#ff00ff',
-  linkingURI: 'yourSchemeHere://chat/jane',
-  parameters: {
-    delay: 1000, // Adjust this delay as per your task requirements
-  },
-};
+const StartAlarmEvent = async (timeToRing) => {
+  const options = {
+    taskName: 'Example',
+    taskTitle: 'ExampleTask title',
+    taskDesc: 'ExampleTask description',
+    taskIcon: {
+      name: 'ic_launcher',
+      type: 'mipmap',
+    },
+    color: '#ff00ff',
+    linkingURI: 'yourSchemeHere://chat/jane',
+    parameters: {
+      delay: 1000,
+      secondsToRing: timeToRing || 1000,
+    },
+  };
 
-const doSomething = async () => {
   await BackgroundService.start(veryIntensiveTask, options);
 };
 
-const doSomethingElse = async () => {
+const StopAlarmEvent = async () => {
   if (backgroundSound) {
     await backgroundSound.stopAsync();
     await backgroundSound.unloadAsync();
@@ -95,4 +97,4 @@ const doSomethingElse = async () => {
   await TrackPlayer.stop(); // Stops the TrackPlayer if it was used
 };
 
-export { doSomething, doSomethingElse };
+export { StartAlarmEvent, StopAlarmEvent };
