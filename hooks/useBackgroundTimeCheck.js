@@ -9,8 +9,6 @@ const TIME_STORAGE_KEY = 'TARGET_TIME';
 const checkTime = async () => {
   console.log('checkTime()');
 
-  await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate a delay
-
   const targetTimeString = await AsyncStorage.getItem(TIME_STORAGE_KEY);
   if (!targetTimeString) {
     console.log('No target time set');
@@ -19,44 +17,54 @@ const checkTime = async () => {
 
   const [targetHours, targetMinutes] = targetTimeString.split(':').map(Number);
   const currentTime = new Date();
-  const targetTime = new Date();
+  const targetTime = new Date(
+    currentTime.getFullYear(),
+    currentTime.getMonth(),
+    currentTime.getDate(),
+    targetHours,
+    targetMinutes,
+  );
 
-  targetTime.setHours(targetHours, targetMinutes, 0, 0);
-
-  const timeDifference = Math.abs(currentTime - targetTime) / (1000 * 60); // Difference in minutes
+  const timeDifference = Math.abs(currentTime.getTime() - targetTime.getTime()) / (1000 * 60); // Difference in minutes
   const isWithinRange = timeDifference <= 15;
 
   if (isWithinRange) {
-    // unregister the task
     console.log('Time is within range, unregistering task');
-    // in seconds to ring the alarm
     const secondsToRing = Math.floor(timeDifference * 60);
     StartAlarmEvent(secondsToRing);
     if (await TaskManager.isTaskRegisteredAsync(TASK_NAME)) {
-      await BackgroundFetch.unregisterTaskAsync(TASK_NAME);
+      await BackgroundFetch.unregisterTaskAsync(TASK_NAME).catch(console.error);
     }
   } else {
-    console.log('Time is not within range, keep checking', timeDifference);
+    console.log('Time is not within range, keep checking');
   }
 
   return isWithinRange;
 };
 
+// Updated TaskManager definition to improve reliability
 TaskManager.defineTask(TASK_NAME, async () => {
   console.log('Background task running');
-
-  const isWithinRange = await checkTime();
-
-  return BackgroundFetch.BackgroundFetchResult.NewData;
+  try {
+    const isWithinRange = await checkTime();
+    return isWithinRange
+      ? BackgroundFetch.BackgroundFetchResult.NewData
+      : BackgroundFetch.BackgroundFetchResult.NoData;
+  } catch (error) {
+    console.error('Error running background task:', error);
+    return BackgroundFetch.BackgroundFetchResult.Failed;
+  }
 });
 
+// Refactored custom hook for better code organization
 export function useBackgroundTimeCheck() {
   const startAlarmBackground = async (timeString) => {
-    console.log('start alarm ⏰😮‍💨');
+    console.log('Starting alarm background task');
     try {
       let [time, period] = timeString.split(' ');
       let [hours, minutes] = time.split(':').map(Number);
 
+      // Convert 12-hour clock to 24-hour clock format
       if (period.toUpperCase() === 'PM' && hours < 12) {
         hours += 12;
       } else if (period.toUpperCase() === 'AM' && hours === 12) {
@@ -67,29 +75,32 @@ export function useBackgroundTimeCheck() {
 
       const isRegistered = await TaskManager.isTaskRegisteredAsync(TASK_NAME);
       if (!isRegistered) {
-        const options = { minimumInterval: 900 };
-        await BackgroundFetch.registerTaskAsync(TASK_NAME, options);
+        await BackgroundFetch.registerTaskAsync(TASK_NAME, { minimumInterval: 900 })
+          .then(() => {
+            console.log('Background time check registered.');
+          })
+          .catch(console.error);
       }
 
       await checkTime();
     } catch (error) {
-      console.log('Failed to register background time check task:', error);
+      console.error('Failed to start background time check task:', error);
     }
   };
 
   const stopAlarmBackground = async () => {
-    console.log('stop alarm ⏰😮‍💨');
-    StopAlarmEvent();
-    // check if the task is registered
-    const isRegistered = await TaskManager.isTaskRegisteredAsync(TASK_NAME);
-    if (!isRegistered) {
-      console.log('Background time check task not registered.');
-      return;
+    console.log('Stopping alarm background task');
+    try {
+      StopAlarmEvent();
+      const isRegistered = await TaskManager.isTaskRegisteredAsync(TASK_NAME);
+      if (isRegistered) {
+        await BackgroundFetch.unregisterTaskAsync(TASK_NAME).catch(console.error);
+      }
+      await AsyncStorage.removeItem(TIME_STORAGE_KEY);
+      console.log('Background time check task stopped.');
+    } catch (error) {
+      console.error('Failed to stop background time check task:', error);
     }
-
-    await BackgroundFetch.unregisterTaskAsync(TASK_NAME);
-    console.log('Background time check task unregistered.');
-    await AsyncStorage.removeItem(TIME_STORAGE_KEY);
   };
 
   return { startAlarmBackground, stopAlarmBackground };

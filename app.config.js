@@ -17,7 +17,7 @@ export default {
       bundleIdentifier: 'com.sleep.zenalarm',
       buildNumber: '3',
       infoPlist: {
-        UIBackgroundModes: ['audio', 'processing', 'fetch'],
+        UIBackgroundModes: ['audio', 'processing', 'fetch', 'remote-notification'],
       },
     },
     android: {
