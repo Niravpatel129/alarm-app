@@ -1,55 +1,90 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as BackgroundFetch from 'expo-background-fetch';
 import * as TaskManager from 'expo-task-manager';
-import { useEffect } from 'react';
 
 const TASK_NAME = 'CHECK_TIME_TASK';
+const TIME_STORAGE_KEY = 'TARGET_TIME';
 
-// Define the logic as a reusable function
-const checkTime = () => {
+const checkTime = async () => {
+  console.log('checkTime()');
+
+  await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate a delay
+
+  const targetTimeString = await AsyncStorage.getItem(TIME_STORAGE_KEY);
+  if (!targetTimeString) {
+    console.log('No target time set');
+    return false;
+  }
+
+  const [targetHours, targetMinutes] = targetTimeString.split(':').map(Number);
   const currentTime = new Date();
   const targetTime = new Date();
 
-  // Set the target time to 10 PM on the current day
-  targetTime.setHours(1, 0, 0, 0);
+  targetTime.setHours(targetHours, targetMinutes, 0, 0);
 
-  const isPastTargetTime = currentTime > targetTime;
-  console.log(isPastTargetTime ? 'Past 12 PM' : 'Before 12 PM');
-  return isPastTargetTime;
+  const timeDifference = Math.abs(currentTime - targetTime) / (1000 * 60); // Difference in minutes
+  const isWithinRange = timeDifference <= 15;
+
+  if (isWithinRange) {
+    // unregister the task
+    console.log('Time is within range, unregistering task');
+    if (await TaskManager.isTaskRegisteredAsync(TASK_NAME)) {
+      await BackgroundFetch.unregisterTaskAsync(TASK_NAME);
+    }
+  } else {
+    console.log('Time is not within range, keep checking', timeDifference);
+  }
+
+  return isWithinRange;
 };
 
-// Define the background task
-TaskManager.defineTask(TASK_NAME, () => {
-  const isPastTargetTime = checkTime();
-  return isPastTargetTime ? 'new-data' : 'no-data';
+TaskManager.defineTask(TASK_NAME, async () => {
+  console.log('Background task running');
+
+  const isWithinRange = await checkTime();
+
+  return isWithinRange ? 'within range' : 'not within range';
 });
 
 export function useBackgroundTimeCheck() {
-  useEffect(() => {
-    console.log('useBackgroundTimeCheck()');
+  const startAlarmBackground = async (timeString) => {
+    console.log('start alarm ⏰😮‍💨');
+    try {
+      let [time, period] = timeString.split(' ');
+      let [hours, minutes] = time.split(':').map(Number);
 
-    async function registerBackgroundTask() {
-      try {
-        const isRegistered = await TaskManager.isTaskRegisteredAsync(TASK_NAME);
-        if (!isRegistered) {
-          // Define minimum interval as 15 minutes
-          const options = { minimumInterval: 900 };
-          await BackgroundFetch.registerTaskAsync(TASK_NAME, options);
-          console.log('Background time check task registered.');
-        }
-
-        checkTime();
-      } catch (error) {
-        console.log('Failed to register background time check task:', error);
+      if (period.toUpperCase() === 'PM' && hours < 12) {
+        hours += 12;
+      } else if (period.toUpperCase() === 'AM' && hours === 12) {
+        hours = 0;
       }
+
+      await AsyncStorage.setItem(TIME_STORAGE_KEY, `${hours}:${minutes}`);
+
+      const isRegistered = await TaskManager.isTaskRegisteredAsync(TASK_NAME);
+      if (!isRegistered) {
+        const options = { minimumInterval: 900 };
+        await BackgroundFetch.registerTaskAsync(TASK_NAME, options);
+      }
+
+      await checkTime();
+    } catch (error) {
+      console.log('Failed to register background time check task:', error);
+    }
+  };
+
+  const stopAlarmBackground = async () => {
+    // check if the task is registered
+    const isRegistered = await TaskManager.isTaskRegisteredAsync(TASK_NAME);
+    if (!isRegistered) {
+      console.log('Background time check task not registered.');
+      return;
     }
 
-    registerBackgroundTask();
+    await BackgroundFetch.unregisterTaskAsync(TASK_NAME);
+    console.log('Background time check task unregistered.');
+    await AsyncStorage.removeItem(TIME_STORAGE_KEY);
+  };
 
-    // Optionally, you can unregister the task when the component unmounts
-    return () => {
-      BackgroundFetch.unregisterTaskAsync(TASK_NAME).then(() => {
-        console.log('Background time check task unregistered.');
-      });
-    };
-  }, []);
+  return { startAlarmBackground, stopAlarmBackground };
 }
