@@ -5,6 +5,7 @@ import TrackPlayer, { Capability } from 'react-native-track-player';
 const sleep = (time) => new Promise((resolve) => setTimeout(resolve, time));
 
 let backgroundSound = null;
+let silentSound = null;
 
 const setupTrackPlayer = async () => {
   try {
@@ -20,29 +21,38 @@ const setupTrackPlayer = async () => {
   }
 };
 
-const playSilentClipAtIntervals = async () => {
-  const { sound } = await Audio.Sound.createAsync(require('../assets/sounds/silent.mp3'), {
-    shouldPlay: false,
-  });
+const preloadAudio = async () => {
+  if (!silentSound) {
+    const silent = await Audio.Sound.createAsync(require('../assets/sounds/silent.mp3'), {
+      shouldPlay: false,
+    });
+    silentSound = silent.sound;
+  }
+
+  if (!backgroundSound) {
+    const background = await Audio.Sound.createAsync(require('../assets/sounds/birds2.wav'), {
+      shouldPlay: false,
+      isLooping: true,
+    });
+    backgroundSound = background.sound;
+  }
 
   await Audio.setAudioModeAsync({
     playsInSilentModeIOS: true,
     staysActiveInBackground: true,
   });
-
-  sound.playAsync().then(() => {
-    sound.setPositionAsync(0);
-  });
-
-  return () => {
-    sound.unloadAsync();
-  };
 };
 
-const veryIntensiveTask = async (taskDataArguments) => {
-  const { delay, secondsToRing } = taskDataArguments;
-  console.log('🚀  delay, secondsToRing:', delay, secondsToRing);
+const playSilentClipAtIntervals = async () => {
+  await silentSound.setPositionAsync(0);
+  await silentSound.playAsync();
+};
 
+const alarmBackgroundTask = async (taskDataArguments) => {
+  const { delay, secondsToRing } = taskDataArguments;
+  console.log('Alarm Background Task Started - delay, secondsToRing:', delay, secondsToRing);
+
+  await preloadAudio();
   await setupTrackPlayer();
 
   for (let i = 0; BackgroundService.isRunning(); i++) {
@@ -52,14 +62,8 @@ const veryIntensiveTask = async (taskDataArguments) => {
       playSilentClipAtIntervals();
     }
 
-    if (i === secondsToRing && !backgroundSound) {
-      const { sound } = await Audio.Sound.createAsync(require('../assets/sounds/birds2.wav'), {
-        shouldPlay: true,
-        isLooping: true,
-      });
-      backgroundSound = sound;
-
-      sound.playAsync();
+    if (i === secondsToRing) {
+      backgroundSound.playAsync();
     }
 
     await sleep(delay || 1000);
@@ -68,9 +72,9 @@ const veryIntensiveTask = async (taskDataArguments) => {
 
 const StartAlarmEvent = async (timeToRing) => {
   const options = {
-    taskName: 'Example',
-    taskTitle: 'ExampleTask title',
-    taskDesc: 'ExampleTask description',
+    taskName: 'AlarmTask',
+    taskTitle: 'Alarm Background Task',
+    taskDesc: 'Manages alarm sounds in the background.',
     taskIcon: {
       name: 'ic_launcher',
       type: 'mipmap',
@@ -83,18 +87,24 @@ const StartAlarmEvent = async (timeToRing) => {
     },
   };
 
-  await BackgroundService.start(veryIntensiveTask, options);
+  await BackgroundService.start(alarmBackgroundTask, options);
 };
 
 const StopAlarmEvent = async () => {
   if (backgroundSound) {
     await backgroundSound.stopAsync();
     await backgroundSound.unloadAsync();
-    backgroundSound = null;
   }
 
-  await BackgroundService.stop(); // Stops the background service
-  await TrackPlayer.stop(); // Stops the TrackPlayer if it was used
+  if (silentSound) {
+    await silentSound.unloadAsync();
+    silentSound = null;
+  }
+
+  backgroundSound = null;
+
+  await BackgroundService.stop();
+  await TrackPlayer.stop();
 };
 
 export { StartAlarmEvent, StopAlarmEvent };
