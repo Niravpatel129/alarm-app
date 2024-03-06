@@ -26,7 +26,7 @@ const checkTime = async () => {
   );
 
   const timeDifference = Math.abs(currentTime.getTime() - targetTime.getTime()) / (1000 * 60); // Difference in minutes
-  const isWithinRange = timeDifference <= 15;
+  const isWithinRange = timeDifference <= 60;
 
   if (isWithinRange) {
     console.log('Time is within range, unregistering task');
