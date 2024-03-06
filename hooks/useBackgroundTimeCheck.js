@@ -47,9 +47,7 @@ TaskManager.defineTask(TASK_NAME, async () => {
 
   const isWithinRange = await checkTime();
 
-  return isWithinRange
-    ? BackgroundFetch.BackgroundFetchResult.NewData
-    : BackgroundFetch.BackgroundFetchResult.NoData;
+  return BackgroundFetch.BackgroundFetchResult.NewData;
 });
 
 export function useBackgroundTimeCheck() {
