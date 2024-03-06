@@ -49,8 +49,9 @@ const playSilentClipAtIntervals = async () => {
 };
 
 const alarmBackgroundTask = async (taskDataArguments) => {
-  const { delay, secondsToRing } = taskDataArguments;
-  console.log('Alarm Background Task Started - delay, secondsToRing:', delay, secondsToRing);
+  // `secondsToRing` is now treated as minutesToRing for clarity in naming
+  const { delay, minutesToRing } = taskDataArguments;
+  console.log('Alarm Background Task Started - delay, minutesToRing:', delay, minutesToRing);
 
   await preloadAudio();
   await setupTrackPlayer();
@@ -58,20 +59,24 @@ const alarmBackgroundTask = async (taskDataArguments) => {
   for (let i = 0; BackgroundService.isRunning(); i++) {
     console.log(`Background iteration: ${i}`);
 
-    if (i % 10 === 0) {
+    // Now checks if it needs to play the silent clip based on minutes
+    if (i % (60 / (delay / 1000)) === 0) {
+      // Assuming delay is 60000 (1 minute)
       playSilentClipAtIntervals();
     }
 
-    if (i === secondsToRing) {
+    // i represents minutes passed, since delay is 60000 (1 minute)
+    if (i === minutesToRing) {
       backgroundSound.playAsync();
     }
 
-    await sleep(delay || 1000);
+    await sleep(delay); // delay is now 60000 (1 minute)
   }
 };
 
-const StartAlarmEvent = async (timeToRing) => {
-  console.log('🚀  timeToRing 123:', timeToRing);
+const StartAlarmEvent = async (secondsToRing) => {
+  const minutesToRing = Math.ceil(secondsToRing / 60);
+  console.log('🚀  minutesToRing:', minutesToRing);
 
   const options = {
     taskName: 'AlarmTask',
@@ -84,8 +89,8 @@ const StartAlarmEvent = async (timeToRing) => {
     color: '#ff00ff',
     linkingURI: 'yourSchemeHere://chat/jane',
     parameters: {
-      delay: 1000,
-      secondsToRing: timeToRing || 1000,
+      delay: 60000, // 1 minute
+      minutesToRing: minutesToRing, // Use the rounded-up minutes
     },
   };
 
