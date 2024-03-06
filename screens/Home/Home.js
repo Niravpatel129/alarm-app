@@ -4,7 +4,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-na
 import Button from '../../components/Button/Button';
 import TimePicker from '../../components/TimePicker/TimePicker';
 import { useAlarmContext } from '../../context/Alarm/AlarmContext';
-import { useBackgroundTimeCheck } from '../../hooks/useBackgroundTimeCheck';
+import { StartAlarmEvent, StopAlarmEvent } from '../../hooks/useBackgroundTask';
 import useTTS from '../../hooks/useTTS';
 
 export default function HomeScreen() {
@@ -12,7 +12,6 @@ export default function HomeScreen() {
   const [secondsToRing, setSecondsToRing] = React.useState(30);
   const selectedTimeShared = useSharedValue(selectedTime);
   const tts = useTTS();
-  const { startAlarmBackground, stopAlarmBackground } = useBackgroundTimeCheck();
 
   const onTimeChange = (newTime) => {
     const now = new Date();
@@ -79,7 +78,7 @@ export default function HomeScreen() {
       <View style={{ marginTop: 40 }}>
         <Button
           onPress={() => {
-            startAlarmBackground(selectedTime);
+            StartAlarmEvent(secondsToRing);
             alert('Alarm set for ' + selectedTime);
           }}
           text={'1'}
@@ -88,7 +87,7 @@ export default function HomeScreen() {
       <View style={{ marginTop: 40 }}>
         <Button
           onPress={() => {
-            stopAlarmBackground();
+            StopAlarmEvent();
             alert('Alarm stopped');
           }}
           text={'2'}

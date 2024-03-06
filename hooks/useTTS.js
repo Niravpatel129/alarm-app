@@ -2,8 +2,12 @@ import * as Speech from 'expo-speech';
 
 const useTTS = () => {
   const speak = () => {
-    const thingToSay = 'hello world';
-    Speech.speak(thingToSay);
+    try {
+      const thingToSay = 'hello world';
+      Speech.speak(thingToSay);
+    } catch (error) {
+      console.log('Error speaking:', error);
+    }
   };
 
   return {
