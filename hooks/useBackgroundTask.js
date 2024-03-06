@@ -49,28 +49,39 @@ const playSilentClipAtIntervals = async () => {
 };
 
 const alarmBackgroundTask = async (taskDataArguments) => {
-  // `secondsToRing` is now treated as minutesToRing for clarity in naming
   const { delay, minutesToRing } = taskDataArguments;
-  console.log('Alarm Background Task Started - delay, minutesToRing:', delay, minutesToRing);
 
-  await preloadAudio();
-  await setupTrackPlayer();
+  let preloaded = false;
 
   for (let i = 0; BackgroundService.isRunning(); i++) {
-    console.log(`Background iteration: ${i}`);
+    const minutesLeft = minutesToRing - i;
 
-    // Now checks if it needs to play the silent clip based on minutes
-    if (i % (60 / (delay / 1000)) === 0) {
-      // Assuming delay is 60000 (1 minute)
+    // Optimize preload timing based on remaining time to alarm
+    if (!preloaded && minutesLeft <= 5) {
+      // Example threshold, adjust based on your needs
+      await preloadAudio();
+      await setupTrackPlayer();
+      preloaded = true;
+    }
+
+    // Optimize silent clip playing
+    if (i % 5 === 0) {
+      // Reduce frequency based on your needs
       playSilentClipAtIntervals();
     }
 
-    // i represents minutes passed, since delay is 60000 (1 minute)
     if (i === minutesToRing) {
+      if (!backgroundSound) {
+        const background = await Audio.Sound.createAsync(require('../assets/sounds/birds2.wav'), {
+          shouldPlay: false,
+          isLooping: true,
+        });
+        backgroundSound = background.sound;
+      }
       backgroundSound.playAsync();
     }
 
-    await sleep(delay); // delay is now 60000 (1 minute)
+    await sleep(delay);
   }
 };
 
