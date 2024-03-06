@@ -4,7 +4,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-na
 import Button from '../../components/Button/Button';
 import TimePicker from '../../components/TimePicker/TimePicker';
 import { useAlarmContext } from '../../context/Alarm/AlarmContext';
-import { StartAlarmEvent, StopAlarmEvent } from '../../hooks/useBackgroundTask';
+import { useBackgroundTimeCheck } from '../../hooks/useBackgroundTimeCheck';
 import useTTS from '../../hooks/useTTS';
 
 export default function HomeScreen() {
@@ -12,12 +12,9 @@ export default function HomeScreen() {
   const [secondsToRing, setSecondsToRing] = React.useState(30);
   const selectedTimeShared = useSharedValue(selectedTime);
   const tts = useTTS();
+  const { startAlarmBackground, stopAlarmBackground } = useBackgroundTimeCheck();
 
-  // Call this function whenever the time changes
   const onTimeChange = (newTime) => {
-    console.log('🚀  newTime:', newTime); // Example format: 11:59 PM
-
-    // Convert newTime string to a Date object representing the next occurrence of that time
     const now = new Date();
     const [time, modifier] = newTime.split(' ');
     let [hours, minutes] = time.split(':');
@@ -80,10 +77,10 @@ export default function HomeScreen() {
         <Button onPress={() => startAlarm(selectedTime)} text={'Sleep'} />
       </View>
       <View style={{ marginTop: 40 }}>
-        <Button onPress={() => StartAlarmEvent(secondsToRing || 30)} text={'1'} />
+        <Button onPress={() => startAlarmBackground(selectedTime)} text={'1'} />
       </View>
       <View style={{ marginTop: 40 }}>
-        <Button onPress={() => StopAlarmEvent()} text={'2'} />
+        <Button onPress={() => stopAlarmBackground()} text={'2'} />
       </View>
       <View style={{ marginTop: 40 }}>
         <Button onPress={() => tts.readText()} text={'Speak'} />

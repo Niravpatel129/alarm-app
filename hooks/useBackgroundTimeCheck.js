@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as BackgroundFetch from 'expo-background-fetch';
 import * as TaskManager from 'expo-task-manager';
+import { StartAlarmEvent, StopAlarmEvent } from './useBackgroundTask';
 
 const TASK_NAME = 'CHECK_TIME_TASK';
 const TIME_STORAGE_KEY = 'TARGET_TIME';
@@ -28,6 +29,9 @@ const checkTime = async () => {
   if (isWithinRange) {
     // unregister the task
     console.log('Time is within range, unregistering task');
+    // in seconds to ring the alarm
+    const secondsToRing = Math.floor(timeDifference * 60);
+    StartAlarmEvent(secondsToRing);
     if (await TaskManager.isTaskRegisteredAsync(TASK_NAME)) {
       await BackgroundFetch.unregisterTaskAsync(TASK_NAME);
     }
@@ -74,6 +78,8 @@ export function useBackgroundTimeCheck() {
   };
 
   const stopAlarmBackground = async () => {
+    console.log('stop alarm ⏰😮‍💨');
+    StopAlarmEvent();
     // check if the task is registered
     const isRegistered = await TaskManager.isTaskRegisteredAsync(TASK_NAME);
     if (!isRegistered) {

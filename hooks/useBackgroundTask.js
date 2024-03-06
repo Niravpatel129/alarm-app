@@ -71,6 +71,8 @@ const alarmBackgroundTask = async (taskDataArguments) => {
 };
 
 const StartAlarmEvent = async (timeToRing) => {
+  console.log('🚀  timeToRing 123:', timeToRing);
+
   const options = {
     taskName: 'AlarmTask',
     taskTitle: 'Alarm Background Task',
