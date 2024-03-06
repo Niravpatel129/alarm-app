@@ -77,10 +77,22 @@ export default function HomeScreen() {
         <Button onPress={() => startAlarm(selectedTime)} text={'Sleep'} />
       </View>
       <View style={{ marginTop: 40 }}>
-        <Button onPress={() => startAlarmBackground(selectedTime)} text={'1'} />
+        <Button
+          onPress={() => {
+            startAlarmBackground(selectedTime);
+            alert('Alarm set for ' + selectedTime);
+          }}
+          text={'1'}
+        />
       </View>
       <View style={{ marginTop: 40 }}>
-        <Button onPress={() => stopAlarmBackground()} text={'2'} />
+        <Button
+          onPress={() => {
+            stopAlarmBackground();
+            alert('Alarm stopped');
+          }}
+          text={'2'}
+        />
       </View>
       <View style={{ marginTop: 40 }}>
         <Button onPress={() => tts.readText()} text={'Speak'} />
