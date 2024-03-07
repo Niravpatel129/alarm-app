@@ -24,7 +24,7 @@ const setupTrackPlayer = async () => {
 const preloadAudio = async () => {
   try {
     if (!silentSound) {
-      const silent = await Audio.Sound.createAsync(require('../assets/sounds/silent.mp3'), {
+      const silent = await Audio.Sound.createAsync(require('../assets/sounds/bubble.mp3'), {
         shouldPlay: false,
       });
 
@@ -76,6 +76,7 @@ const alarmBackgroundTask = async (taskDataArguments) => {
   let preloaded = false;
 
   for (let i = 0; BackgroundService.isRunning(); i++) {
+    console.log('🚀  i:', i);
     const minutesLeft = minutesToRing - i;
 
     if (!preloaded && minutesLeft <= 5) {
@@ -86,7 +87,7 @@ const alarmBackgroundTask = async (taskDataArguments) => {
     }
 
     // Optimize silent clip playing
-    if (i % 5 === 0) {
+    if (i % 2 === 0) {
       console.log('Playing silent clip');
       // Reduce frequency based on your needs
       playSilentClipAtIntervals();
@@ -101,6 +102,10 @@ const alarmBackgroundTask = async (taskDataArguments) => {
         backgroundSound = background.sound;
       }
       backgroundSound.playAsync();
+
+      // stop the background task
+      await BackgroundService.stop();
+      return;
     }
 
     await sleep(delay);
