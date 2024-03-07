@@ -26,6 +26,7 @@ const preloadAudio = async () => {
     if (!silentSound) {
       const silent = await Audio.Sound.createAsync(require('../assets/sounds/silent.mp3'), {
         shouldPlay: false,
+        isLooping: true, // Ensure silent clip loops indefinitely
       });
 
       silentSound = silent.sound;
@@ -44,10 +45,10 @@ const preloadAudio = async () => {
 
     await Audio.setAudioModeAsync({
       allowsRecordingIOS: false,
-      interruptionModeIOS: 'DoNotMix',
+      interruptionModeIOS: 'MixWithOthers',
       playsInSilentModeIOS: true,
       shouldDuckAndroid: true,
-      interruptionModeAndroid: 'DoNotMix',
+      interruptionModeAndroid: 'MixWithOthers',
       staysActiveInBackground: true,
       playThroughEarpieceAndroid: false,
     });
@@ -56,16 +57,16 @@ const preloadAudio = async () => {
   }
 };
 
-const playSilentClipAtIntervals = async () => {
-  console.log('playSilentClipAtIntervals()');
+const playSilentClipContinuously = async () => {
   try {
     if (!silentSound) {
       await preloadAudio();
-      console.log('silentSound not loaded', silentSound);
-      return;
     }
-    await silentSound.setPositionAsync(0);
-    await silentSound.playAsync();
+    // Instead of playing the silent clip at intervals, we ensure it's always playing
+    if (!(await silentSound.getStatusAsync()).isPlaying) {
+      await silentSound.setPositionAsync(0);
+      await silentSound.playAsync();
+    }
   } catch (e) {
     console.log(e);
   }
@@ -81,28 +82,33 @@ const alarmBackgroundTask = async (taskDataArguments) => {
     elapsedTime += delay / 1000;
     console.log('🚀  elapsedTime:', elapsedTime);
 
-    if (!preloaded && elapsedTime <= 30) {
+    if (!preloaded) {
       await preloadAudio();
       await setupTrackPlayer();
       preloaded = true;
     }
 
+    // Ensure the silent clip is continuously playing
+    playSilentClipContinuously();
+
     if (elapsedTime >= secondsToRing) {
       if (!backgroundSound) {
         const background = await Audio.Sound.createAsync(require('../assets/sounds/birds2.wav'), {
-          shouldPlay: false,
+          shouldPlay: true, // Ensure it starts playing immediately
           isLooping: true,
         });
         backgroundSound = background.sound;
       }
-      backgroundSound.playAsync();
+      // Ensure the background sound is playing if it isn't already
+      if (!(await backgroundSound.getStatusAsync()).isPlaying) {
+        backgroundSound.playAsync();
+      }
 
       // Stop the background task
       await BackgroundService.stop();
       return;
     }
 
-    playSilentClipAtIntervals();
     await sleep(delay);
   }
 };
