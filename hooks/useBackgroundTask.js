@@ -22,29 +22,38 @@ const setupTrackPlayer = async () => {
 };
 
 const preloadAudio = async () => {
-  if (!silentSound) {
-    const silent = await Audio.Sound.createAsync(require('../assets/sounds/silent.mp3'), {
-      shouldPlay: false,
+  try {
+    if (!silentSound) {
+      const silent = await Audio.Sound.createAsync(require('../assets/sounds/silent.mp3'), {
+        shouldPlay: false,
+      });
+
+      silentSound = silent.sound;
+      console.log('silentSound loaded');
+    }
+
+    if (!backgroundSound) {
+      const background = await Audio.Sound.createAsync(require('../assets/sounds/birds2.wav'), {
+        shouldPlay: false,
+        isLooping: true,
+      });
+
+      backgroundSound = background.sound;
+      console.log('backgroundSound loaded');
+    }
+
+    await Audio.setAudioModeAsync({
+      allowsRecordingIOS: false,
+      interruptionModeIOS: 'DoNotMix',
+      playsInSilentModeIOS: true,
+      shouldDuckAndroid: true,
+      interruptionModeAndroid: 'DoNotMix',
+      staysActiveInBackground: true,
+      playThroughEarpieceAndroid: false,
     });
-
-    silentSound = silent.sound;
-    console.log('silentSound loaded');
+  } catch (e) {
+    console.log(e);
   }
-
-  if (!backgroundSound) {
-    const background = await Audio.Sound.createAsync(require('../assets/sounds/birds2.wav'), {
-      shouldPlay: false,
-      isLooping: true,
-    });
-
-    backgroundSound = background.sound;
-    console.log('backgroundSound loaded');
-  }
-
-  await Audio.setAudioModeAsync({
-    playsInSilentModeIOS: true,
-    staysActiveInBackground: true,
-  });
 };
 
 const playSilentClipAtIntervals = async () => {
