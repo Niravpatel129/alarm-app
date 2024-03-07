@@ -24,7 +24,7 @@ const setupTrackPlayer = async () => {
 const preloadAudio = async () => {
   try {
     if (!silentSound) {
-      const silent = await Audio.Sound.createAsync(require('../assets/sounds/bubble.mp3'), {
+      const silent = await Audio.Sound.createAsync(require('../assets/sounds/silent.mp3'), {
         shouldPlay: false,
       });
 
@@ -75,25 +75,24 @@ const alarmBackgroundTask = async (taskDataArguments) => {
 
   let preloaded = false;
 
-  for (let i = 0; BackgroundService.isRunning(); i++) {
+  for (let i = 0; BackgroundService.isRunning(); i += 6) {
+    // Corrected increment
     console.log('🚀  i:', i);
     const minutesLeft = minutesToRing - i;
 
     if (!preloaded && minutesLeft <= 5) {
-      // Example threshold, adjust based on your needs
       await preloadAudio();
       await setupTrackPlayer();
       preloaded = true;
     }
 
-    // Optimize silent clip playing
     if (i % 2 === 0) {
       console.log('Playing silent clip');
-      // Reduce frequency based on your needs
       playSilentClipAtIntervals();
     }
 
-    if (i === minutesToRing) {
+    if (i >= minutesToRing) {
+      // Corrected condition
       if (!backgroundSound) {
         const background = await Audio.Sound.createAsync(require('../assets/sounds/birds2.wav'), {
           shouldPlay: false,
@@ -127,7 +126,7 @@ const StartAlarmEvent = async (secondsToRing) => {
     color: '#ff00ff',
     linkingURI: 'yourSchemeHere://chat/jane',
     parameters: {
-      delay: 60000, // 1 minute
+      delay: 10000, // 30 seconds
       minutesToRing: minutesToRing, // Use the rounded-up minutes
     },
   };
