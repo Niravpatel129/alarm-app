@@ -57,6 +57,7 @@ const preloadAudio = async () => {
 };
 
 const playSilentClipAtIntervals = async () => {
+  console.log('playSilentClipAtIntervals()');
   try {
     if (!silentSound) {
       await preloadAudio();
@@ -71,28 +72,22 @@ const playSilentClipAtIntervals = async () => {
 };
 
 const alarmBackgroundTask = async (taskDataArguments) => {
-  const { delay, minutesToRing } = taskDataArguments;
+  const { delay, secondsToRing } = taskDataArguments;
 
   let preloaded = false;
+  let elapsedTime = 0; // Tracking elapsed time in seconds
 
-  for (let i = 0; BackgroundService.isRunning(); i += 6) {
-    // Corrected increment
-    console.log('🚀  i:', i);
-    const minutesLeft = minutesToRing - i;
+  for (let i = 0; BackgroundService.isRunning(); i++) {
+    elapsedTime += delay / 1000;
+    console.log('🚀  elapsedTime:', elapsedTime);
 
-    if (!preloaded && minutesLeft <= 5) {
+    if (!preloaded && elapsedTime <= 30) {
       await preloadAudio();
       await setupTrackPlayer();
       preloaded = true;
     }
 
-    if (i % 2 === 0) {
-      console.log('Playing silent clip');
-      playSilentClipAtIntervals();
-    }
-
-    if (i >= minutesToRing) {
-      // Corrected condition
+    if (elapsedTime >= secondsToRing) {
       if (!backgroundSound) {
         const background = await Audio.Sound.createAsync(require('../assets/sounds/birds2.wav'), {
           shouldPlay: false,
@@ -102,18 +97,20 @@ const alarmBackgroundTask = async (taskDataArguments) => {
       }
       backgroundSound.playAsync();
 
-      // stop the background task
+      // Stop the background task
       await BackgroundService.stop();
       return;
     }
 
+    playSilentClipAtIntervals();
     await sleep(delay);
   }
 };
 
 const StartAlarmEvent = async (secondsToRing) => {
-  const minutesToRing = Math.ceil(secondsToRing / 60);
-  console.log('🚀  minutesToRing:', minutesToRing);
+  // Ensure a minimum of 30 seconds for the alarm to ring
+  const finalSecondsToRing = secondsToRing < 30 ? 30 : secondsToRing;
+  console.log('🚀  secondsToRing:', finalSecondsToRing);
 
   const options = {
     taskName: 'AlarmTask',
@@ -126,8 +123,8 @@ const StartAlarmEvent = async (secondsToRing) => {
     color: '#ff00ff',
     linkingURI: 'yourSchemeHere://chat/jane',
     parameters: {
-      delay: 10000, // 30 seconds
-      minutesToRing: minutesToRing, // Use the rounded-up minutes
+      delay: 10000, // 10 seconds
+      secondsToRing: finalSecondsToRing, // Adjusted to use seconds
     },
   };
 
