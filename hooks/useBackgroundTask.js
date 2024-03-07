@@ -26,7 +26,9 @@ const preloadAudio = async () => {
     const silent = await Audio.Sound.createAsync(require('../assets/sounds/silent.mp3'), {
       shouldPlay: false,
     });
+
     silentSound = silent.sound;
+    console.log('silentSound loaded');
   }
 
   if (!backgroundSound) {
@@ -34,7 +36,9 @@ const preloadAudio = async () => {
       shouldPlay: false,
       isLooping: true,
     });
+
     backgroundSound = background.sound;
+    console.log('backgroundSound loaded');
   }
 
   await Audio.setAudioModeAsync({
@@ -44,8 +48,17 @@ const preloadAudio = async () => {
 };
 
 const playSilentClipAtIntervals = async () => {
-  await silentSound.setPositionAsync(0);
-  await silentSound.playAsync();
+  try {
+    if (!silentSound) {
+      await preloadAudio();
+      console.log('silentSound not loaded', silentSound);
+      return;
+    }
+    await silentSound.setPositionAsync(0);
+    await silentSound.playAsync();
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 const alarmBackgroundTask = async (taskDataArguments) => {
@@ -56,7 +69,6 @@ const alarmBackgroundTask = async (taskDataArguments) => {
   for (let i = 0; BackgroundService.isRunning(); i++) {
     const minutesLeft = minutesToRing - i;
 
-    // Optimize preload timing based on remaining time to alarm
     if (!preloaded && minutesLeft <= 5) {
       // Example threshold, adjust based on your needs
       await preloadAudio();
@@ -66,6 +78,7 @@ const alarmBackgroundTask = async (taskDataArguments) => {
 
     // Optimize silent clip playing
     if (i % 5 === 0) {
+      console.log('Playing silent clip');
       // Reduce frequency based on your needs
       playSilentClipAtIntervals();
     }
