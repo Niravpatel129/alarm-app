@@ -45,10 +45,8 @@ const preloadAudio = async () => {
 
     await Audio.setAudioModeAsync({
       allowsRecordingIOS: false,
-      interruptionModeIOS: 'MixWithOthers',
       playsInSilentModeIOS: true,
       shouldDuckAndroid: true,
-      interruptionModeAndroid: 'MixWithOthers',
       staysActiveInBackground: true,
       playThroughEarpieceAndroid: false,
     });
