@@ -55,11 +55,11 @@ export default function HomeAlarm() {
                 <Text
                   style={{
                     color: 'white',
-                    fontSize: 80,
+                    fontSize: 60,
                     fontWeight: 100,
                   }}
                 >
-                  01 : 00
+                  01 : 00 AM
                 </Text>
               </View>
             </View>
