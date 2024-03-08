@@ -1,63 +1,40 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Audio } from 'expo-av';
 import { useEffect } from 'react';
-import TrackPlayer from 'react-native-track-player';
 
-// Custom hook to setup and play the audio clip
 function usePlayAudioClip(audioUri) {
   useEffect(() => {
-    // const setupListener = async () => {
-    //   TrackPlayer.addEventListener('remote-play', () => {
-    //     TrackPlayer.play();
-    //   });
-    //   TrackPlayer.addEventListener('remote-pause', () => {
-    //     TrackPlayer.pause();
-    //   });
-    // };
-
-    // setupListener();
+    let playbackObject;
+    let intervalId;
 
     async function setupPlayer() {
       console.log('🚀  audioUri:', audioUri);
       const number = await AsyncStorage.getItem('interval');
       console.log('🚀  number:', number);
 
-      await TrackPlayer.setupPlayer();
-      await TrackPlayer.updateOptions({
-        stopWithApp: false,
-        capabilities: [],
-        compactCapabilities: [],
-        notificationCapabilities: [],
-        playInBackground: true,
-        pauseInBackground: true,
-      });
-
-      await TrackPlayer.add({
-        id: 'trackId',
-        url: require('../assets/sounds/bubble.mp3'),
-        title: '', // Avoid providing metadata
-        artist: '', // Avoid providing metadata
-      });
-
-      // Define minimal player capabilities
-      await TrackPlayer.updateOptions({
-        capabilities: [],
-      });
+      // Create and load the sound
+      playbackObject = new Audio.Sound();
+      try {
+        await playbackObject.loadAsync(require('../assets/sounds/bubble.mp3'), {}, true);
+      } catch (error) {
+        console.error('Error loading sound:', error);
+        return;
+      }
 
       // Start playing the audio at a set interval
-      const intervalId = setInterval(async () => {
-        TrackPlayer.seekTo(0); // Seek to the beginning of the track
-        TrackPlayer.play(); // Play the track
+      intervalId = setInterval(async () => {
+        await playbackObject.setPositionAsync(0); // Seek to the beginning of the track
+        await playbackObject.playAsync(); // Play the track
       }, Number(number) || 10000);
-
-      // Cleanup function to stop the playback and destroy the player on component unmount
-      return () => {
-        clearInterval(intervalId);
-        TrackPlayer.stop();
-        TrackPlayer.destroy();
-      };
     }
 
     setupPlayer();
+
+    // Cleanup function to stop the playback and unload the player on component unmount
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+      playbackObject && playbackObject.unloadAsync();
+    };
   }, [audioUri]); // Dependency array to re-run the effect if the audioUri changes
 }
 
