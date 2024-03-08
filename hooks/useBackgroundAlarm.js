@@ -5,16 +5,16 @@ import TrackPlayer from 'react-native-track-player';
 // Custom hook to setup and play the audio clip
 function usePlayAudioClip(audioUri) {
   useEffect(() => {
-    const setupListener = async () => {
-      TrackPlayer.addEventListener('remote-play', () => {
-        TrackPlayer.play();
-      });
-      TrackPlayer.addEventListener('remote-pause', () => {
-        TrackPlayer.pause();
-      });
-    };
+    // const setupListener = async () => {
+    //   TrackPlayer.addEventListener('remote-play', () => {
+    //     TrackPlayer.play();
+    //   });
+    //   TrackPlayer.addEventListener('remote-pause', () => {
+    //     TrackPlayer.pause();
+    //   });
+    // };
 
-    setupListener();
+    // setupListener();
 
     async function setupPlayer() {
       console.log('🚀  audioUri:', audioUri);
