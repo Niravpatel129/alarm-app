@@ -60,7 +60,6 @@ const playSilentClipContinuously = async () => {
     if (!silentSound) {
       await preloadAudio();
     }
-    // Instead of playing the silent clip at intervals, we ensure it's always playing
     if (!(await silentSound.getStatusAsync()).isPlaying) {
       await silentSound.setPositionAsync(0);
       await silentSound.playAsync();
@@ -86,7 +85,6 @@ const alarmBackgroundTask = async (taskDataArguments) => {
       preloaded = true;
     }
 
-    // Ensure the silent clip is continuously playing
     playSilentClipContinuously();
 
     if (elapsedTime >= secondsToRing) {
@@ -97,7 +95,6 @@ const alarmBackgroundTask = async (taskDataArguments) => {
         });
         backgroundSound = background.sound;
       }
-      // Ensure the background sound is playing if it isn't already
       if (!(await backgroundSound.getStatusAsync()).isPlaying) {
         backgroundSound.playAsync();
       }
@@ -112,7 +109,6 @@ const alarmBackgroundTask = async (taskDataArguments) => {
 };
 
 const StartAlarmEvent = async (secondsToRing) => {
-  // Ensure a minimum of 30 seconds for the alarm to ring
   const finalSecondsToRing = secondsToRing < 30 ? 30 : secondsToRing;
   console.log('🚀  secondsToRing:', finalSecondsToRing);
 
