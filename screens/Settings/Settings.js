@@ -3,9 +3,11 @@ import * as Notifications from 'expo-notifications';
 import React, { useEffect, useState } from 'react';
 import { Alert, Platform, Text, TouchableOpacity, View } from 'react-native';
 import BackgroundTimer from 'react-native-background-timer';
+import useBackgroundAlarm from '../../hooks/useBackgroundAlarm';
 
 const Settings = () => {
   const [soundObject, setSoundObject] = useState(null);
+  const test = useBackgroundAlarm();
 
   useEffect(() => {
     const loadSounds = async () => {
