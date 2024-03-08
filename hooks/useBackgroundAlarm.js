@@ -1,41 +1,72 @@
+// Import necessary libraries
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Audio } from 'expo-av';
 import { useEffect } from 'react';
+import BackgroundService from 'react-native-background-actions';
 
-function usePlayAudioClip(audioUri) {
+// Define the sleep function for delays
+const sleep = (time) => new Promise((resolve) => setTimeout(() => resolve(), time));
+
+// Task to be run in the background
+const backgroundTask = async (taskData) => {
+  const { audioFile, interval } = taskData;
+  const playbackObject = new Audio.Sound();
+
+  try {
+    // Load the audio file
+    await playbackObject.loadAsync(require('../assets/sounds/bubble.mp3'));
+
+    // Loop to keep playing audio at the specified interval
+    for (;;) {
+      await playbackObject.setPositionAsync(0); // Seek to the beginning
+      await playbackObject.playAsync(); // Play the sound
+      await sleep(interval); // Wait for the specified interval
+    }
+  } catch (error) {
+    console.error('Error with playing audio in background:', error);
+  }
+};
+
+// Options for the background service
+const options = {
+  taskName: 'Alarm',
+  taskTitle: 'Alarm Playing',
+  taskDesc: 'The alarm is playing in the background',
+  taskIcon: {
+    name: 'ic_launcher',
+    type: 'mipmap',
+  },
+  color: '#ff0000',
+  parameters: {
+    delay: 10000,
+  },
+};
+
+function useBackgroundAlarm() {
   useEffect(() => {
-    let playbackObject;
-    let intervalId;
+    let interval;
 
-    async function setupPlayer() {
-      console.log('🚀  audioUri:', audioUri);
-      const number = await AsyncStorage.getItem('interval');
-      console.log('🚀  number:', number);
+    async function setupAndStartBackgroundTask() {
+      const intervalString = await AsyncStorage.getItem('interval');
+      interval = Number(intervalString) || 10000; // Default to 10 seconds if not set
 
-      // Create and load the sound
-      playbackObject = new Audio.Sound();
-      try {
-        await playbackObject.loadAsync(require('../assets/sounds/bubble.mp3'), {}, true);
-      } catch (error) {
-        console.error('Error loading sound:', error);
-        return;
-      }
+      // Path to the audio file
+      const audioFile = '../assets/sounds/bubble.mp3';
 
-      // Start playing the audio at a set interval
-      intervalId = setInterval(async () => {
-        await playbackObject.setPositionAsync(0); // Seek to the beginning of the track
-        await playbackObject.playAsync(); // Play the track
-      }, Number(number) || 10000);
+      // Start the background task
+      BackgroundService.start(backgroundTask, {
+        ...options,
+        parameters: { audioFile, interval },
+      });
     }
 
-    setupPlayer();
+    setupAndStartBackgroundTask();
 
-    // Cleanup function to stop the playback and unload the player on component unmount
     return () => {
-      if (intervalId) clearInterval(intervalId);
-      playbackObject && playbackObject.unloadAsync();
+      // Cleanup function to stop the background service when the component unmounts
+      BackgroundService.stop();
     };
-  }, [audioUri]); // Dependency array to re-run the effect if the audioUri changes
+  }, []); // Empty dependency array means this effect runs only once after the initial render
 }
 
-export default usePlayAudioClip;
+export default useBackgroundAlarm;
