@@ -1,13 +1,27 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Audio } from 'expo-av';
 import * as Notifications from 'expo-notifications';
 import React, { useEffect, useState } from 'react';
-import { Alert, Platform, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Platform, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import BackgroundTimer from 'react-native-background-timer';
 import useBackgroundAlarm from '../../hooks/useBackgroundAlarm';
 
 const Settings = () => {
   const [soundObject, setSoundObject] = useState(null);
+  const [number, setNumber] = useState(0);
   const test = useBackgroundAlarm();
+
+  const changeInterval = (number) => {
+    AsyncStorage.setItem('interval', number.toString());
+  };
+
+  useEffect(() => {
+    AsyncStorage.getItem('interval').then((value) => {
+      if (value) {
+        setNumber(Number(value));
+      }
+    });
+  }, []);
 
   useEffect(() => {
     const loadSounds = async () => {
@@ -65,6 +79,15 @@ const Settings = () => {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text>Settings Page</Text>
+
+      <View>
+        <Text>Interval: {number}</Text>
+        <TextInput value={number.toString()} onChangeText={(text) => setNumber(text)} />
+        <TouchableOpacity onPress={() => changeInterval(number)}>
+          <Text>Submit Change</Text>
+        </TouchableOpacity>
+      </View>
+
       <TouchableOpacity
         onPress={() => {
           if (soundObject) {
