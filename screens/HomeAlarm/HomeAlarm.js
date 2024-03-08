@@ -1,8 +1,37 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import React from 'react';
-import { ImageBackground, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react';
+import {
+  ImageBackground,
+  Pressable,
+  SafeAreaView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import TimePicker from '../../components/DateTimePicker/DateTimePicker';
 
 export default function HomeAlarm() {
+  const [date, setDate] = useState(new Date());
+  const [isPickerVisible, setPickerVisible] = useState(false);
+
+  const handleConfirm = (date) => {
+    console.log('A date has been picked: ', date);
+    setDate(date);
+    hidePicker();
+  };
+
+  const showPicker = () => {
+    setPickerVisible(true);
+  };
+
+  const hidePicker = () => {
+    setPickerVisible(false);
+  };
+
+  const formatTime = (date) => {
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  };
+
   return (
     <View>
       <ImageBackground
@@ -38,10 +67,11 @@ export default function HomeAlarm() {
                     fontWeight: 400,
                   }}
                 >
-                  *Please select a task ...
+                  * Please select a task ...
                 </Text>
               </TouchableOpacity>
-              <View
+              <Pressable
+                onPress={showPicker}
                 style={{
                   borderWidth: 1,
                   borderColor: 'white',
@@ -61,7 +91,7 @@ export default function HomeAlarm() {
                 >
                   01 : 00 AM
                 </Text>
-              </View>
+              </Pressable>
             </View>
 
             <View>
@@ -91,6 +121,7 @@ export default function HomeAlarm() {
               </TouchableOpacity>
             </View>
           </View>
+          <TimePicker isVisible={isPickerVisible} onConfirm={handleConfirm} onCancel={hidePicker} />
         </SafeAreaView>
       </ImageBackground>
     </View>
