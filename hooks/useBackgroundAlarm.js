@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect } from 'react';
-import TrackPlayer, { Capability } from 'react-native-track-player';
+import TrackPlayer from 'react-native-track-player';
 
 // Custom hook to setup and play the audio clip
 function usePlayAudioClip(audioUri) {
@@ -16,26 +16,34 @@ function usePlayAudioClip(audioUri) {
 
     setupListener();
 
-    // Setup the player
     async function setupPlayer() {
       console.log('🚀  audioUri:', audioUri);
       const number = await AsyncStorage.getItem('interval');
       console.log('🚀  number:', number);
 
       await TrackPlayer.setupPlayer();
+      await TrackPlayer.updateOptions({
+        stopWithApp: false,
+        capabilities: [],
+        compactCapabilities: [],
+        notificationCapabilities: [],
+        playInBackground: true,
+        pauseInBackground: true,
+      });
+
       await TrackPlayer.add({
         id: 'trackId',
         url: require('../assets/sounds/bubble.mp3'),
-        title: '',
-        artist: '',
+        title: '', // Avoid providing metadata
+        artist: '', // Avoid providing metadata
       });
 
-      // Define player capabilities
+      // Define minimal player capabilities
       await TrackPlayer.updateOptions({
-        capabilities: [Capability.Play, Capability.Pause],
+        capabilities: [],
       });
 
-      // Start playing the audio every 3 seconds
+      // Start playing the audio at a set interval
       const intervalId = setInterval(async () => {
         TrackPlayer.seekTo(0); // Seek to the beginning of the track
         TrackPlayer.play(); // Play the track
