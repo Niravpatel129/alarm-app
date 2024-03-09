@@ -1,11 +1,12 @@
+import { FontAwesome5 } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import {
-  Keyboard,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
@@ -24,7 +25,7 @@ const TaskAddScreen = ({ onAdd }) => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
     >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <TouchableWithoutFeedback onPress={() => {}} accessible={false}>
         <View style={styles.container}>
           <View style={styles.inputContainer}>
             <TextInput
@@ -37,9 +38,64 @@ const TaskAddScreen = ({ onAdd }) => {
               blurOnSubmit={false}
               autoFocus={true}
             />
-            <View style={styles.pomodoroContainer}>
-              <Text style={styles.pomodoroLabel}>Estimated Pomodoros</Text>
-              <View style={styles.pomodoroCounter}></View>
+
+            <View
+              style={{
+                borderWidth: 1,
+                borderColor: '#cccccc',
+                borderRightColor: 'transparent',
+                borderLeftColor: 'transparent',
+                borderBottomColor: 'transparent',
+                paddingTop: 10,
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    flex: 1,
+                  }}
+                >
+                  <TouchableOpacity>
+                    <FontAwesome5 name='font-awesome-flag' size={24} color='black' />
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <FontAwesome5 name='apple' size={24} color='black' />
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <FontAwesome5 name='ad' size={24} color='black' />
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <FontAwesome5 name='tag' size={24} color='black' />
+                  </TouchableOpacity>
+                </View>
+
+                <TouchableOpacity
+                  onPress={() => {
+                    console.log('done');
+                  }}
+                  style={{
+                    flex: 1,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      color: 'black',
+                      textAlign: 'right',
+                    }}
+                  >
+                    Done
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </View>
@@ -72,7 +128,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 30,
+    marginBottom: 10,
   },
   pomodoroLabel: {
     fontSize: 16,
