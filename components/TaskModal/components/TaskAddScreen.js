@@ -15,7 +15,7 @@ const TaskAddScreen = ({ onAdd }) => {
 
   const handleAddTask = () => {
     onAdd(task);
-    setTask(''); // Clear the input after adding the task
+    setTask('');
   };
 
   return (
@@ -35,6 +35,7 @@ const TaskAddScreen = ({ onAdd }) => {
               returnKeyType='done'
               onSubmitEditing={handleAddTask}
               blurOnSubmit={false}
+              autoFocus={true}
             />
             <View style={styles.pomodoroContainer}>
               <Text style={styles.pomodoroLabel}>Estimated Pomodoros</Text>
@@ -82,7 +83,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   addButton: {
-    backgroundColor: '#007AFF', // iOS blue color
+    backgroundColor: '#007AFF',
     borderRadius: 14,
     marginHorizontal: 16,
     marginBottom: 30,
