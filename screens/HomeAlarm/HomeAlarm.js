@@ -1,4 +1,3 @@
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import {
   ImageBackground,
@@ -62,17 +61,19 @@ export default function HomeAlarm() {
                     borderColor: 'white',
                     paddingVertical: 15,
                     paddingHorizontal: 25,
-                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                    backgroundColor: 'rgba(22, 22, 22, 0.45)',
                   }}
                 >
                   <Text
                     style={{
                       color: 'white',
-                      fontSize: 20,
+                      fontSize: 18,
                       fontWeight: 400,
+                      maxWidth: 300,
+                      textAlign: 'center',
                     }}
                   >
-                    * Please select a task ...
+                    {selectedTask?.text || '  * Please select a task ...'}
                   </Text>
                 </TouchableOpacity>
                 <Pressable
@@ -108,24 +109,23 @@ export default function HomeAlarm() {
                     borderRadius: 10,
                     borderWidth: 1,
                     borderColor: 'white',
-                    backgroundColor: 'white',
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
                     flexDirection: 'row',
                     gap: 10,
                     alignItems: 'center',
-                    paddingVertical: 5,
-                    paddingHorizontal: 30,
+                    paddingVertical: 10,
+                    paddingHorizontal: 35,
                   }}
                 >
                   <Text
                     style={{
                       color: 'black',
-                      fontSize: 24,
+                      fontSize: 22,
                       fontWeight: 300,
                     }}
                   >
                     Sleep
                   </Text>
-                  <MaterialCommunityIcons name='sleep' size={24} color='black' />
                 </TouchableOpacity>
               </View>
             </View>

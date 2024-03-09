@@ -4,11 +4,11 @@ import { Animated, FlatList, Modal, StyleSheet, Text, TouchableOpacity, View } f
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 
 const fakeTasks = [
-  { id: '1', text: 'Click the play button on the right to start' },
-  { id: '2', text: 'Click the left circle button to complete' },
-  { id: '3', text: 'Swipe to the left to see more operations' },
-  { id: '4', text: 'Before you start the timer, set an intention' },
-  { id: '5', text: 'Click the "Show completed tasks" button' },
+  { id: '1', text: 'Wake up smarter' },
+  { id: '2', text: 'Wake up smarter' },
+  { id: '3', text: 'Wake up smarter' },
+  { id: '4', text: 'Wake up smarter' },
+  { id: '5', text: 'Wake up smarter' },
 ];
 
 const TaskModal = ({ isVisible, onClose, selectedTask, setSelectedTask }) => {
