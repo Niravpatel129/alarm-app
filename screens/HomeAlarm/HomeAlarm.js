@@ -119,7 +119,7 @@ export default function HomeAlarm() {
                   <Text
                     style={{
                       color: 'black',
-                      fontSize: 30,
+                      fontSize: 24,
                       fontWeight: 300,
                     }}
                   >
