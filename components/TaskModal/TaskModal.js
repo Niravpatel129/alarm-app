@@ -7,15 +7,14 @@ const fakeTasks = [
   { id: '1', text: 'Click the play button on the right to start...' },
   { id: '2', text: 'Click the left circle button to complete...' },
   { id: '3', text: 'Swipe to the left to see more operations' },
-  { id: '4', text: 'Before you start the timer, set an intenti...' },
-  { id: '5', text: 'Click the "Show completed tasks" butt...' },
+  { id: '4', text: 'Before you start the timer, set an intention...' },
+  { id: '5', text: 'Click the "Show completed tasks" button...' },
 ];
 
 const TaskModal = ({ isVisible, onClose }) => {
   const translateY = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    // Reset translateY to 0 whenever isVisible changes, to ensure modal starts from the correct position
     translateY.setValue(0);
   }, [isVisible, translateY]);
 
@@ -30,70 +29,96 @@ const TaskModal = ({ isVisible, onClose }) => {
       } else {
         Animated.spring(translateY, {
           toValue: 0,
-          tension: 200, // Adjust the tension for a snappier animation
-          friction: 12, // Adjust the friction to control the bounciness
+          tension: 200,
+          friction: 12,
           useNativeDriver: true,
         }).start();
       }
     }
   };
 
-  const modalHeight = 500; // Adjust this value based on your modal's content height
-
   return (
     <Modal transparent visible={isVisible} animationType='slide' onRequestClose={onClose}>
-      <TouchableOpacity style={styles.modalOverlay} activeOpacity={1}>
-        <PanGestureHandler
-          onGestureEvent={onGestureEvent}
-          onHandlerStateChange={onHandlerStateChange}
+      {/* Overlay View */}
+      <View style={styles.modalOverlay} onStartShouldSetResponder={() => true}>
+        {/* Prevent touches on the modal content from closing the modal */}
+        <TouchableOpacity
+          activeOpacity={1}
+          style={{ flex: 1, justifyContent: 'flex-end' }}
+          onPress={onClose}
         >
-          <Animated.View
-            style={[
-              styles.modalContainer,
-              {
-                transform: [
-                  {
-                    translateY: translateY.interpolate({
-                      inputRange: [0, modalHeight],
-                      outputRange: [0, modalHeight],
-                      extrapolate: 'clamp',
-                    }),
-                  },
-                ],
-                // Use the animated value to control the opacity for a smoother transition
-                opacity: translateY.interpolate({
-                  inputRange: [0, modalHeight * 0.5, modalHeight],
-                  outputRange: [1, 0.5, 0],
-                  extrapolate: 'clamp',
-                }),
-              },
-            ]}
+          <PanGestureHandler
+            onGestureEvent={onGestureEvent}
+            onHandlerStateChange={onHandlerStateChange}
           >
-            <View style={styles.header}>
-              <Text style={styles.headerTitle}>Today</Text>
-              <TouchableOpacity onPress={() => {}}>
-                <AntDesign name='pluscircleo' size={24} color='red' />
-              </TouchableOpacity>
-            </View>
-            <FlatList
-              data={fakeTasks}
-              renderItem={({ item }) => (
-                <View style={styles.taskItem}>
-                  <Text style={styles.taskText}>{item.text}</Text>
-                  <TouchableOpacity
-                    onPress={() => {
-                      /* function to handle task completion */
+            <Animated.View
+              style={[
+                styles.modalContainer,
+                {
+                  transform: [
+                    {
+                      translateY: translateY.interpolate({
+                        inputRange: [0, 500], // Adjust based on your modal's height
+                        outputRange: [0, 500],
+                        extrapolate: 'clamp',
+                      }),
+                    },
+                  ],
+                  opacity: translateY.interpolate({
+                    inputRange: [0, 250, 500], // Adjust based on your modal's height
+                    outputRange: [1, 0.5, 0],
+                    extrapolate: 'clamp',
+                  }),
+                },
+              ]}
+            >
+              <View style={styles.header}>
+                <Text style={styles.headerTitle}>Today</Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    console.log('Add task');
+                  }}
+                >
+                  <AntDesign name='pluscircleo' size={24} color='red' />
+                </TouchableOpacity>
+              </View>
+              <FlatList
+                data={fakeTasks}
+                renderItem={({ item }) => (
+                  <TouchableOpacity style={styles.taskItem} onPress={() => {}}>
+                    <Text style={styles.taskText}>{item.text}</Text>
+
+                    <AntDesign name='arrowright' size={20} color='red' />
+                  </TouchableOpacity>
+                )}
+                keyExtractor={(item) => item.id}
+              />
+              <View
+                style={{
+                  marginTop: 30,
+                  marginBottom: 60,
+                }}
+              >
+                <TouchableOpacity
+                  style={{ backgroundColor: '#f1f1f1', padding: 20, borderRadius: 40 }}
+                  onPress={onClose}
+                >
+                  <Text
+                    style={{
+                      color: 'black',
+                      fontSize: 20,
+                      fontWeight: 300,
+                      textAlign: 'center',
                     }}
                   >
-                    <AntDesign name='circledowno' size={24} color='red' />
-                  </TouchableOpacity>
-                </View>
-              )}
-              keyExtractor={(item) => item.id}
-            />
-          </Animated.View>
-        </PanGestureHandler>
-      </TouchableOpacity>
+                    Close
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </Animated.View>
+          </PanGestureHandler>
+        </TouchableOpacity>
+      </View>
     </Modal>
   );
 };
@@ -101,6 +126,7 @@ const TaskModal = ({ isVisible, onClose }) => {
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
+    // backgroundColor: 'rgba(0,0,0,0.5)', // Semi-transparent background
     justifyContent: 'flex-end',
   },
   modalContainer: {
@@ -108,7 +134,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
-    maxHeight: '80%', // Adjust as needed
+    maxHeight: '80%',
   },
   header: {
     flexDirection: 'row',
@@ -127,7 +153,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 12,
+    paddingVertical: 20,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: 'lightgrey',
   },
