@@ -4,14 +4,15 @@ import { Animated, FlatList, Modal, StyleSheet, Text, TouchableOpacity, View } f
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 
 const fakeTasks = [
-  { id: '1', text: 'Click the play button on the right to start...' },
-  { id: '2', text: 'Click the left circle button to complete...' },
+  { id: '1', text: 'Click the play button on the right to start' },
+  { id: '2', text: 'Click the left circle button to complete' },
   { id: '3', text: 'Swipe to the left to see more operations' },
-  { id: '4', text: 'Before you start the timer, set an intention...' },
-  { id: '5', text: 'Click the "Show completed tasks" button...' },
+  { id: '4', text: 'Before you start the timer, set an intention' },
+  { id: '5', text: 'Click the "Show completed tasks" button' },
 ];
 
-const TaskModal = ({ isVisible, onClose }) => {
+const TaskModal = ({ isVisible, onClose, selectedTask, setSelectedTask }) => {
+  console.log('🚀  selectedTask:', selectedTask);
   const translateY = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -85,8 +86,24 @@ const TaskModal = ({ isVisible, onClose }) => {
               <FlatList
                 data={fakeTasks}
                 renderItem={({ item }) => (
-                  <TouchableOpacity style={styles.taskItem} onPress={() => {}}>
-                    <Text style={styles.taskText}>{item.text}</Text>
+                  <TouchableOpacity
+                    style={styles.taskItem}
+                    onPress={() => {
+                      setSelectedTask(item);
+                      onClose();
+                    }}
+                  >
+                    <Text
+                      style={[
+                        styles.taskText,
+                        {
+                          fontWeight: selectedTask?.id === item.id ? 800 : 400,
+                        },
+                      ]}
+                    >
+                      {console.log('🚀 ~ file: TaskModal.js ~ line 108 ~ item', selectedTask, item)}
+                      {item.text}
+                    </Text>
 
                     <AntDesign name='arrowright' size={20} color='red' />
                   </TouchableOpacity>

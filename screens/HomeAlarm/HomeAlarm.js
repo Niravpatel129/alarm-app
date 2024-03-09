@@ -15,6 +15,7 @@ export default function HomeAlarm() {
   const [date, setDate] = useState(new Date());
   const [isPickerVisible, setPickerVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
 
   const handleConfirm = (date) => {
     console.log('A date has been picked: ', date);
@@ -136,7 +137,12 @@ export default function HomeAlarm() {
           </SafeAreaView>
         </ImageBackground>
       </View>
-      <TaskModal isVisible={modalVisible} onClose={() => setModalVisible(false)} />
+      <TaskModal
+        isVisible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        setSelectedTask={setSelectedTask}
+        selectedTask={selectedTask}
+      />
     </>
   );
 }
