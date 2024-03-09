@@ -78,8 +78,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   closeButtonContainer: {
-    marginTop: 30,
-    marginBottom: 60,
+    // marginTop: 30,
+    // marginBottom: 60,
   },
   closeButton: {
     backgroundColor: '#f1f1f1',
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   closeButtonText: {
     color: 'black',
     fontSize: 20,
-    fontWeight: '300',
+    fontWeight: 300,
     textAlign: 'center',
   },
 });
