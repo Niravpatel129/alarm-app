@@ -74,6 +74,7 @@ const TaskModal = ({ isVisible, onClose, selectedTask, setSelectedTask }) => {
               style={[
                 styles.modalContainer,
                 {
+                  flex: 1,
                   transform: [
                     {
                       translateY: translateY.interpolate({
@@ -91,7 +92,7 @@ const TaskModal = ({ isVisible, onClose, selectedTask, setSelectedTask }) => {
                 },
               ]}
             >
-              <View>{switchScreens()}</View>
+              <View style={{ flex: 1 }}>{switchScreens()}</View>
             </Animated.View>
           </PanGestureHandler>
         </TouchableOpacity>
