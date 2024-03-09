@@ -1,5 +1,5 @@
 import { AntDesign } from '@expo/vector-icons';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Animated, FlatList, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 
@@ -12,7 +12,8 @@ const fakeTasks = [
 ];
 
 const TaskModal = ({ isVisible, onClose, selectedTask, setSelectedTask }) => {
-  console.log('🚀  selectedTask:', selectedTask);
+  const [screens, setScreens] = useState('main');
+
   const translateY = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -35,6 +36,91 @@ const TaskModal = ({ isVisible, onClose, selectedTask, setSelectedTask }) => {
           useNativeDriver: true,
         }).start();
       }
+    }
+  };
+
+  const renderMain = () => {
+    return (
+      <>
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Today</Text>
+          <TouchableOpacity
+            onPress={() => {
+              console.log('Add task');
+            }}
+          >
+            <AntDesign name='pluscircleo' size={24} color='red' />
+          </TouchableOpacity>
+        </View>
+        <FlatList
+          data={fakeTasks}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.taskItem}
+              onPress={() => {
+                setSelectedTask(item);
+                onClose();
+              }}
+            >
+              <Text
+                style={[
+                  styles.taskText,
+                  {
+                    fontWeight: selectedTask?.id === item.id ? 800 : 400,
+                  },
+                ]}
+              >
+                {console.log('🚀 ~ file: TaskModal.js ~ line 108 ~ item', selectedTask, item)}
+                {item.text}
+              </Text>
+
+              <AntDesign name='arrowright' size={20} color='red' />
+            </TouchableOpacity>
+          )}
+          keyExtractor={(item) => item.id}
+        />
+        <View
+          style={{
+            marginTop: 30,
+            marginBottom: 60,
+          }}
+        >
+          <TouchableOpacity
+            style={{ backgroundColor: '#f1f1f1', padding: 20, borderRadius: 40 }}
+            onPress={onClose}
+          >
+            <Text
+              style={{
+                color: 'black',
+                fontSize: 20,
+                fontWeight: 300,
+                textAlign: 'center',
+              }}
+            >
+              Close
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </>
+    );
+  };
+
+  const renderTaskAdd = () => {
+    return (
+      <View>
+        <Text>Task Add</Text>
+      </View>
+    );
+  };
+
+  const switchScreens = () => {
+    switch (screens) {
+      case 'main':
+        return renderMain();
+      case 'task':
+        return renderTaskAdd();
+      default:
+        return null;
     }
   };
 
@@ -73,7 +159,7 @@ const TaskModal = ({ isVisible, onClose, selectedTask, setSelectedTask }) => {
                 },
               ]}
             >
-              <View style={styles.header}>
+              {/* <View style={styles.header}>
                 <Text style={styles.headerTitle}>Today</Text>
                 <TouchableOpacity
                   onPress={() => {
@@ -82,56 +168,8 @@ const TaskModal = ({ isVisible, onClose, selectedTask, setSelectedTask }) => {
                 >
                   <AntDesign name='pluscircleo' size={24} color='red' />
                 </TouchableOpacity>
-              </View>
-              <FlatList
-                data={fakeTasks}
-                renderItem={({ item }) => (
-                  <TouchableOpacity
-                    style={styles.taskItem}
-                    onPress={() => {
-                      setSelectedTask(item);
-                      onClose();
-                    }}
-                  >
-                    <Text
-                      style={[
-                        styles.taskText,
-                        {
-                          fontWeight: selectedTask?.id === item.id ? 800 : 400,
-                        },
-                      ]}
-                    >
-                      {console.log('🚀 ~ file: TaskModal.js ~ line 108 ~ item', selectedTask, item)}
-                      {item.text}
-                    </Text>
-
-                    <AntDesign name='arrowright' size={20} color='red' />
-                  </TouchableOpacity>
-                )}
-                keyExtractor={(item) => item.id}
-              />
-              <View
-                style={{
-                  marginTop: 30,
-                  marginBottom: 60,
-                }}
-              >
-                <TouchableOpacity
-                  style={{ backgroundColor: '#f1f1f1', padding: 20, borderRadius: 40 }}
-                  onPress={onClose}
-                >
-                  <Text
-                    style={{
-                      color: 'black',
-                      fontSize: 20,
-                      fontWeight: 300,
-                      textAlign: 'center',
-                    }}
-                  >
-                    Close
-                  </Text>
-                </TouchableOpacity>
-              </View>
+              </View> */}
+              <View>{switchScreens()}</View>
             </Animated.View>
           </PanGestureHandler>
         </TouchableOpacity>
