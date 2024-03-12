@@ -17,12 +17,21 @@ const TaskModal = ({ isVisible, onClose, selectedTask, setSelectedTask }) => {
   const translateY = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
+    setScreens('main');
+  }, [isVisible]);
+
+  useEffect(() => {
     translateY.setValue(0);
   }, [isVisible, translateY]);
 
   const onGestureEvent = Animated.event([{ nativeEvent: { translationY: translateY } }], {
     useNativeDriver: true,
   });
+
+  const onAdd = (task) => {
+    console.log('Add task:', task);
+    onClose();
+  };
 
   const onHandlerStateChange = ({ nativeEvent }) => {
     if (nativeEvent.state === State.END) {
@@ -52,7 +61,7 @@ const TaskModal = ({ isVisible, onClose, selectedTask, setSelectedTask }) => {
           />
         );
       case 'task':
-        return <TaskAddScreen />;
+        return <TaskAddScreen onAdd={onAdd} />;
       default:
         return null;
     }

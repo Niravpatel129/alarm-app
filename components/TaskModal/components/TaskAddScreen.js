@@ -15,6 +15,7 @@ const TaskAddScreen = ({ onAdd }) => {
   const [task, setTask] = useState('');
 
   const handleAddTask = () => {
+    console.log('Add task:', task);
     onAdd(task);
     setTask('');
   };
@@ -80,6 +81,7 @@ const TaskAddScreen = ({ onAdd }) => {
                 <TouchableOpacity
                   onPress={() => {
                     console.log('done');
+                    handleAddTask();
                   }}
                   style={{
                     flex: 1,
