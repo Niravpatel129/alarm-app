@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
-const TimePicker = ({ isVisible, onConfirm, onCancel }) => {
+const TimePicker = ({ isVisible, onConfirm, onCancel, value }) => {
   return (
     <View>
       <DateTimePickerModal
@@ -10,6 +10,8 @@ const TimePicker = ({ isVisible, onConfirm, onCancel }) => {
         mode='time'
         onConfirm={onConfirm}
         onCancel={onCancel}
+        date={value}
+      
       />
     </View>
   );

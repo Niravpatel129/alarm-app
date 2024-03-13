@@ -130,6 +130,7 @@ export default function HomeAlarm() {
               </View>
             </View>
             <TimePicker
+              value={date}
               isVisible={isPickerVisible}
               onConfirm={handleConfirm}
               onCancel={hidePicker}
