@@ -14,8 +14,40 @@ export default function AlarmScreen() {
   const [messageTitle, setMessageTitle] = useState('Sleep is luxury');
   const [messages, setMessages] = useState(['Sleep is luxury']);
   const navigation = useNavigation();
-  // const { selectedTime, messages, toggleGuide, stopAlarm, messageTitle } =
-  // useAlarmContext('01:00 AM');
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+
+
+  useEffect(() => {
+    console.log('Sleep is starting', params.time);
+    // parse time Wed Mar 13 2024 13:37:55 GMT-0400 to be read as 01:37 PM 
+    const time = new Date(params.time);
+    const ringsIn = time.getTime() - new Date().getTime();
+    const hours = Math.floor(ringsIn / (1000 * 60 * 60)); 
+    const minutes = Math.floor((ringsIn % (1000 * 60 * 60)) / (1000 * 60));
+
+    setSelectedTime(`${hours} hours and ${minutes} minutes`);
+
+
+    setMessages(['Sleep is starting']);
+    setAlarmActive(true);
+    setShowGuide(true);
+
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+
+  const day = days[currentTime.getDay()];
+  const date = `${currentTime.getDate() < 10 ? '0' : ''}${currentTime.getDate()}`;
+  const month = months[currentTime.getMonth()];
+  const year = currentTime.getFullYear();
+  const hours = `${currentTime.getHours() < 10 ? '0' : ''}${currentTime.getHours()}`;
+  const minutes = `${currentTime.getMinutes() < 10 ? '0' : ''}${currentTime.getMinutes()}`;
 
   const handleStopAlarm = () => {
     console.log('Stop alarm');
@@ -26,7 +58,6 @@ export default function AlarmScreen() {
 
   };
   
-  console.log('🚀  params:', params);
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
@@ -68,28 +99,6 @@ export default function AlarmScreen() {
     }),
   ).current;
 
-  const [currentTime, setCurrentTime] = useState(new Date());
-
-  useEffect(() => {
-    setMessages(['Sleep is starting']);
-    setAlarmActive(true);
-    setShowGuide(true);
-
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  const months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
-
-  const day = days[currentTime.getDay()];
-  const date = `${currentTime.getDate() < 10 ? '0' : ''}${currentTime.getDate()}`;
-  const month = months[currentTime.getMonth()];
-  const year = currentTime.getFullYear();
-  const hours = `${currentTime.getHours() < 10 ? '0' : ''}${currentTime.getHours()}`;
-  const minutes = `${currentTime.getMinutes() < 10 ? '0' : ''}${currentTime.getMinutes()}`;
 
   return (
     <View
@@ -169,7 +178,7 @@ export default function AlarmScreen() {
                 fontFamily: 'Roboto',
               }}
             >
-              Alarm {selectedTime}
+              {selectedTime}
             </Text>
           </View>
           <Animated.View
