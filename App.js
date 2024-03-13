@@ -1,4 +1,3 @@
-// Import React and necessary components from React Native and React Navigation
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -9,6 +8,7 @@ import { AlarmProvider } from './context/Alarm/AlarmContext';
 import { SoundProvider } from './context/sound/SoundContext';
 import AlarmScreen from './screens/AlarmScreen/AlarmScreen';
 import HomeScreen from './screens/Home/Home';
+import HomeAlarm from './screens/HomeAlarm/HomeAlarm';
 import OnboardingScreen from './screens/OnboardingScreen/OnboardingScreen';
 import SettingsScreen from './screens/Settings/Settings';
 
@@ -40,7 +40,7 @@ function App() {
           <AlarmProvider>
             <Stack.Navigator>
               {/* Dev */}
-              {/* <Stack.Screen name='Dev' component={AlarmScreen} options={{ headerShown: false }} /> */}
+              {/* <Stack.Screen name='Dev' component={HomeAlarm} options={{ headerShown: false }} /> */}
               <Stack.Screen
                 name='Onboarding'
                 component={OnboardingScreen}
@@ -49,7 +49,7 @@ function App() {
 
               <Stack.Screen
                 name='Home'
-                component={MyTabs}
+                component={HomeAlarm}
                 options={{
                   headerShown: false,
                   animation: 'slide_from_bottom',

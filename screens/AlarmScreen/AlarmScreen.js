@@ -1,16 +1,30 @@
 import { Entypo, MaterialIcons } from '@expo/vector-icons';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useRef, useState } from 'react';
 import { Animated, Image, PanResponder, SafeAreaView, Text, View } from 'react-native';
 import MeditationGuide from '../../components/MeditationGuide/MeditationGuide';
-import { useAlarmContext } from '../../context/Alarm/AlarmContext';
 
 export default function AlarmScreen() {
   const params = useRoute().params;
+  const [alarmActive, setAlarmActive] = useState(false);
   const position = useRef(new Animated.ValueXY()).current;
   const opacity = useRef(new Animated.Value(1)).current;
-  const { selectedTime, messages, showGuide, toggleGuide, stopAlarm, messageTitle } =
-  useAlarmContext('01:00 AM');
+  const [showGuide, setShowGuide] = useState(false);
+  const [selectedTime, setSelectedTime] = useState('01:00 AM');
+  const [messageTitle, setMessageTitle] = useState('Sleep is luxury');
+  const [messages, setMessages] = useState(['Sleep is luxury']);
+  const navigation = useNavigation();
+  // const { selectedTime, messages, toggleGuide, stopAlarm, messageTitle } =
+  // useAlarmContext('01:00 AM');
+
+  const handleStopAlarm = () => {
+    console.log('Stop alarm');
+    setMessages(['Sleep is over']);
+    setShowGuide(true);
+    setAlarmActive(false);
+    // navigation.navigate('Home');
+
+  };
   
   console.log('🚀  params:', params);
   const panResponder = useRef(
@@ -32,12 +46,16 @@ export default function AlarmScreen() {
             useNativeDriver: false,
           }).start(() => {
             position.setValue({ x: 0, y: 0 });
+
+            handleStopAlarm();
+
             setTimeout(() => {
               opacity.setValue(1);
             }, 3000);
           });
 
-          stopAlarm();
+        
+
         } else {
           Animated.spring(position, {
             toValue: { x: 0, y: 0 },
@@ -53,6 +71,10 @@ export default function AlarmScreen() {
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
+    setMessages(['Sleep is starting']);
+    setAlarmActive(true);
+    setShowGuide(true);
+
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
@@ -174,7 +196,15 @@ export default function AlarmScreen() {
         <MeditationGuide
           messageTitle={messageTitle}
           messages={messages}
-          onCompletion={() => toggleGuide()}
+          onCompletion={() => {
+            if(!alarmActive){
+              navigation.navigate('Home')
+            }  
+            
+            setShowGuide(false)
+          
+          
+          }}
         />
       )}
     </View>
