@@ -1,15 +1,18 @@
 import { Entypo, MaterialIcons } from '@expo/vector-icons';
+import { useRoute } from '@react-navigation/native';
 import React, { useEffect, useRef, useState } from 'react';
 import { Animated, Image, PanResponder, SafeAreaView, Text, View } from 'react-native';
 import MeditationGuide from '../../components/MeditationGuide/MeditationGuide';
 import { useAlarmContext } from '../../context/Alarm/AlarmContext';
 
 export default function AlarmScreen() {
+  const params = useRoute().params;
   const position = useRef(new Animated.ValueXY()).current;
   const opacity = useRef(new Animated.Value(1)).current;
   const { selectedTime, messages, showGuide, toggleGuide, stopAlarm, messageTitle } =
-    useAlarmContext('01:00 AM');
-
+  useAlarmContext('01:00 AM');
+  
+  console.log('🚀  params:', params);
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,

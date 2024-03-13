@@ -16,14 +16,14 @@ const MeditationGuide = ({ messages = ['Sleep is luxury'], onCompletion, message
 
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const opacity = useSharedValue(1);
-  const tapToContinueOpacity = useSharedValue(0); 
+  const tapToContinueOpacity = useSharedValue(0); // Shared value for controlling the "Tap to continue" text opacity
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      tapToContinueOpacity.value = 1;
-    }, 3000); 
-    return () => clearTimeout(timer); 
-  }, [currentMessageIndex]); 
+      tapToContinueOpacity.value = 1; // Fade in the "Tap to continue" text after an additional delay
+    }, 3000); // Delay for the "Tap to continue" text to appear
+    return () => clearTimeout(timer); // Cleanup the timer when component unmounts or currentMessageIndex changes
+  }, [currentMessageIndex]); // Dependency array includes currentMessageIndex to trigger the effect on change
 
   const animatedStyles = useAnimatedStyle(() => {
     return {

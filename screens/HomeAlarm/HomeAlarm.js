@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import {
   ImageBackground,
@@ -15,6 +16,17 @@ export default function HomeAlarm() {
   const [isPickerVisible, setPickerVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
+  const navigation = useNavigation();
+
+  const handleSleep = () => {
+    console.log('Sleep');
+    
+
+    navigation.navigate('AlarmScreen', {
+        task: selectedTask,
+        time: date,
+    });
+  };
 
   const handleConfirm = (date) => {
     console.log('A date has been picked: ', date);
@@ -105,6 +117,7 @@ export default function HomeAlarm() {
 
               <View>
                 <TouchableOpacity
+                  onPress={handleSleep}
                   style={{
                     borderRadius: 10,
                     borderWidth: 1,
