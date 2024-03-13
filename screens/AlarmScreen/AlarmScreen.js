@@ -3,6 +3,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useRef, useState } from 'react';
 import { Animated, Image, PanResponder, SafeAreaView, Text, View } from 'react-native';
 import MeditationGuide from '../../components/MeditationGuide/MeditationGuide';
+import { StartAlarmEvent, StopAlarmEvent } from '../../hooks/useBackgroundTask';
 
 export default function AlarmScreen() {
   const params = useRoute().params;
@@ -27,8 +28,10 @@ export default function AlarmScreen() {
     const minutes = Math.floor((ringsIn % (1000 * 60 * 60)) / (1000 * 60));
 
     setSelectedTime(`${hours} hours and ${minutes} minutes`);
-
-
+    const secondsToRingAlarm = Math.floor(ringsIn / 1000) + 1;
+    console.log('🚀  secondsToRingAlarm:', secondsToRingAlarm);
+    const secondsToRingAlarm2 = Math.floor(ringsIn / 1000) + 1;
+    StartAlarmEvent(secondsToRingAlarm2);
     setMessages(['Sleep is starting']);
     setAlarmActive(true);
     setShowGuide(true);
@@ -50,6 +53,7 @@ export default function AlarmScreen() {
   const minutes = `${currentTime.getMinutes() < 10 ? '0' : ''}${currentTime.getMinutes()}`;
 
   const handleStopAlarm = () => {
+    StopAlarmEvent();
     console.log('Stop alarm');
     setMessages(['Sleep is over']);
     setShowGuide(true);
