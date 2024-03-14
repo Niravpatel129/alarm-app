@@ -1,6 +1,7 @@
 import { AntDesign } from '@expo/vector-icons';
 import React from 'react';
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Animated, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Swipeable } from 'react-native-gesture-handler';
 
 const TaskListScreen = ({
   setSelectedTask,
@@ -10,6 +11,29 @@ const TaskListScreen = ({
   selectedTask,
   onDelete,
 }) => {
+  // Render swipeable delete button with smooth animations
+  const renderRightActions = (progress, dragX, item) => {
+    const translateX = dragX.interpolate({
+      inputRange: [-100, 0],
+      outputRange: [0, 100],
+      extrapolate: 'clamp',
+    });
+
+    const opacity = dragX.interpolate({
+      inputRange: [-100, -50, 0],
+      outputRange: [1, 0.5, 0],
+      extrapolate: 'clamp',
+    });
+
+    return (
+      <Animated.View style={{ flex: 1, justifyContent: 'center', transform: [{ translateX }], opacity }}>
+        <TouchableOpacity onPress={() => onDelete(item.id)} style={styles.deleteButton}>
+          <Text style={styles.deleteButtonText}>Delete</Text>
+        </TouchableOpacity>
+      </Animated.View>
+    );
+  };
+
   return (
     <>
       <View style={styles.header}>
@@ -18,41 +42,34 @@ const TaskListScreen = ({
           onPress={() => {
             console.log('Add task');
             setScreens('task');
-          }}
-        >
-          <AntDesign name='pluscircleo' size={24} color='red' />
+          }}>
+          <AntDesign name="pluscircleo" size={24} color="red" />
         </TouchableOpacity>
       </View>
       <FlatList
         data={tasks}
         renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.taskItem}
-            onPress={() => {
-              setSelectedTask(item);
-              onClose();
-            }}
-          >
-            <Text
-              style={[
-                styles.taskText,
-                {
-                  fontWeight: selectedTask?.id === item.id ? 'bold' : 'normal',
-                },
-              ]}
-            >
-              {item.text}
-            </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                gap: 5,
-              }}
-            >
-              <AntDesign name='arrowright' size={20} color='red' />
-            </View>
-          </TouchableOpacity>
+          <Swipeable renderRightActions={(progress, dragX) => renderRightActions(progress, dragX, item)}>
+            <TouchableOpacity
+              style={styles.taskItem}
+              onPress={() => {
+                setSelectedTask(item);
+                onClose();
+              }}>
+              <Text
+                style={[
+                  styles.taskText,
+                  {
+                    fontWeight: selectedTask?.id === item.id ? 'bold' : 'normal',
+                  },
+                ]}>
+                {item.text}
+              </Text>
+              <View style={styles.rightIcon}>
+                <AntDesign name="arrowright" size={20} color="red" />
+              </View>
+            </TouchableOpacity>
+          </Swipeable>
         )}
         keyExtractor={(item) => item.id}
       />
@@ -92,9 +109,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     maxWidth: '80%',
   },
+  rightIcon: {
+    // Your existing styles for the right icon, if any
+  },
   closeButtonContainer: {
-    // marginTop: 30,
-    // marginBottom: 60,
+    // Adjust these styles if necessary
   },
   closeButton: {
     backgroundColor: '#f1f1f1',
@@ -104,8 +123,23 @@ const styles = StyleSheet.create({
   closeButtonText: {
     color: 'black',
     fontSize: 20,
-    fontWeight: 300,
     textAlign: 'center',
+    // React Native does not support numeric font weights except 'bold',
+    // if you previously had fontWeight: '300', change it to 'normal' or 'bold' as appropriate.
+  },
+  deleteButton: {
+    backgroundColor: 'red',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 100, // Adjust as needed
+    height: '100%',
+    position: 'absolute',
+    right: 0,
+  },
+  deleteButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
 });
 

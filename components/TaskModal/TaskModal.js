@@ -50,6 +50,9 @@ const TaskModal = ({ isVisible, onClose, selectedTask, setSelectedTask }) => {
   };
 
   const onDelete = async (taskId) => {
+    console.log('Delete task:', taskId);
+
+
     const updatedTasks = tasks.filter(task => task.id !== taskId);
     setTasks(updatedTasks);
     await AsyncStorage.setItem('tasks', JSON.stringify(updatedTasks));
