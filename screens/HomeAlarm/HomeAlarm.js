@@ -24,7 +24,7 @@ export default function HomeAlarm() {
 
     navigation.navigate('AlarmScreen', {
         task: selectedTask,
-        time: date,
+        time: date.toISOString(),
     });
   };
 
