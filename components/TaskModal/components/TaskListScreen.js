@@ -11,26 +11,26 @@ const TaskListScreen = ({
   selectedTask,
   onDelete,
 }) => {
-  // Render swipeable delete button with smooth animations
+  // Modified render swipeable delete button with simple content push
   const renderRightActions = (progress, dragX, item) => {
     const translateX = dragX.interpolate({
-      inputRange: [-100, 0],
-      outputRange: [0, 100],
-      extrapolate: 'clamp',
-    });
-
-    const opacity = dragX.interpolate({
-      inputRange: [-100, -50, 0],
-      outputRange: [1, 0.5, 0],
+      inputRange: [0, 100],
+      outputRange: [0, -100],
       extrapolate: 'clamp',
     });
 
     return (
-      <Animated.View style={{ flex: 1, justifyContent: 'center', transform: [{ translateX }], opacity }}>
-        <TouchableOpacity onPress={() => onDelete(item.id)} style={styles.deleteButton}>
-          <Text style={styles.deleteButtonText}>Delete</Text>
-        </TouchableOpacity>
-      </Animated.View>
+      <View style={{ width: 100, justifyContent: 'center', alignItems: 'center' }}>
+        <Animated.View
+          style={{
+            transform: [{ translateX }],
+          }}
+        >
+          <TouchableOpacity onPress={() => onDelete(item.id)} style={styles.deleteButton}>
+            <Text style={styles.deleteButtonText}>Delete</Text>
+          </TouchableOpacity>
+        </Animated.View>
+      </View>
     );
   };
 
@@ -42,33 +42,40 @@ const TaskListScreen = ({
           onPress={() => {
             console.log('Add task');
             setScreens('task');
-          }}>
-          <AntDesign name="pluscircleo" size={24} color="red" />
+          }}
+        >
+          <AntDesign name='pluscircleo' size={24} color='red' />
         </TouchableOpacity>
       </View>
       <FlatList
         data={tasks}
         renderItem={({ item }) => (
-          <Swipeable renderRightActions={(progress, dragX) => renderRightActions(progress, dragX, item)}>
-            <TouchableOpacity
-              style={styles.taskItem}
-              onPress={() => {
-                setSelectedTask(item);
-                onClose();
-              }}>
-              <Text
-                style={[
-                  styles.taskText,
-                  {
-                    fontWeight: selectedTask?.id === item.id ? 'bold' : 'normal',
-                  },
-                ]}>
-                {item.text}
-              </Text>
-              <View style={styles.rightIcon}>
-                <AntDesign name="arrowright" size={20} color="red" />
-              </View>
-            </TouchableOpacity>
+          <Swipeable
+            renderRightActions={(progress, dragX) => renderRightActions(progress, dragX, item)}
+          >
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <TouchableOpacity
+                style={styles.taskItem}
+                onPress={() => {
+                  setSelectedTask(item);
+                  onClose();
+                }}
+              >
+                <Text
+                  style={[
+                    styles.taskText,
+                    {
+                      fontWeight: selectedTask?.id === item.id ? 'bold' : 'normal',
+                    },
+                  ]}
+                >
+                  {item.text}
+                </Text>
+                <View style={styles.rightIcon}>
+                  <AntDesign name='arrowright' size={20} color='red' />
+                </View>
+              </TouchableOpacity>
+            </View>
           </Swipeable>
         )}
         keyExtractor={(item) => item.id}
@@ -103,6 +110,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: 'lightgrey',
+    flex: 1, // Ensure the task item takes full width
   },
   taskText: {
     color: 'black',
@@ -133,8 +141,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: 100, // Adjust as needed
     height: '100%',
-    position: 'absolute',
-    right: 0,
   },
   deleteButtonText: {
     color: 'white',
