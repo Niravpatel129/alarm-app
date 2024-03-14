@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useRef, useState } from 'react';
 import { Animated, Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
@@ -5,20 +6,31 @@ import TaskAddScreen from './components/TaskAddScreen';
 import TaskListScreen from './components/TaskListScreen';
 
 const fakeTasks = [
-  { id: '1', text: 'Wake up smarter' },
-  { id: '2', text: 'Wake up smarter' },
-  { id: '3', text: 'Wake up smarter' },
-  { id: '4', text: 'Wake up smarter' },
-  { id: '5', text: 'Wake up smarter' },
+  { id: '1', text: 'Study for Chemistry' },
+  { id: '2', text: 'Go to the Gym and train Chest' },
+  { id: '3', text: 'Read 20 pages of a book' },
+  { id: '4', text: 'Practice mindfulness meditation' },
+  { id: '5', text: 'Plan tomorrow’s tasks' },
 ];
 
 const TaskModal = ({ isVisible, onClose, selectedTask, setSelectedTask }) => {
+  const [tasks, setTasks] = useState(fakeTasks);
   const [screens, setScreens] = useState('main');
   const translateY = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    setScreens('main');
+    const loadTasks = async () => {      
+      const tasksString = await AsyncStorage.getItem('tasks');
+      const loadedTasks = tasksString ? JSON.parse(tasksString) : [];
+      setScreens('main');
+      setTasks(loadedTasks);
+    };
+  
+    loadTasks();
   }, [isVisible]);
+  
+
+  
 
   useEffect(() => {
     translateY.setValue(0);
@@ -28,11 +40,22 @@ const TaskModal = ({ isVisible, onClose, selectedTask, setSelectedTask }) => {
     useNativeDriver: true,
   });
 
-  const onAdd = (task) => {
+  const onAdd = async (task) => {
     console.log('Add task:', task);
-    onClose();
+    const newTask = { id: String(tasks.length + 1), text: task };
+    const updatedTasks = [...tasks, newTask];
+    setTasks(updatedTasks);
+    await AsyncStorage.setItem('tasks', JSON.stringify(updatedTasks));
+    setScreens('main');
   };
 
+  const onDelete = async (taskId) => {
+    const updatedTasks = tasks.filter(task => task.id !== taskId);
+    setTasks(updatedTasks);
+    await AsyncStorage.setItem('tasks', JSON.stringify(updatedTasks));
+  };
+  
+  
   const onHandlerStateChange = ({ nativeEvent }) => {
     if (nativeEvent.state === State.END) {
       if (nativeEvent.translationY > 100) {
@@ -56,12 +79,13 @@ const TaskModal = ({ isVisible, onClose, selectedTask, setSelectedTask }) => {
             setSelectedTask={setSelectedTask}
             onClose={onClose}
             setScreens={setScreens}
-            fakeTasks={fakeTasks}
+            tasks={tasks}
             selectedTask={selectedTask}
+            onDelete={onDelete}
           />
         );
       case 'task':
-        return <TaskAddScreen onAdd={onAdd} />;
+        return <TaskAddScreen onAdd={onAdd} onDelete={onDelete} />;
       default:
         return null;
     }

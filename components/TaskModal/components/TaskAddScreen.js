@@ -20,6 +20,8 @@ const TaskAddScreen = ({ onAdd }) => {
     setTask('');
   };
 
+
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}

@@ -2,7 +2,14 @@ import { AntDesign } from '@expo/vector-icons';
 import React from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-const TaskListScreen = ({ setSelectedTask, onClose, setScreens, fakeTasks, selectedTask }) => {
+const TaskListScreen = ({
+  setSelectedTask,
+  onClose,
+  setScreens,
+  tasks,
+  selectedTask,
+  onDelete,
+}) => {
   return (
     <>
       <View style={styles.header}>
@@ -17,7 +24,7 @@ const TaskListScreen = ({ setSelectedTask, onClose, setScreens, fakeTasks, selec
         </TouchableOpacity>
       </View>
       <FlatList
-        data={fakeTasks}
+        data={tasks}
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.taskItem}
@@ -36,8 +43,15 @@ const TaskListScreen = ({ setSelectedTask, onClose, setScreens, fakeTasks, selec
             >
               {item.text}
             </Text>
-
-            <AntDesign name='arrowright' size={20} color='red' />
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 5,
+              }}
+            >
+              <AntDesign name='arrowright' size={20} color='red' />
+            </View>
           </TouchableOpacity>
         )}
         keyExtractor={(item) => item.id}
@@ -75,7 +89,8 @@ const styles = StyleSheet.create({
   },
   taskText: {
     color: 'black',
-    fontSize: 18,
+    fontSize: 16,
+    maxWidth: '80%',
   },
   closeButtonContainer: {
     // marginTop: 30,
