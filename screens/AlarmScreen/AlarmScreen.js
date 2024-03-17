@@ -17,14 +17,12 @@ export default function AlarmScreen() {
   const navigation = useNavigation();
   const [currentTime, setCurrentTime] = useState(new Date());
 
-
-
   useEffect(() => {
     console.log('Sleep is starting', params.time);
-    // parse time Wed Mar 13 2024 13:37:55 GMT-0400 to be read as 01:37 PM 
+    // parse time Wed Mar 13 2024 13:37:55 GMT-0400 to be read as 01:37 PM
     const time = new Date(params.time);
     const ringsIn = time.getTime() - new Date().getTime();
-    const hours = Math.floor(ringsIn / (1000 * 60 * 60)); 
+    const hours = Math.floor(ringsIn / (1000 * 60 * 60));
     const minutes = Math.floor((ringsIn % (1000 * 60 * 60)) / (1000 * 60));
 
     setSelectedTime(`${hours} hours and ${minutes} minutes`);
@@ -32,7 +30,7 @@ export default function AlarmScreen() {
     console.log('🚀  secondsToRingAlarm:', secondsToRingAlarm);
     const secondsToRingAlarm2 = Math.floor(ringsIn / 1000) + 1;
     StartAlarmEvent(secondsToRingAlarm2);
-    setMessages(['Sleep is starting']);
+    setMessages(['Sleep is starting, Sleep is starting, Sleep is starting']);
     setAlarmActive(true);
     setShowGuide(true);
 
@@ -59,9 +57,8 @@ export default function AlarmScreen() {
     setShowGuide(true);
     setAlarmActive(false);
     // navigation.navigate('Home');
-
   };
-  
+
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
@@ -88,9 +85,6 @@ export default function AlarmScreen() {
               opacity.setValue(1);
             }, 3000);
           });
-
-        
-
         } else {
           Animated.spring(position, {
             toValue: { x: 0, y: 0 },
@@ -102,7 +96,6 @@ export default function AlarmScreen() {
       },
     }),
   ).current;
-
 
   return (
     <View
@@ -210,13 +203,11 @@ export default function AlarmScreen() {
           messageTitle={messageTitle}
           messages={messages}
           onCompletion={() => {
-            if(!alarmActive){
-              navigation.navigate('Home')
-            }  
-            
-            setShowGuide(false)
-          
-          
+            if (!alarmActive) {
+              navigation.navigate('Home');
+            }
+
+            setShowGuide(false);
           }}
         />
       )}

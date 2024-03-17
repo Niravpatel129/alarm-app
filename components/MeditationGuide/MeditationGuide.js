@@ -1,11 +1,5 @@
-import React, { useEffect, useState } from 'react'; // Import useEffect
-import { Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import Animated, {
-  Easing,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
+import React, { useEffect, useState } from 'react';
+import { Animated, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import GradientText from '../GradientText/GradientText';
 
 const MeditationGuide = ({ messages = ['Sleep is luxury'], onCompletion, messageTitle }) => {
@@ -15,47 +9,45 @@ const MeditationGuide = ({ messages = ['Sleep is luxury'], onCompletion, message
   }
 
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
-  const opacity = useSharedValue(1);
-  const tapToContinueOpacity = useSharedValue(0); 
+  const opacity = new Animated.Value(1);
+  const tapToContinueOpacity = new Animated.Value(0);
+  const words = messages[currentMessageIndex].split(' ');
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      tapToContinueOpacity.value = 1;
-    }, 3000); 
-    return () => clearTimeout(timer); 
-  }, [currentMessageIndex]); 
+      Animated.timing(tapToContinueOpacity, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: true,
+      }).start();
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [currentMessageIndex, tapToContinueOpacity]);
 
-  const animatedStyles = useAnimatedStyle(() => {
-    return {
-      opacity: withTiming(opacity.value, {
-        duration: 700,
-        easing: Easing.inOut(Easing.ease),
-      }),
-    };
-  });
+  const animatedStyles = {
+    opacity: opacity,
+  };
 
-  const tapToContinueAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      opacity: withTiming(tapToContinueOpacity.value, {
-        duration: 500, // Slightly faster to make it more responsive
-        easing: Easing.inOut(Easing.ease),
-      }),
-    };
-  });
+  const tapToContinueAnimatedStyle = {
+    opacity: tapToContinueOpacity,
+  };
 
   const goToNextMessage = () => {
-    opacity.value = 0; // Start fading out the current message
-    tapToContinueOpacity.value = 0; // Also start fading out the "Tap to continue" text
-    if (currentMessageIndex < messages.length - 1) {
-      setTimeout(() => {
-        setCurrentMessageIndex(currentMessageIndex + 1); // Update the message index to the next message
+    Animated.timing(opacity, {
+      toValue: 0,
+      duration: 700,
+      useNativeDriver: true,
+    }).start(() => {
+      tapToContinueOpacity.setValue(0);
+      if (currentMessageIndex < messages.length - 1) {
+        setCurrentMessageIndex(currentMessageIndex + 1);
         setTimeout(() => {
-          opacity.value = 1; // Start fading in the next message after the index has been updated
-        }, 100); // Short delay to ensure the index is updated before starting to fade in
-      }, 700); // Match this delay with the duration of the fade-out animation
-    } else {
-      setTimeout(onCompletion, 700); // If at the last message, call completion handler after the fade-out animation
-    }
+          opacity.setValue(1);
+        }, 100);
+      } else {
+        setTimeout(onCompletion, 700);
+      }
+    });
   };
 
   return (
@@ -95,7 +87,20 @@ const MeditationGuide = ({ messages = ['Sleep is luxury'], onCompletion, message
               letterSpacing: 1,
             }}
           >
-            {messages[currentMessageIndex]}
+            {words.map((word, index) => (
+              <Animated.Text
+                key={index}
+                style={{
+                  opacity: opacity.interpolate({
+                    inputRange: [0, 0.8, 1],
+                    outputRange: [0, 0, 1],
+                    extrapolate: 'clamp',
+                  }),
+                }}
+              >
+                {word}{' '}
+              </Animated.Text>
+            ))}
           </GradientText>
         </Animated.View>
         <Animated.View
