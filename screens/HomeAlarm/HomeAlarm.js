@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import TimePicker from '../../components/DateTimePicker/DateTimePicker';
 import TaskModal from '../../components/TaskModal/TaskModal';
+import Toast from 'react-native-toast-message';
 
 export default function HomeAlarm() {
   const [date, setDate] = useState(new Date());
@@ -19,12 +20,36 @@ export default function HomeAlarm() {
   const navigation = useNavigation();
 
   const handleSleep = () => {
-    console.log('Sleep');
-    
+    const currentTime = new Date();
+    const selectedTime = new Date(date.getTime());
+    const timeDifference = selectedTime.getTime() - currentTime.getTime();
 
+    // Check if the selected time is in the future and the difference is more than 2 minutes
+    if (timeDifference > 0 && timeDifference < 120000) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Time difference must be more than 2 minutes',
+        position: 'bottom',
+      });
+      console.log('Time difference must be more than 2 minutes');
+      return;
+    } else if (timeDifference <= 0) {
+      // If the selected time is not in the future
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Selected time is in the past. Please choose a future time.',
+        position: 'bottom',
+      });
+      console.log('Selected time is in the past. Please choose a future time.');
+      return;
+    }
+
+    // If all checks pass, navigate to AlarmScreen
     navigation.navigate('AlarmScreen', {
-        task: selectedTask,
-        time: date.toISOString(),
+      task: selectedTask,
+      time: selectedTime.toISOString(),
     });
   };
 

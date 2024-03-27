@@ -11,6 +11,7 @@ import HomeScreen from './screens/Home/Home';
 import HomeAlarm from './screens/HomeAlarm/HomeAlarm';
 import OnboardingScreen from './screens/OnboardingScreen/OnboardingScreen';
 import SettingsScreen from './screens/Settings/Settings';
+import Toast from 'react-native-toast-message';
 
 const Tab = createBottomTabNavigator();
 
@@ -67,6 +68,7 @@ function App() {
           </AlarmProvider>
         </SoundProvider>
       </NavigationContainer>
+      <Toast />
     </GestureHandlerRootView>
   );
 }
