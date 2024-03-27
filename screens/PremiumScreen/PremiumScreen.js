@@ -10,17 +10,39 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  withSpring,
+} from 'react-native-reanimated';
 
 const SubscriptionPage = () => {
   const [isProPlan, setIsProPlan] = useState(false);
   const [showMoreTestimonials, setShowMoreTestimonials] = useState(false);
 
+  const planScale = useSharedValue(1);
+  const testimonialPosition = useSharedValue(0);
+
+  const planAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: planScale.value }],
+  }));
+
+  const testimonialAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: testimonialPosition.value }],
+  }));
+
   const togglePlan = () => {
     setIsProPlan(!isProPlan);
+    planScale.value = withSpring(isProPlan ? 1 : 1.05, { mass: 0.5, stiffness: 120 });
   };
 
   const toggleShowMoreTestimonials = () => {
     setShowMoreTestimonials(!showMoreTestimonials);
+  };
+
+  const scrollTestimonial = (index) => {
+    testimonialPosition.value = withTiming(index * -300, { duration: 500 });
   };
 
   return (
@@ -29,7 +51,7 @@ const SubscriptionPage = () => {
         <View style={styles.header}>
           <Image
             source={{
-              uri: 'https://example.com/premium-features-showcase.jpg',
+              uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKcnzal7N31LBP7SufePuJLThqdY7vEQTCoX6gKTHBzA&s',
             }}
             style={styles.headerImage}
             accessibilityLabel='Premium Features Showcase'
@@ -38,7 +60,9 @@ const SubscriptionPage = () => {
           <Text style={styles.subtitle}>Choose the plan that's right for you</Text>
           <Text style={styles.tagline}>Enhance your experience with exclusive benefits</Text>
         </View>
-        <View style={[styles.planCard, isProPlan && styles.proPlanCard]}>
+        <Animated.View
+          style={[styles.planCard, isProPlan && styles.proPlanCard, planAnimatedStyle]}
+        >
           <View style={styles.planHeader}>
             <Text style={[styles.planTitle, isProPlan && styles.proPlanTitle]}>
               {isProPlan ? 'Pro Plan' : 'Free Plan'}
@@ -86,7 +110,9 @@ const SubscriptionPage = () => {
           <View style={styles.comparisonTable}>
             <Text style={styles.comparisonTableTitle}>Plan Comparison</Text>
             <View style={styles.comparisonTableHeader}>
-              <Text style={styles.comparisonTableHeaderText}>Features</Text>
+              <Text style={[styles.comparisonTableHeaderText, styles.comparisonTableFeatureHeader]}>
+                Features
+              </Text>
               <Text style={styles.comparisonTableHeaderText}>Free Plan</Text>
               <View style={styles.proPlanHeaderColumn}>
                 <Text style={styles.comparisonTableHeaderText}>Pro Plan</Text>
@@ -97,23 +123,39 @@ const SubscriptionPage = () => {
             </View>
             <View style={styles.comparisonTableRow}>
               <Text style={styles.comparisonTableRowText}>Unlimited access</Text>
-              <Ionicons name='close-circle' size={24} color='#E0E0E0' />
-              <Ionicons name='checkmark-circle' size={24} color='#FF9800' />
+              <View style={styles.comparisonTableCell}>
+                <Ionicons name='close-circle' size={24} color='#E0E0E0' />
+              </View>
+              <View style={styles.comparisonTableCell}>
+                <Ionicons name='checkmark-circle' size={24} color='#FF9800' />
+              </View>
             </View>
             <View style={styles.comparisonTableRow}>
               <Text style={styles.comparisonTableRowText}>Ad-free Experience</Text>
-              <Ionicons name='close-circle' size={24} color='#E0E0E0' />
-              <Ionicons name='checkmark-circle' size={24} color='#FF9800' />
+              <View style={styles.comparisonTableCell}>
+                <Ionicons name='close-circle' size={24} color='#E0E0E0' />
+              </View>
+              <View style={styles.comparisonTableCell}>
+                <Ionicons name='checkmark-circle' size={24} color='#FF9800' />
+              </View>
             </View>
             <View style={styles.comparisonTableRow}>
               <Text style={styles.comparisonTableRowText}>Priority support</Text>
-              <Ionicons name='close-circle' size={24} color='#E0E0E0' />
-              <Ionicons name='checkmark-circle' size={24} color='#FF9800' />
+              <View style={styles.comparisonTableCell}>
+                <Ionicons name='close-circle' size={24} color='#E0E0E0' />
+              </View>
+              <View style={styles.comparisonTableCell}>
+                <Ionicons name='checkmark-circle' size={24} color='#FF9800' />
+              </View>
             </View>
             <View style={styles.comparisonTableRow}>
               <Text style={styles.comparisonTableRowText}>Exclusive content</Text>
-              <Ionicons name='close-circle' size={24} color='#E0E0E0' />
-              <Ionicons name='checkmark-circle' size={24} color='#FF9800' />
+              <View style={styles.comparisonTableCell}>
+                <Ionicons name='close-circle' size={24} color='#E0E0E0' />
+              </View>
+              <View style={styles.comparisonTableCell}>
+                <Ionicons name='checkmark-circle' size={24} color='#FF9800' />
+              </View>
             </View>
           </View>
           {isProPlan && (
@@ -133,12 +175,12 @@ const SubscriptionPage = () => {
               <Text style={styles.tryFreeButtonText}>Try Pro Plan for Free</Text>
             </TouchableOpacity>
           )}
-        </View>
+        </Animated.View>
         <View style={styles.socialProofContainer}>
           <Text style={styles.socialProofText}>Trusted by over 100,000 satisfied users</Text>
           <Image
             source={{
-              uri: 'https://example.com/awards-image.jpg',
+              uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKcnzal7N31LBP7SufePuJLThqdY7vEQTCoX6gKTHBzA&s',
             }}
             style={styles.awardsImage}
             accessibilityLabel='Awards and Recognition'
@@ -162,22 +204,24 @@ const SubscriptionPage = () => {
                 will remain active until the end of the current billing cycle.
               </Text>
             </View>
-            {/* Add more FAQ items */}
           </View>
-          {/* Add more FAQ categories */}
         </View>
         <View style={styles.testimonialsContainer}>
           <Text style={styles.testimonialsTitle}>What Our Users Say</Text>
-          <ScrollView
+          <Animated.ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.testimonialsList}
+            scrollEventThrottle={16}
+            onScroll={() => {
+              // Do something on scroll
+            }}
           >
-            <View style={styles.testimonialItem}>
+            <Animated.View style={[styles.testimonialItem, testimonialAnimatedStyle]}>
               <View style={styles.testimonialHeader}>
                 <Image
                   source={{
-                    uri: 'https://example.com/user1.jpg',
+                    uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKcnzal7N31LBP7SufePuJLThqdY7vEQTCoX6gKTHBzA&s',
                   }}
                   style={styles.testimonialImage}
                   accessibilityLabel='User Profile Picture'
@@ -193,9 +237,22 @@ const SubscriptionPage = () => {
                 content."
               </Text>
               <Text style={styles.testimonialAuthor}>John Doe, Photographer</Text>
-            </View>
+            </Animated.View>
             {/* Add more testimonial items */}
-          </ScrollView>
+          </Animated.ScrollView>
+          <View style={styles.testimonialDots}>
+            {[0, 1, 2].map((index) => (
+              <TouchableOpacity
+                key={index}
+                style={[
+                  styles.testimonialDot,
+                  index === Math.round(testimonialPosition.value / -300) &&
+                    styles.activeTestimonialDot,
+                ]}
+                onPress={() => scrollTestimonial(index)}
+              />
+            ))}
+          </View>
           {!showMoreTestimonials && (
             <TouchableOpacity style={styles.seeMoreButton} onPress={toggleShowMoreTestimonials}>
               <Text style={styles.seeMoreButtonText}>See More</Text>
@@ -312,11 +369,14 @@ const styles = StyleSheet.create({
   },
   comparisonTable: {
     padding: 20,
+    backgroundColor: '#F5F5F5',
+    borderRadius: 10,
+    marginTop: 20,
   },
   comparisonTableTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 15,
     color: '#333',
     textAlign: 'center',
     fontFamily: 'Roboto',
@@ -333,6 +393,49 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
     fontFamily: 'Roboto',
+    textAlign: 'center',
+    flex: 1,
+  },
+  comparisonTableFeatureHeader: {
+    textAlign: 'left',
+  },
+  proPlanHeaderColumn: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+  },
+  popularBadge: {
+    backgroundColor: '#FF9800',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+    marginTop: 5,
+  },
+  popularBadgeText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
+    fontFamily: 'Roboto',
+  },
+  comparisonTableRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
+  },
+  comparisonTableRowText: {
+    fontSize: 16,
+    color: '#333',
+    fontFamily: 'Roboto',
+    flex: 1,
+  },
+  comparisonTableCell: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
   },
   proPlanHeaderColumn: {
     flexDirection: 'row',
@@ -569,6 +672,21 @@ const styles = StyleSheet.create({
   },
   moreTestimonialsList: {
     paddingTop: 20,
+  },
+  testimonialDots: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 20,
+  },
+  testimonialDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: '#E0E0E0',
+    marginHorizontal: 5,
+  },
+  activeTestimonialDot: {
+    backgroundColor: '#FF9800',
   },
 });
 
