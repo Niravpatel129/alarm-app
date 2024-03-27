@@ -3,17 +3,16 @@ import { Animated, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react
 import GradientText from '../GradientText/GradientText';
 
 const MeditationGuide = ({ messages = ['Sleep is luxury'], onCompletion, messageTitle }) => {
-  console.log('🚀  messages:', messages[0]);
-  if (!messages) {
-    console.error('MeditationGuide: No messages provided');
-    return null;
-  }
-
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const opacity = useState(new Animated.Value(0))[0];
   const scale = useState(new Animated.Value(0.8))[0];
   const tapToContinueOpacity = useState(new Animated.Value(0))[0];
-  const words = messages[currentMessageIndex].split(' ');
+  const lines = messages[currentMessageIndex].split('\n\n');
+  const [lineAnimations, setLineAnimations] = useState([]);
+
+  useEffect(() => {
+    setLineAnimations(lines.map(() => new Animated.Value(0)));
+  }, [currentMessageIndex, messages]);
 
   useEffect(() => {
     const animateIn = () => {
@@ -28,6 +27,16 @@ const MeditationGuide = ({ messages = ['Sleep is luxury'], onCompletion, message
           duration: 1000,
           useNativeDriver: true,
         }),
+        Animated.stagger(
+          1200,
+          lineAnimations.map((animation) =>
+            Animated.timing(animation, {
+              toValue: 1,
+              duration: 1000,
+              useNativeDriver: true,
+            }),
+          ),
+        ),
       ]).start(() => {
         setTimeout(() => {
           Animated.timing(tapToContinueOpacity, {
@@ -35,18 +44,21 @@ const MeditationGuide = ({ messages = ['Sleep is luxury'], onCompletion, message
             duration: 500,
             useNativeDriver: true,
           }).start();
-        }, 3000); // Delay of 3 seconds
+        }, 8000);
       });
     };
 
-    animateIn();
+    if (lineAnimations.length > 0) {
+      animateIn();
+    }
 
     return () => {
       opacity.setValue(0);
       scale.setValue(0.8);
       tapToContinueOpacity.setValue(0);
+      lineAnimations.forEach((animation) => animation.setValue(0));
     };
-  }, [currentMessageIndex, messages]);
+  }, [currentMessageIndex, messages, lineAnimations]);
 
   const animatedStyles = {
     opacity: opacity,
@@ -114,61 +126,33 @@ const MeditationGuide = ({ messages = ['Sleep is luxury'], onCompletion, message
 
   return (
     <SafeAreaView style={styles.container}>
-      <Pressable
-        style={{
-          flex: 1,
-        }}
-        onPress={goToNextMessage}
-      >
-        <View
-          style={{
-            marginBottom: 'auto',
-            alignItems: 'center',
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 14,
-              fontWeight: 'bold',
-              color: 'white',
-              opacity: 0.2,
-            }}
-          >
+      <Pressable style={{ flex: 1 }} onPress={goToNextMessage}>
+        <View style={{ marginBottom: 'auto', alignItems: 'center' }}>
+          <Text style={{ fontSize: 14, fontWeight: 'bold', color: 'white', opacity: 0.2 }}>
             {messageTitle} ({currentMessageIndex + 1}/{messages.length})
           </Text>
         </View>
-
         <Animated.View style={[styles.messageContainer, animatedStyles]}>
-          <GradientText
-            style={{
-              fontSize: 30,
-              fontWeight: 'bold',
-              color: 'white',
-              textAlign: 'center',
-              fontFamily: 'Avenir-Black',
-              letterSpacing: 1,
-            }}
-          >
-            {words.map((word, index) => (
-              <Animated.Text key={index}>{word} </Animated.Text>
-            ))}
-          </GradientText>
+          {lines.map((line, index) => (
+            <Animated.View key={index} style={{ opacity: lineAnimations[index] }}>
+              <GradientText
+                style={{
+                  fontSize: 30,
+                  fontWeight: 'bold',
+                  color: 'white',
+                  textAlign: 'center',
+                  fontFamily: 'Avenir-Black',
+                  letterSpacing: 1,
+                }}
+              >
+                {line}
+              </GradientText>
+            </Animated.View>
+          ))}
         </Animated.View>
-        <Animated.View
-          style={[
-            {
-              marginTop: 'auto',
-            },
-            tapToContinueAnimatedStyle,
-          ]}
-        >
+        <Animated.View style={[{ marginTop: 'auto' }, tapToContinueAnimatedStyle]}>
           <GradientText
-            style={{
-              fontSize: 14,
-              fontWeight: 'bold',
-              color: 'white',
-              textAlign: 'center',
-            }}
+            style={{ fontSize: 14, fontWeight: 'bold', color: 'white', textAlign: 'center' }}
           >
             - Tap to continue -
           </GradientText>

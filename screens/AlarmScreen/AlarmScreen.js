@@ -38,7 +38,9 @@ export default function AlarmScreen() {
     const formatTimePart = (value, label) =>
       value > 0 ? `${value} ${label}${value > 1 ? 's' : ''}` : '';
 
-    const message = params.task?.text || 'Relax and enjoy the moment';
+    const message = `Your task when you wake up is ${
+      params.task?.text.toLowerCase() || 'Relax and enjoy the moment'
+    }`;
 
     const timeMessageParts = [
       formatTimePart(hours, 'hour'),
