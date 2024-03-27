@@ -71,7 +71,8 @@ const playSilentClipContinuously = async () => {
 
 const saveOriginalVolume = async () => {
   try {
-    if (VolumeManager) { // Check if VolumeManager exists
+    if (VolumeManager) {
+      // Check if VolumeManager exists
       originalVolume = await VolumeManager.getVolume(); // Save the original volume level
     } else {
       originalVolume = 1; // Default volume if VolumeManager is not available
@@ -99,7 +100,8 @@ const adjustVolumeGradually = async (targetVolume, duration = 5000) => {
 };
 
 const restoreOriginalVolume = async () => {
-  if (VolumeManager) { // Check if VolumeManager exists
+  if (VolumeManager) {
+    // Check if VolumeManager exists
     await VolumeManager.setVolume(originalVolume); // Restore the original volume after the alarm
   }
 };
@@ -112,7 +114,6 @@ const alarmBackgroundTask = async (taskDataArguments) => {
 
   for (let i = 0; BackgroundService.isRunning(); i++) {
     elapsedTime += delay / 1000; // Update elapsedTime based on the delay
-    console.log('🚀 elapsedTime:', elapsedTime);
 
     if (!preloaded) {
       await preloadAudio();
