@@ -2,7 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Animated, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import GradientText from '../GradientText/GradientText';
 
-const MeditationGuide = ({ messages = ['Sleep is luxury'], onCompletion, messageTitle }) => {
+const MeditationGuide = ({
+  messages = ['Sleep is luxury'],
+  onCompletion,
+  messageTitle,
+  lastMessageGradient = { start: '#000', end: '#fff' }, // Example gradient prop
+  lastMessageFontSize = 36, // Larger font size for the last message
+}) => {
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const opacity = useState(new Animated.Value(0))[0];
   const scale = useState(new Animated.Value(0.8))[0];
@@ -134,16 +140,19 @@ const MeditationGuide = ({ messages = ['Sleep is luxury'], onCompletion, message
         </View>
         <Animated.View style={[styles.messageContainer, animatedStyles]}>
           {lines.map((line, index) => (
-            <Animated.View key={index} style={{ opacity: lineAnimations[index] }}>
+            <Animated.View key={index} style={{ opacity: lineAnimations[index], marginBottom: 10 }}>
+              {/* Apply different styling for the last message */}
               <GradientText
                 style={{
-                  fontSize: 30,
+                  fontSize: index === lines.length - 1 ? lastMessageFontSize : 30,
                   fontWeight: 'bold',
                   color: 'white',
                   textAlign: 'center',
                   fontFamily: 'Avenir-Black',
                   letterSpacing: 1,
                 }}
+                start={index === lines.length - 1 ? lastMessageGradient.start : undefined} // Start color of gradient for the last message
+                end={index === lines.length - 1 ? lastMessageGradient.end : undefined} // End color of gradient for the last message
               >
                 {line}
               </GradientText>
@@ -175,7 +184,7 @@ const styles = StyleSheet.create({
     left: 0,
   },
   messageContainer: {
-    padding: 10,
+    padding: 20,
     borderRadius: 10,
   },
 });
