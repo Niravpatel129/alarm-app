@@ -7,7 +7,7 @@ const MeditationGuide = ({
   onCompletion,
   messageTitle,
   lastMessageGradient = { start: '#000', end: '#fff' }, // Example gradient prop
-  lastMessageFontSize = 36, // Larger font size for the last message
+  lastMessageFontSize = 30, // Larger font size for the last message
 }) => {
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const opacity = useState(new Animated.Value(0))[0];
@@ -140,7 +140,7 @@ const MeditationGuide = ({
         </View>
         <Animated.View style={[styles.messageContainer, animatedStyles]}>
           {lines.map((line, index) => (
-            <Animated.View key={index} style={{ opacity: lineAnimations[index], marginBottom: 10 }}>
+            <Animated.View key={index} style={{ opacity: lineAnimations[index], marginBottom: 30 }}>
               {/* Apply different styling for the last message */}
               <GradientText
                 style={{
