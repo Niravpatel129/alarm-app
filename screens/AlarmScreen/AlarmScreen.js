@@ -39,7 +39,7 @@ export default function AlarmScreen() {
       value > 0 ? `${value} ${label}${value > 1 ? 's' : ''}` : '';
 
     const message = `Your task when you wake up is ${
-      params.task?.text.toLowerCase() || 'Relax and enjoy the moment'
+      params.task?.text.toLowerCase() || 'relax and enjoy the moment'
     }`;
 
     const timeMessageParts = [
