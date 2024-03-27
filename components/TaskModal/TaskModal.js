@@ -6,11 +6,14 @@ import TaskAddScreen from './components/TaskAddScreen';
 import TaskListScreen from './components/TaskListScreen';
 
 const fakeTasks = [
-  { id: '1', text: 'Study for Chemistry' },
-  { id: '2', text: 'Go to the Gym and train Chest' },
-  { id: '3', text: 'Read 20 pages of a book' },
-  { id: '4', text: 'Practice mindfulness meditation' },
-  { id: '5', text: 'Plan tomorrow’s tasks' },
+  { id: '1', text: 'Complete the project proposal for review' },
+  { id: '2', text: 'Jog for 30 minutes to stay healthy' },
+  { id: '3', text: 'Spend an hour learning a new programming language' },
+  { id: '4', text: 'Meditate for 15 minutes to clear the mind' },
+  { id: '5', text: 'Call a friend or family member to catch up' },
+  { id: '6', text: 'Read a chapter of a book to relax and learn' },
+  { id: '7', text: 'Plan the week’s meals for better nutrition' },
+  { id: '8', text: 'Dedicate an hour to a hobby or personal project' },
 ];
 
 const TaskModal = ({ isVisible, onClose, selectedTask, setSelectedTask }) => {
@@ -19,18 +22,28 @@ const TaskModal = ({ isVisible, onClose, selectedTask, setSelectedTask }) => {
   const translateY = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    const loadTasks = async () => {      
+    // clear local storage
+    // AsyncStorage.clear();
+    const initializeTasks = async () => {
+      // Check if the initialization flag exists and is true
+      const isInitialized = await AsyncStorage.getItem('isInitialized');
+      if (isInitialized !== 'true') {
+        // If not initialized, set the fake tasks and mark as initialized
+        await AsyncStorage.setItem('tasks', JSON.stringify(fakeTasks));
+        await AsyncStorage.setItem('isInitialized', 'true');
+      }
+
+      // Load tasks from AsyncStorage
       const tasksString = await AsyncStorage.getItem('tasks');
       const loadedTasks = tasksString ? JSON.parse(tasksString) : [];
-      setScreens('main');
       setTasks(loadedTasks);
+      setScreens('main');
     };
-  
-    loadTasks();
-  }, [isVisible]);
-  
 
-  
+    if (isVisible) {
+      initializeTasks();
+    }
+  }, [isVisible]);
 
   useEffect(() => {
     translateY.setValue(0);
@@ -52,13 +65,11 @@ const TaskModal = ({ isVisible, onClose, selectedTask, setSelectedTask }) => {
   const onDelete = async (taskId) => {
     console.log('Delete task:', taskId);
 
-
-    const updatedTasks = tasks.filter(task => task.id !== taskId);
+    const updatedTasks = tasks.filter((task) => task.id !== taskId);
     setTasks(updatedTasks);
     await AsyncStorage.setItem('tasks', JSON.stringify(updatedTasks));
   };
-  
-  
+
   const onHandlerStateChange = ({ nativeEvent }) => {
     if (nativeEvent.state === State.END) {
       if (nativeEvent.translationY > 100) {

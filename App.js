@@ -7,7 +7,6 @@ import TabBar from './components/TabBar/TabBar';
 import { AlarmProvider } from './context/Alarm/AlarmContext';
 import { SoundProvider } from './context/sound/SoundContext';
 import AlarmScreen from './screens/AlarmScreen/AlarmScreen';
-import Contract from './screens/Contract/Contract';
 import HomeScreen from './screens/Home/Home';
 import HomeAlarm from './screens/HomeAlarm/HomeAlarm';
 import OnboardingScreen from './screens/OnboardingScreen/OnboardingScreen';

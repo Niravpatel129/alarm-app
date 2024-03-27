@@ -48,6 +48,7 @@ const TaskListScreen = ({
         </TouchableOpacity>
       </View>
       <FlatList
+        showsVerticalScrollIndicator={false}
         data={tasks}
         renderItem={({ item }) => (
           <Swipeable
