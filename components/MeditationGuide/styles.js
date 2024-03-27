@@ -13,8 +13,7 @@ const styles = StyleSheet.create({
     left: 0,
   },
   messageContainer: {
-    padding: 20,
-    borderRadius: 10,
+    marginHorizontal: 10,
   },
 });
 

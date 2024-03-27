@@ -148,8 +148,7 @@ const MeditationGuide = ({
         </View>
         <Animated.View style={[styles.messageContainer, animatedStyles]}>
           {lines.map((line, index) => (
-            <Animated.View key={index} style={{ opacity: lineAnimations[index], marginBottom: 30 }}>
-              {/* Apply different styling for the last message */}
+            <Animated.View key={index} style={{ opacity: lineAnimations[index], marginBottom: 0 }}>
               <GradientText
                 startColor={'#333'}
                 endColor={'#eee'}
