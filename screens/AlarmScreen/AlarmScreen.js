@@ -152,14 +152,13 @@ export default function AlarmScreen() {
               marginTop: 20,
             }}
           >
-            Today, {day}
+            {day}
           </Text>
           <Text
             style={{
               fontSize: 16,
               fontWeight: '400',
               color: '#ababac',
-              marginTop: 5,
             }}
           >
             {date}.{month}.{year}

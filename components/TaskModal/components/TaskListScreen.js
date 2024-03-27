@@ -49,7 +49,7 @@ const TaskListScreen = ({
       </View>
       <FlatList
         showsVerticalScrollIndicator={false}
-        data={tasks}
+        data={tasks.reverse()}
         renderItem={({ item }) => (
           <Swipeable
             renderRightActions={(progress, dragX) => renderRightActions(progress, dragX, item)}
