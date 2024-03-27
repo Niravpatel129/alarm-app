@@ -3,6 +3,7 @@ import { Animated, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react
 import GradientText from '../GradientText/GradientText';
 
 const MeditationGuide = ({ messages = ['Sleep is luxury'], onCompletion, messageTitle }) => {
+  console.log('🚀  messages:', messages[0]);
   if (!messages) {
     console.error('MeditationGuide: No messages provided');
     return null;
