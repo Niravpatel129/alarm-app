@@ -4,8 +4,8 @@ import React from 'react';
 import { Text } from 'react-native';
 
 const GradientText = (props) => {
-  const startColor = '#8A2BE2';
-  const endColor = '#87CEFA';
+  const startColor = props.startColor || '#8A2BE2';
+  const endColor = props.endColor || '#87CEFA';
 
   return (
     <MaskedView maskElement={<Text {...props} />}>
