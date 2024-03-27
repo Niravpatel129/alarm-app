@@ -9,23 +9,38 @@ const MeditationGuide = ({ messages = ['Sleep is luxury'], onCompletion, message
   }
 
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
-  const opacity = new Animated.Value(1);
+  const opacity = new Animated.Value(0);
+  const scale = new Animated.Value(0.8);
   const tapToContinueOpacity = new Animated.Value(0);
   const words = messages[currentMessageIndex].split(' ');
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      Animated.timing(tapToContinueOpacity, {
+    Animated.parallel([
+      Animated.timing(opacity, {
         toValue: 1,
-        duration: 500,
+        duration: 1000,
         useNativeDriver: true,
-      }).start();
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, [currentMessageIndex, tapToContinueOpacity]);
+      }),
+      Animated.timing(scale, {
+        toValue: 1,
+        duration: 1000,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      const timer = setTimeout(() => {
+        Animated.timing(tapToContinueOpacity, {
+          toValue: 1,
+          duration: 500,
+          useNativeDriver: true,
+        }).start();
+      }, 2000);
+      return () => clearTimeout(timer);
+    });
+  }, [currentMessageIndex, opacity, scale, tapToContinueOpacity]);
 
   const animatedStyles = {
     opacity: opacity,
+    transform: [{ scale: scale }],
   };
 
   const tapToContinueAnimatedStyle = {
@@ -33,19 +48,58 @@ const MeditationGuide = ({ messages = ['Sleep is luxury'], onCompletion, message
   };
 
   const goToNextMessage = () => {
-    Animated.timing(opacity, {
-      toValue: 0,
-      duration: 700,
-      useNativeDriver: true,
-    }).start(() => {
+    // if there are no more messages, call onCompletion
+    if (currentMessageIndex === messages.length - 1) {
+      // fade out the message
+      Animated.parallel([
+        Animated.timing(opacity, {
+          toValue: 0,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scale, {
+          toValue: 0.8,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+      ]).start(() => {
+        tapToContinueOpacity.setValue(0);
+        onCompletion();
+      });
+      return;
+    }
+
+    Animated.parallel([
+      Animated.timing(opacity, {
+        toValue: 0,
+        duration: 700,
+        useNativeDriver: true,
+      }),
+      Animated.timing(scale, {
+        toValue: 0.8,
+        duration: 700,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
       tapToContinueOpacity.setValue(0);
       if (currentMessageIndex < messages.length - 1) {
         setCurrentMessageIndex(currentMessageIndex + 1);
         setTimeout(() => {
-          opacity.setValue(1);
+          opacity.setValue(0);
+          scale.setValue(0.8);
+          Animated.parallel([
+            Animated.timing(opacity, {
+              toValue: 1,
+              duration: 1000,
+              useNativeDriver: true,
+            }),
+            Animated.timing(scale, {
+              toValue: 1,
+              duration: 1000,
+              useNativeDriver: true,
+            }),
+          ]).start();
         }, 100);
-      } else {
-        setTimeout(onCompletion, 700);
       }
     });
   };
