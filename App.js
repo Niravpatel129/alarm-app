@@ -15,22 +15,6 @@ import Toast from 'react-native-toast-message';
 
 const Tab = createBottomTabNavigator();
 
-function MyTabs() {
-  return (
-    <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
-      <Tab.Screen
-        name='Sleep'
-        component={HomeScreen}
-        options={{
-          headerShown: false,
-        }}
-      />
-
-      <Tab.Screen name='Settings' component={SettingsScreen} />
-    </Tab.Navigator>
-  );
-}
-
 const Stack = createNativeStackNavigator();
 
 function App() {

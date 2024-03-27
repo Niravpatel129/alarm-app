@@ -90,34 +90,16 @@ const MeditationGuide = ({
       Animated.parallel([
         Animated.timing(opacity, {
           toValue: 0,
-          duration: 1000, // Increased from 700 to 1000
+          duration: 700, // Increased from 700 to 1000
           useNativeDriver: true,
         }),
         Animated.timing(scale, {
           toValue: 0.8,
-          duration: 1000, // Increased from 700 to 1000
+          duration: 700, // Increased from 700 to 1000
           useNativeDriver: true,
         }),
       ]).start(() => {
-        if (currentMessageIndex < messages.length - 1) {
-          setCurrentMessageIndex(currentMessageIndex + 1);
-          setTimeout(() => {
-            opacity.setValue(0);
-            scale.setValue(0.8);
-            Animated.parallel([
-              Animated.timing(opacity, {
-                toValue: 1,
-                duration: 1500, // Increased from 1000 to 1500
-                useNativeDriver: true,
-              }),
-              Animated.timing(scale, {
-                toValue: 1,
-                duration: 1500, // Increased from 1000 to 1500
-                useNativeDriver: true,
-              }),
-            ]).start();
-          }, 200); // Increased from 100 to 200
-        }
+        onCompletion();
       });
 
       return;
@@ -173,7 +155,7 @@ const MeditationGuide = ({
             return (
               <Animated.View
                 key={index}
-                style={{ opacity: lineAnimations[index], marginBottom: 0 }}
+                style={{ marginVertical: 40, opacity: lineAnimations[index], marginBottom: 0 }}
               >
                 <GradientText
                   startColor={startColor}
