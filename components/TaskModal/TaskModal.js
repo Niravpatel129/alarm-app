@@ -6,14 +6,16 @@ import TaskAddScreen from './components/TaskAddScreen';
 import TaskListScreen from './components/TaskListScreen';
 
 const fakeTasks = [
-  { id: '1', text: 'Complete the project proposal for review' },
-  { id: '2', text: 'Jog for 30 minutes to stay healthy' },
-  { id: '3', text: 'Spend an hour learning a new programming language' },
-  { id: '4', text: 'Meditate for 15 minutes to clear the mind' },
-  { id: '5', text: 'Call a friend or family member to catch up' },
-  { id: '6', text: 'Read a chapter of a book to relax and learn' },
-  { id: '7', text: 'Plan the week’s meals for better nutrition' },
-  { id: '8', text: 'Dedicate an hour to a hobby or personal project' },
+  { id: '1', text: 'Finalize the investment proposal by noon' },
+  { id: '2', text: 'Complete 5 miles morning run for marathon training' },
+  { id: '3', text: 'Finish coding the new feature for the app' },
+  { id: '4', text: 'Draft and send the marketing strategy to the team' },
+  { id: '5', text: 'Analyze and report on the monthly sales data' },
+  { id: '6', text: 'Study advanced algorithms for the upcoming interview' },
+  { id: '7', text: 'Network with 5 new industry contacts on LinkedIn' },
+  { id: '8', text: 'Read and summarize the latest industry report' },
+  { id: '9', text: 'Plan the next quarter’s project milestones' },
+  { id: '10', text: 'Meditate 20 minutes to enhance focus and clarity' },
 ];
 
 const TaskModal = ({ isVisible, onClose, selectedTask, setSelectedTask }) => {

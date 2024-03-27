@@ -18,28 +18,40 @@ export default function AlarmScreen() {
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
-    console.log('Sleep is starting', params.time);
+    console.log('Sleep is starting', params.time, params.task);
     // parse time Wed Mar 13 2024 13:37:55 GMT-0400 to be read as 01:37 PM
     const time = new Date(params.time);
     const ringsIn = time.getTime() - new Date().getTime();
     const hours = Math.floor(ringsIn / (1000 * 60 * 60));
     const minutes = Math.floor((ringsIn % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((ringsIn % (1000 * 60)) / 1000);
+    console.log('🚀  hours:', hours);
+    console.log('🚀  minutes:', minutes);
+    console.log('🚀  seconds:', seconds);
 
     setSelectedTime(`${hours} hours and ${minutes} minutes`);
     const secondsToRingAlarm = Math.floor(ringsIn / 1000) + 1;
     console.log('🚀  secondsToRingAlarm:', secondsToRingAlarm);
     const secondsToRingAlarm2 = Math.floor(ringsIn / 1000) + 1;
     StartAlarmEvent(secondsToRingAlarm2);
+    console.log('🚀  params.task:', params.task);
+    const formatTimePart = (value, label) =>
+      value > 0 ? `${value} ${label}${value > 1 ? 's' : ''}` : '';
 
-    setMessages([
-      `
-      It's time to sleep
-      ${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${
-        seconds < 10 ? '0' : ''
-      }${seconds}
-    `,
-    ]);
+    const message = params.task?.text || 'Relax and enjoy the moment';
+
+    const timeMessageParts = [
+      formatTimePart(hours, 'hour'),
+      formatTimePart(minutes, 'minute'),
+      formatTimePart(seconds, 'second'),
+    ]
+      .filter((part) => part)
+      .join(', ')
+      .replace(/, ([^,]*)$/, ' and $1'); // Replaces the last comma with 'and'
+
+    console.log('🚀  timeMessageParts:', timeMessageParts);
+    setMessages([`You will be woken up in ${timeMessageParts}\n\n${message}`]);
+
     setAlarmActive(true);
     setShowGuide(true);
 
