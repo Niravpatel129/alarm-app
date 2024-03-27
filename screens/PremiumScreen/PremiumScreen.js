@@ -51,7 +51,7 @@ const SubscriptionPage = () => {
         <View style={styles.header}>
           <Image
             source={{
-              uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKcnzal7N31LBP7SufePuJLThqdY7vEQTCoX6gKTHBzA&s',
+              uri: 'https://example.com/premium-features-showcase.jpg',
             }}
             style={styles.headerImage}
             accessibilityLabel='Premium Features Showcase'
@@ -180,7 +180,7 @@ const SubscriptionPage = () => {
           <Text style={styles.socialProofText}>Trusted by over 100,000 satisfied users</Text>
           <Image
             source={{
-              uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKcnzal7N31LBP7SufePuJLThqdY7vEQTCoX6gKTHBzA&s',
+              uri: 'https://example.com/awards-image.jpg',
             }}
             style={styles.awardsImage}
             accessibilityLabel='Awards and Recognition'
@@ -204,7 +204,9 @@ const SubscriptionPage = () => {
                 will remain active until the end of the current billing cycle.
               </Text>
             </View>
+            {/* Add more FAQ items */}
           </View>
+          {/* Add more FAQ categories */}
         </View>
         <View style={styles.testimonialsContainer}>
           <Text style={styles.testimonialsTitle}>What Our Users Say</Text>
@@ -213,15 +215,13 @@ const SubscriptionPage = () => {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.testimonialsList}
             scrollEventThrottle={16}
-            onScroll={() => {
-              // Do something on scroll
-            }}
+            onScroll={() => {}}
           >
             <Animated.View style={[styles.testimonialItem, testimonialAnimatedStyle]}>
               <View style={styles.testimonialHeader}>
                 <Image
                   source={{
-                    uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKcnzal7N31LBP7SufePuJLThqdY7vEQTCoX6gKTHBzA&s',
+                    uri: 'https://example.com/user1.jpg',
                   }}
                   style={styles.testimonialImage}
                   accessibilityLabel='User Profile Picture'
@@ -396,9 +396,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     flex: 1,
   },
-  comparisonTableFeatureHeader: {
-    textAlign: 'left',
-  },
+  comparisonTableFeatureHeader: { textAlign: 'left' },
   proPlanHeaderColumn: {
     flexDirection: 'column',
     alignItems: 'center',
@@ -436,36 +434,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
-  },
-  proPlanHeaderColumn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  popularBadge: {
-    backgroundColor: '#FF9800',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 4,
-    marginLeft: 10,
-  },
-  popularBadgeText: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: 'bold',
-    fontFamily: 'Roboto',
-  },
-  comparisonTableRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
-  },
-  comparisonTableRowText: {
-    fontSize: 16,
-    color: '#333',
-    fontFamily: 'Roboto',
   },
   priceContainer: {
     alignItems: 'center',
