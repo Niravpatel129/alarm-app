@@ -76,7 +76,11 @@ export default function AlarmScreen() {
   const handleStopAlarm = () => {
     StopAlarmEvent();
     console.log('Stop alarm');
-    setMessages(['Sleep is over']);
+    const sleepOverMessage = `Good morning! It's time to wake up and start your day \n\n your task is ${
+      params.task?.text.toLowerCase() || 'relax and enjoy the moment'
+    }`;
+
+    setMessages([sleepOverMessage]);
     setShowGuide(true);
     setAlarmActive(false);
     // navigation.navigate('Home');
