@@ -26,26 +26,26 @@ const MeditationGuide = ({
       Animated.parallel([
         Animated.timing(opacity, {
           toValue: 1,
-          duration: 1000,
+          duration: 1500, // Increased from 1000 to 1500
           useNativeDriver: true,
         }),
         Animated.timing(scale, {
           toValue: 1,
-          duration: 1000,
+          duration: 1500, // Increased from 1000 to 1500
           useNativeDriver: true,
         }),
         Animated.stagger(
-          1600,
+          2000, // Increased from 1600 to 2000
           lineAnimations.map((animation, index) =>
             Animated.sequence([
               Animated.timing(animation, {
                 toValue: 1,
-                duration: 1000,
+                duration: 1500, // Increased from 1000 to 1500
                 useNativeDriver: true,
               }),
               Animated.timing(animation, {
                 toValue: index === lineAnimations.length - 1 ? 1 : 0,
-                duration: 1000,
+                duration: 1500, // Increased from 1000 to 1500
                 useNativeDriver: true,
               }),
             ]),
@@ -58,7 +58,7 @@ const MeditationGuide = ({
             duration: 500,
             useNativeDriver: true,
           }).start();
-        }, 4000);
+        }, 3000);
       });
     };
 
@@ -90,17 +90,36 @@ const MeditationGuide = ({
       Animated.parallel([
         Animated.timing(opacity, {
           toValue: 0,
-          duration: 1000,
+          duration: 1000, // Increased from 700 to 1000
           useNativeDriver: true,
         }),
         Animated.timing(scale, {
           toValue: 0.8,
-          duration: 1000,
+          duration: 1000, // Increased from 700 to 1000
           useNativeDriver: true,
         }),
       ]).start(() => {
-        onCompletion();
+        if (currentMessageIndex < messages.length - 1) {
+          setCurrentMessageIndex(currentMessageIndex + 1);
+          setTimeout(() => {
+            opacity.setValue(0);
+            scale.setValue(0.8);
+            Animated.parallel([
+              Animated.timing(opacity, {
+                toValue: 1,
+                duration: 1500, // Increased from 1000 to 1500
+                useNativeDriver: true,
+              }),
+              Animated.timing(scale, {
+                toValue: 1,
+                duration: 1500, // Increased from 1000 to 1500
+                useNativeDriver: true,
+              }),
+            ]).start();
+          }, 200); // Increased from 100 to 200
+        }
       });
+
       return;
     }
 
@@ -180,7 +199,7 @@ const MeditationGuide = ({
           <GradientText
             style={{ fontSize: 14, fontWeight: 'bold', color: 'white', textAlign: 'center' }}
           >
-            - Tap to continue -
+            - Tap to agree to self commitment contract -
           </GradientText>
         </Animated.View>
       </Pressable>
