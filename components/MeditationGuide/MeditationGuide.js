@@ -23,42 +23,44 @@ const MeditationGuide = ({
 
   useEffect(() => {
     const animateIn = () => {
+      const slowDown = 1.5;
+      const delay = 1500 * slowDown;
+      const staggerDelay = 2000 * slowDown;
+
       Animated.parallel([
         Animated.timing(opacity, {
           toValue: 1,
-          duration: 1500, // Increased from 1000 to 1500
+          duration: delay, // Increased from 1000 to 1500
           useNativeDriver: true,
         }),
         Animated.timing(scale, {
           toValue: 1,
-          duration: 1500, // Increased from 1000 to 1500
+          duration: delay, // Increased from 1000 to 1500
           useNativeDriver: true,
         }),
         Animated.stagger(
-          2000, // Increased from 1600 to 2000
+          staggerDelay, // Increased from 1600 to 2000
           lineAnimations.map((animation, index) =>
             Animated.sequence([
               Animated.timing(animation, {
                 toValue: 1,
-                duration: 1500, // Increased from 1000 to 1500
+                duration: delay, // Increased from 1000 to 1500
                 useNativeDriver: true,
               }),
               Animated.timing(animation, {
                 toValue: index === lineAnimations.length - 1 ? 1 : 0,
-                duration: 1500, // Increased from 1000 to 1500
+                duration: delay, // Increased from 1000 to 1500
                 useNativeDriver: true,
               }),
             ]),
           ),
         ),
       ]).start(() => {
-        setTimeout(() => {
-          Animated.timing(tapToContinueOpacity, {
-            toValue: 1,
-            duration: 500,
-            useNativeDriver: true,
-          }).start();
-        }, 3000);
+        Animated.timing(tapToContinueOpacity, {
+          toValue: 1,
+          duration: 500,
+          useNativeDriver: true,
+        }).start();
       });
     };
 
