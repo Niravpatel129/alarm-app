@@ -41,7 +41,7 @@ function App() {
           <AlarmProvider>
             <Stack.Navigator>
               {/* Dev */}
-              <Stack.Screen name='Dev' component={Contract} options={{ headerShown: false }} />
+              {/* <Stack.Screen name='Dev' component={Contract} options={{ headerShown: false }} /> */}
               <Stack.Screen
                 name='Onboarding'
                 component={OnboardingScreen}

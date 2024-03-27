@@ -24,13 +24,22 @@ export default function AlarmScreen() {
     const ringsIn = time.getTime() - new Date().getTime();
     const hours = Math.floor(ringsIn / (1000 * 60 * 60));
     const minutes = Math.floor((ringsIn % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((ringsIn % (1000 * 60)) / 1000);
 
     setSelectedTime(`${hours} hours and ${minutes} minutes`);
     const secondsToRingAlarm = Math.floor(ringsIn / 1000) + 1;
     console.log('🚀  secondsToRingAlarm:', secondsToRingAlarm);
     const secondsToRingAlarm2 = Math.floor(ringsIn / 1000) + 1;
     StartAlarmEvent(secondsToRingAlarm2);
-    setMessages(['Sleep is starting, Sleep is starting, Sleep is starting']);
+
+    setMessages([
+      `
+      It's time to sleep
+      ${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${
+        seconds < 10 ? '0' : ''
+      }${seconds}
+    `,
+    ]);
     setAlarmActive(true);
     setShowGuide(true);
 

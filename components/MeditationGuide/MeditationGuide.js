@@ -9,34 +9,34 @@ const MeditationGuide = ({ messages = ['Sleep is luxury'], onCompletion, message
   }
 
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
-  const opacity = new Animated.Value(0);
-  const scale = new Animated.Value(0.8);
-  const tapToContinueOpacity = new Animated.Value(0);
+  const opacity = useState(new Animated.Value(0))[0];
+  const scale = useState(new Animated.Value(0.8))[0];
+  const tapToContinueOpacity = useState(new Animated.Value(0))[0];
   const words = messages[currentMessageIndex].split(' ');
 
   useEffect(() => {
-    Animated.parallel([
-      Animated.timing(opacity, {
-        toValue: 1,
-        duration: 1000,
-        useNativeDriver: true,
-      }),
-      Animated.timing(scale, {
-        toValue: 1,
-        duration: 1000,
-        useNativeDriver: true,
-      }),
-    ]).start(() => {
-      const timer = setTimeout(() => {
-        Animated.timing(tapToContinueOpacity, {
+    const animateIn = () => {
+      Animated.parallel([
+        Animated.timing(opacity, {
           toValue: 1,
-          duration: 500,
+          duration: 1000,
           useNativeDriver: true,
-        }).start();
-      }, 2000);
-      return () => clearTimeout(timer);
-    });
-  }, [currentMessageIndex, opacity, scale, tapToContinueOpacity]);
+        }),
+        Animated.timing(scale, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    };
+
+    animateIn();
+
+    return () => {
+      opacity.setValue(0);
+      scale.setValue(0.8);
+    };
+  }, [currentMessageIndex, messages]);
 
   const animatedStyles = {
     opacity: opacity,
@@ -48,9 +48,7 @@ const MeditationGuide = ({ messages = ['Sleep is luxury'], onCompletion, message
   };
 
   const goToNextMessage = () => {
-    // if there are no more messages, call onCompletion
     if (currentMessageIndex === messages.length - 1) {
-      // fade out the message
       Animated.parallel([
         Animated.timing(opacity, {
           toValue: 0,
@@ -142,18 +140,7 @@ const MeditationGuide = ({ messages = ['Sleep is luxury'], onCompletion, message
             }}
           >
             {words.map((word, index) => (
-              <Animated.Text
-                key={index}
-                style={{
-                  opacity: opacity.interpolate({
-                    inputRange: [0, 0.8, 1],
-                    outputRange: [0, 0, 1],
-                    extrapolate: 'clamp',
-                  }),
-                }}
-              >
-                {word}{' '}
-              </Animated.Text>
+              <Animated.Text key={index}>{word} </Animated.Text>
             ))}
           </GradientText>
         </Animated.View>
@@ -195,7 +182,6 @@ const styles = StyleSheet.create({
   },
   messageContainer: {
     padding: 10,
-    backgroundColor: 'transparent',
     borderRadius: 10,
   },
 });
