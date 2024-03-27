@@ -36,12 +36,19 @@ const MeditationGuide = ({
         }),
         Animated.stagger(
           1200,
-          lineAnimations.map((animation) =>
-            Animated.timing(animation, {
-              toValue: 1,
-              duration: 1000,
-              useNativeDriver: true,
-            }),
+          lineAnimations.map((animation, index) =>
+            Animated.sequence([
+              Animated.timing(animation, {
+                toValue: 1,
+                duration: 1000,
+                useNativeDriver: true,
+              }),
+              Animated.timing(animation, {
+                toValue: index === lineAnimations.length - 1 ? 1 : 0,
+                duration: 1000,
+                useNativeDriver: true,
+              }),
+            ]),
           ),
         ),
       ]).start(() => {
