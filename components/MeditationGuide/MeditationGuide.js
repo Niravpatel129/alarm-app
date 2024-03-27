@@ -35,7 +35,7 @@ const MeditationGuide = ({
           useNativeDriver: true,
         }),
         Animated.stagger(
-          1200,
+          1600,
           lineAnimations.map((animation, index) =>
             Animated.sequence([
               Animated.timing(animation, {
@@ -58,7 +58,7 @@ const MeditationGuide = ({
             duration: 500,
             useNativeDriver: true,
           }).start();
-        }, 8000);
+        }, 4000);
       });
     };
 
@@ -141,32 +141,40 @@ const MeditationGuide = ({
   return (
     <SafeAreaView style={styles.container}>
       <Pressable style={{ flex: 1 }} onPress={goToNextMessage}>
-        <View style={{ marginBottom: 'auto', alignItems: 'center' }}>
+        <View style={{ alignItems: 'center' }}>
           <Text style={{ fontSize: 14, fontWeight: 'bold', color: 'white', opacity: 0.2 }}>
             {messageTitle} ({currentMessageIndex + 1}/{messages.length})
           </Text>
         </View>
         <Animated.View style={[styles.messageContainer, animatedStyles]}>
-          {lines.map((line, index) => (
-            <Animated.View key={index} style={{ opacity: lineAnimations[index], marginBottom: 0 }}>
-              <GradientText
-                startColor={'#333'}
-                endColor={'#eee'}
-                style={{
-                  fontSize: index === lines.length - 1 ? lastMessageFontSize : 30,
-                  fontWeight: 'bold',
-                  color: 'white',
-                  textAlign: 'center',
-                  fontFamily: 'Avenir-Black',
-                  letterSpacing: 1,
-                }}
-                start={index === lines.length - 1 ? lastMessageGradient.start : undefined} // Start color of gradient for the last message
-                end={index === lines.length - 1 ? lastMessageGradient.end : undefined} // End color of gradient for the last message
+          {lines.map((line, index) => {
+            const startColor = index === lines.length - 1 ? '#5e46bc' : '#333';
+            const endColor = index === lines.length - 1 ? '#b006db' : '#eee';
+
+            return (
+              <Animated.View
+                key={index}
+                style={{ opacity: lineAnimations[index], marginBottom: 0 }}
               >
-                {line}
-              </GradientText>
-            </Animated.View>
-          ))}
+                <GradientText
+                  startColor={startColor}
+                  endColor={endColor}
+                  style={{
+                    fontSize: index === lines.length - 1 ? lastMessageFontSize : 30,
+                    fontWeight: 'bold',
+                    color: 'white',
+                    textAlign: 'center',
+                    fontFamily: 'Avenir-Black',
+                    letterSpacing: 1,
+                  }}
+                  start={index === lines.length - 1 ? lastMessageGradient.start : undefined} // Start color of gradient for the last message
+                  end={index === lines.length - 1 ? lastMessageGradient.end : undefined} // End color of gradient for the last message
+                >
+                  {line}
+                </GradientText>
+              </Animated.View>
+            );
+          })}
         </Animated.View>
         <Animated.View style={[{ marginTop: 'auto' }, tapToContinueAnimatedStyle]}>
           <GradientText

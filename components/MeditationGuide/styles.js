@@ -14,6 +14,7 @@ const styles = StyleSheet.create({
   },
   messageContainer: {
     marginHorizontal: 10,
+    marginTop: '30%',
   },
 });
 

@@ -52,7 +52,7 @@ export default function AlarmScreen() {
       .replace(/, ([^,]*)$/, ' and $1'); // Replaces the last comma with 'and'
 
     console.log('🚀  timeMessageParts:', timeMessageParts);
-    setMessages([`You will be woken up\n\n in ${timeMessageParts}\n\n${message}`]);
+    setMessages([`You will be woken up in\n\n${timeMessageParts}\n\n${message}`]);
 
     setAlarmActive(true);
     setShowGuide(true);
