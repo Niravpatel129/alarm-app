@@ -27,7 +27,15 @@ const MeditationGuide = ({ messages = ['Sleep is luxury'], onCompletion, message
           duration: 1000,
           useNativeDriver: true,
         }),
-      ]).start();
+      ]).start(() => {
+        setTimeout(() => {
+          Animated.timing(tapToContinueOpacity, {
+            toValue: 1,
+            duration: 500,
+            useNativeDriver: true,
+          }).start();
+        }, 3000); // Delay of 3 seconds
+      });
     };
 
     animateIn();
@@ -35,6 +43,7 @@ const MeditationGuide = ({ messages = ['Sleep is luxury'], onCompletion, message
     return () => {
       opacity.setValue(0);
       scale.setValue(0.8);
+      tapToContinueOpacity.setValue(0);
     };
   }, [currentMessageIndex, messages]);
 
@@ -48,6 +57,8 @@ const MeditationGuide = ({ messages = ['Sleep is luxury'], onCompletion, message
   };
 
   const goToNextMessage = () => {
+    tapToContinueOpacity.setValue(0);
+
     if (currentMessageIndex === messages.length - 1) {
       Animated.parallel([
         Animated.timing(opacity, {
@@ -61,7 +72,6 @@ const MeditationGuide = ({ messages = ['Sleep is luxury'], onCompletion, message
           useNativeDriver: true,
         }),
       ]).start(() => {
-        tapToContinueOpacity.setValue(0);
         onCompletion();
       });
       return;
@@ -79,7 +89,6 @@ const MeditationGuide = ({ messages = ['Sleep is luxury'], onCompletion, message
         useNativeDriver: true,
       }),
     ]).start(() => {
-      tapToContinueOpacity.setValue(0);
       if (currentMessageIndex < messages.length - 1) {
         setCurrentMessageIndex(currentMessageIndex + 1);
         setTimeout(() => {
