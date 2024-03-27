@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Animated, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Animated, Pressable, SafeAreaView, Text, View } from 'react-native';
 import GradientText from '../GradientText/GradientText';
+import styles from './styles';
 
 const MeditationGuide = ({
   messages = ['Sleep is luxury'],
@@ -172,23 +173,5 @@ const MeditationGuide = ({
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'black',
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    top: 0,
-    left: 0,
-  },
-  messageContainer: {
-    padding: 20,
-    borderRadius: 10,
-  },
-});
 
 export default MeditationGuide;
