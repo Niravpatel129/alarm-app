@@ -29,44 +29,56 @@ const SubscriptionPage = () => {
         <View style={styles.header}>
           <Image
             source={{
-              uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5R0CknnnYF_c0Siko_inKqJG8TcT8UTXWKA&usqp=CAU',
+              uri: 'https://example.com/premium-features-showcase.jpg',
             }}
             style={styles.headerImage}
+            accessibilityLabel='Premium Features Showcase'
           />
           <Text style={styles.title}>Unlock Premium Features</Text>
           <Text style={styles.subtitle}>Choose the plan that's right for you</Text>
+          <Text style={styles.tagline}>Enhance your experience with exclusive benefits</Text>
         </View>
-        <View style={styles.planCard}>
+        <View style={[styles.planCard, isProPlan && styles.proPlanCard]}>
           <View style={styles.planHeader}>
-            <Text style={styles.planTitle}>{isProPlan ? 'Pro Plan' : 'Free Plan'}</Text>
+            <Text style={[styles.planTitle, isProPlan && styles.proPlanTitle]}>
+              {isProPlan ? 'Pro Plan' : 'Free Plan'}
+            </Text>
             <Switch
               value={isProPlan}
               onValueChange={togglePlan}
               trackColor={{ false: '#E0E0E0', true: '#FF9800' }}
               thumbColor={isProPlan ? '#fff' : '#f4f3f4'}
               ios_backgroundColor='#E0E0E0'
+              accessibilityLabel='Toggle Plan'
             />
           </View>
           <View style={styles.planFeatures}>
             <View style={styles.featureItem}>
               <Ionicons name='checkmark-circle' size={24} color='#FF9800' />
               <Text style={[styles.featureText, styles.boldText]}>
-                Unlimited access to all features
+                <Ionicons name='infinite' size={18} color='#FF9800' /> Unlimited access to all
+                features
               </Text>
             </View>
             <View style={styles.featureItem}>
               <Ionicons name='checkmark-circle' size={24} color='#FF9800' />
-              <Text style={[styles.featureText, styles.boldText]}>Ad-free experience</Text>
+              <Text style={[styles.featureText, styles.boldText]}>
+                <Ionicons name='stop-circle' size={18} color='#FF9800' /> Ad-free experience
+              </Text>
             </View>
             {isProPlan && (
               <>
                 <View style={styles.featureItem}>
                   <Ionicons name='checkmark-circle' size={24} color='#FF9800' />
-                  <Text style={styles.featureText}>Priority customer support</Text>
+                  <Text style={styles.featureText}>
+                    <Ionicons name='star' size={18} color='#FF9800' /> Priority customer support
+                  </Text>
                 </View>
                 <View style={styles.featureItem}>
                   <Ionicons name='checkmark-circle' size={24} color='#FF9800' />
-                  <Text style={styles.featureText}>Exclusive pro content</Text>
+                  <Text style={styles.featureText}>
+                    <Ionicons name='gift' size={18} color='#FF9800' /> Exclusive pro content
+                  </Text>
                 </View>
               </>
             )}
@@ -76,7 +88,12 @@ const SubscriptionPage = () => {
             <View style={styles.comparisonTableHeader}>
               <Text style={styles.comparisonTableHeaderText}>Features</Text>
               <Text style={styles.comparisonTableHeaderText}>Free Plan</Text>
-              <Text style={styles.comparisonTableHeaderText}>Pro Plan</Text>
+              <View style={styles.proPlanHeaderColumn}>
+                <Text style={styles.comparisonTableHeaderText}>Pro Plan</Text>
+                <View style={styles.popularBadge}>
+                  <Text style={styles.popularBadgeText}>Most Popular</Text>
+                </View>
+              </View>
             </View>
             <View style={styles.comparisonTableRow}>
               <Text style={styles.comparisonTableRowText}>Unlimited access</Text>
@@ -124,25 +141,30 @@ const SubscriptionPage = () => {
               uri: 'https://example.com/awards-image.jpg',
             }}
             style={styles.awardsImage}
+            accessibilityLabel='Awards and Recognition'
           />
         </View>
         <View style={styles.faqContainer}>
           <Text style={styles.faqTitle}>Frequently Asked Questions</Text>
-          <View style={styles.faqItem}>
-            <Text style={styles.faqQuestion}>How does the free trial work?</Text>
-            <Text style={styles.faqAnswer}>
-              You can try the Pro Plan for free for 7 days. After the trial period, you will be
-              charged the monthly subscription fee unless you cancel before the trial ends.
-            </Text>
+          <View style={styles.faqCategoryContainer}>
+            <Text style={styles.faqCategoryTitle}>Subscription</Text>
+            <View style={styles.faqItem}>
+              <Text style={styles.faqQuestion}>How does the free trial work?</Text>
+              <Text style={styles.faqAnswer}>
+                You can try the Pro Plan for free for 7 days. After the trial period, you will be
+                charged the monthly subscription fee unless you cancel before the trial ends.
+              </Text>
+            </View>
+            <View style={styles.faqItem}>
+              <Text style={styles.faqQuestion}>Can I cancel my subscription anytime?</Text>
+              <Text style={styles.faqAnswer}>
+                Yes, you can cancel your subscription at any time. If you cancel, your subscription
+                will remain active until the end of the current billing cycle.
+              </Text>
+            </View>
+            {/* Add more FAQ items */}
           </View>
-          <View style={styles.faqItem}>
-            <Text style={styles.faqQuestion}>Can I cancel my subscription anytime?</Text>
-            <Text style={styles.faqAnswer}>
-              Yes, you can cancel your subscription at any time. If you cancel, your subscription
-              will remain active until the end of the current billing cycle.
-            </Text>
-          </View>
-          {/* Add more FAQ items */}
+          {/* Add more FAQ categories */}
         </View>
         <View style={styles.testimonialsContainer}>
           <Text style={styles.testimonialsTitle}>What Our Users Say</Text>
@@ -158,6 +180,7 @@ const SubscriptionPage = () => {
                     uri: 'https://example.com/user1.jpg',
                   }}
                   style={styles.testimonialImage}
+                  accessibilityLabel='User Profile Picture'
                 />
                 <View style={styles.testimonialRating}>
                   {[1, 2, 3, 4, 5].map((star) => (
@@ -209,6 +232,7 @@ const styles = StyleSheet.create({
     height: 200,
     resizeMode: 'cover',
     marginBottom: 20,
+    borderRadius: 10,
   },
   title: {
     fontSize: 28,
@@ -223,6 +247,14 @@ const styles = StyleSheet.create({
     color: '#666',
     textAlign: 'center',
     fontFamily: 'Roboto',
+    marginBottom: 5,
+  },
+  tagline: {
+    fontSize: 16,
+    color: '#FF9800',
+    textAlign: 'center',
+    fontFamily: 'Roboto',
+    fontWeight: 'bold',
   },
   planCard: {
     marginHorizontal: 20,
@@ -236,6 +268,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
+    marginBottom: 20,
+  },
+  proPlanCard: {
+    backgroundColor: '#FFF3E0',
+    borderWidth: 2,
+    borderColor: '#FF9800',
   },
   planHeader: {
     flexDirection: 'row',
@@ -251,6 +289,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
     fontFamily: 'Roboto',
+  },
+  proPlanTitle: {
+    color: '#FF9800',
   },
   planFeatures: {
     padding: 20,
@@ -293,6 +334,23 @@ const styles = StyleSheet.create({
     color: '#333',
     fontFamily: 'Roboto',
   },
+  proPlanHeaderColumn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  popularBadge: {
+    backgroundColor: '#FF9800',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+    marginLeft: 10,
+  },
+  popularBadgeText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
+    fontFamily: 'Roboto',
+  },
   comparisonTableRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -325,8 +383,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF9800',
     paddingVertical: 15,
     alignItems: 'center',
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
+    borderRadius: 30,
+    marginHorizontal: 20,
+    marginBottom: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
   },
   subscribeButtonText: {
     color: '#fff',
@@ -343,13 +410,21 @@ const styles = StyleSheet.create({
   },
   tryFreeButton: {
     backgroundColor: '#fff',
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: '#FF9800',
     paddingVertical: 15,
     alignItems: 'center',
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
-    marginTop: 20,
+    borderRadius: 30,
+    marginHorizontal: 20,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
   },
   tryFreeButtonText: {
     color: '#FF9800',
@@ -387,8 +462,21 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'Roboto',
   },
+  faqCategoryContainer: {
+    marginBottom: 30,
+  },
+  faqCategoryTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#333',
+    fontFamily: 'Roboto',
+  },
   faqItem: {
     marginBottom: 20,
+    backgroundColor: '#F5F5F5',
+    borderRadius: 10,
+    padding: 15,
   },
   faqQuestion: {
     fontSize: 18,
@@ -418,7 +506,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   testimonialItem: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#fff',
     borderRadius: 10,
     padding: 20,
     marginRight: 20,
@@ -461,9 +549,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF9800',
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 5,
+    borderRadius: 20,
     alignSelf: 'center',
     marginTop: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
   },
   seeMoreButtonText: {
     color: '#fff',
