@@ -11,6 +11,7 @@ import {
 import TimePicker from '../../components/DateTimePicker/DateTimePicker';
 import TaskModal from '../../components/TaskModal/TaskModal';
 import Toast from 'react-native-toast-message';
+import { AntDesign } from '@expo/vector-icons';
 
 export default function HomeAlarm() {
   const [date, setDate] = useState(new Date());
@@ -81,6 +82,15 @@ export default function HomeAlarm() {
           style={{ width: '100%', height: '100%' }}
         >
           <SafeAreaView style={{ flex: 1 }}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Premium')}
+              style={{
+                margin: 20,
+                marginLeft: 'auto',
+              }}
+            >
+              <AntDesign name='Trophy' size={24} color='white' />
+            </TouchableOpacity>
             <View
               style={{
                 flex: 1,
@@ -92,7 +102,7 @@ export default function HomeAlarm() {
                 <TouchableOpacity
                   onPress={() => setModalVisible(true)}
                   style={{
-                    marginBottom: 80,
+                    marginBottom: 70,
                     borderRadius: 10,
                     borderWidth: 1,
                     borderColor: 'white',

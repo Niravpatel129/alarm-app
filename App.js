@@ -12,6 +12,7 @@ import HomeAlarm from './screens/HomeAlarm/HomeAlarm';
 import OnboardingScreen from './screens/OnboardingScreen/OnboardingScreen';
 import SettingsScreen from './screens/Settings/Settings';
 import Toast from 'react-native-toast-message';
+import PremiumScreen from './screens/PremiumScreen/PremiumScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -29,6 +30,11 @@ function App() {
               <Stack.Screen
                 name='Onboarding'
                 component={OnboardingScreen}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name='Premium'
+                component={PremiumScreen}
                 options={{ headerShown: false }}
               />
 
